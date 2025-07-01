@@ -1,3 +1,7 @@
+
+REM Baixar e instalar JAVA
+REM https://www.oracle.com/br/java/technologies/downloads/#jdk24-windows
+
 REM Baixar Intelej: IDE Java
 REM https://www.jetbrains.com/pt-br/idea/download/download-thanks.html?platform=windows&code=IIC
 REM https://www.jetbrains.com/pt-br/idea/download/?section=windows
