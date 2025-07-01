@@ -1,3 +1,8 @@
+REM Baixar Intelej: IDE Java
+REM https://www.jetbrains.com/pt-br/idea/download/download-thanks.html?platform=windows&code=IIC
+REM https://www.jetbrains.com/pt-br/idea/download/?section=windows
+
+
 @echo off
 SETLOCAL
 
@@ -27,3 +32,6 @@ echo ✅ JAVA configurado com sucesso.
 echo Abra um novo terminal e digite: java -version
 ENDLOCAL
 pause
+
+
+
