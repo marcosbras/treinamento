@@ -6,6 +6,8 @@ REM Baixar Intelej: IDE Java
 REM https://www.jetbrains.com/pt-br/idea/download/download-thanks.html?platform=windows&code=IIC
 REM https://www.jetbrains.com/pt-br/idea/download/?section=windows
 
+REM https://code.visualstudio.com/docs/languages/java
+
 
 @echo off
 SETLOCAL
