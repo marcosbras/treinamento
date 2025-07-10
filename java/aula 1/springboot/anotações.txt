@@ -1,0 +1,16 @@
+contenair SpringBoot: gerenciains instâncias de classes
+
+
+@Beans: Utilizo para classes externas 
+
+@Components: Utilizo quando tenho acesso ao código fonte. Provida de injeção de depedencia.
+
+
+https://www.dio.me/articles/beans-entendendo-a-base-fundamental-do-spring-framework
+https://www.google.com/search?q=beans+vs+components+springboot.+qual+%C3%A9+a+vantagem%3F&sca_esv=8fe472cf0c0bad30&sxsrf=AE3TifNY9J_WsYQZJoDys-KA6tE-WRR9og%3A1751919577622&ei=2StsaO_aJcCy5OUPmIS_cA&ved=0ahUKEwivq-WAyauOAxVAGbkGHRjCDw4Q4dUDCBA&uact=5&oq=beans+vs+components+springboot.+qual+%C3%A9+a+vantagem%3F&gs_lp=Egxnd3Mtd2l6LXNlcnAiM2JlYW5zIHZzIGNvbXBvbmVudHMgc3ByaW5nYm9vdC4gcXVhbCDDqSBhIHZhbnRhZ2VtPzIHECEYoAEYCjIHECEYoAEYCjIHECEYoAEYCjIHECEYoAEYCkiklAFQxjNYyJIBcAV4AJABAJgBqAGgAZwdqgEEMC4yNbgBA8gBAPgBAZgCHaAC6R3CAgoQABiwAxjWBBhHwgIFECEYnwXCAgQQIRgVmAMA4gMFEgExIECIBgGQBgiSBwQ1LjI0oAf4lAGyBwQwLjI0uAe3HcIHCDAuNC4yMy4yyAePAQ&sclient=gws-wiz-serp
+
+https://www.google.com/search?q=beans+vs+components+springboot.+qual+%C3%A9+a+vantagem%3F&sca_esv=8fe472cf0c0bad30&sxsrf=AE3TifNY9J_WsYQZJoDys-KA6tE-WRR9og%3A1751919577622&ei=2StsaO_aJcCy5OUPmIS_cA&ved=0ahUKEwivq-WAyauOAxVAGbkGHRjCDw4Q4dUDCBA&uact=5&oq=beans+vs+components+springboot.+qual+%C3%A9+a+vantagem%3F&gs_lp=Egxnd3Mtd2l6LXNlcnAiM2JlYW5zIHZzIGNvbXBvbmVudHMgc3ByaW5nYm9vdC4gcXVhbCDDqSBhIHZhbnRhZ2VtPzIHECEYoAEYCjIHECEYoAEYCjIHECEYoAEYCjIHECEYoAEYCkiklAFQxjNYyJIBcAV4AJABAJgBqAGgAZwdqgEEMC4yNbgBA8gBAPgBAZgCHaAC6R3CAgoQABiwAxjWBBhHwgIFECEYnwXCAgQQIRgVmAMA4gMFEgExIECIBgGQBgiSBwQ1LjI0oAf4lAGyBwQwLjI0uAe3HcIHCDAuNC4yMy4yyAePAQ&sclient=gws-wiz-serp#fpstate=ive&vld=cid:bb34498b,vid:S6ljIhE6mfY,st:0
+
+
+
+https://www.youtube.com/watch?v=wlYvA2b1BWI&ab_channel=MichelliBrito
