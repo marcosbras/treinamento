@@ -1,5 +1,17 @@
+Curso em video
 https://www.youtube.com/watch?v=sTX0UEplF54&list=PLHz_AreHm4dkI2ZdjTwZA4mPMxWTfNSpR&ab_channel=CursoemV%C3%ADdeo
+
+SpringBoot Iniciante
+https://www.youtube.com/watch?v=YY_hf0FOIcU&ab_channel=FernandaKipper%7CDev
+https://www.youtube.com/watch?v=SqU9v_V32RA&ab_channel=MatheusLeandroFerreira
+https://www.youtube.com/watch?v=gh5NG0Deljk&ab_channel=Erudio
+
+SpringBoot CRUD
+https://www.youtube.com/watch?v=yW7RrWfUeHE&ab_channel=Javanauta
 
 Aula 1 18/07/2025
 Exercício 1 18/07/2025
+
+CUDA WSL 2
+https://learn.microsoft.com/en-us/windows/ai/directml/gpu-cuda-in-wsl
 
