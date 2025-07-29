@@ -1,0 +1,14 @@
+The average salary for an application programmer in the United States is around $88,946 per year, with a range typically between $62,500 and $134,000. The hourly wage typically ranges from $30 to $64. 
+Here's a more detailed breakdown: 
+Average: $88,946 per year
+Hourly: $43
+Top Earners: $134,000 annually or $64 per hour
+75th Percentile: $116,000 annually or $56 per hour
+25th Percentile: $62,500 annually or $30 per hour
+Salaries can vary based on experience, location, and the specific company. For example, ZipRecruiter reports some states like New York and Massachusetts may offer higher salaries than others. 
+Other factors influencing salary:
+Experience: Entry-level programmers may earn less than those with several years of experience. 
+Skills: Specific programming languages and technologies can also affect salary. 
+Company Size: Larger companies may offer higher salaries and benefits. 
+Industry: The industry in which the application programmer works can also play a role in salary. 
+To get a more precise idea of what you could earn as an application programmer, it's recommended to research salaries for similar roles in your specific location and with your desired experience level. 
