@@ -1,3 +1,34 @@
 <p>Home {{ name }}</p>
 
-<button  (clich)="submit($event)"  [type]="tipoButton" id={{idButton}}  [attr.aria-label]="idButton"> My Button One </button>
+@if(meuBoleano){
+    <h1>YEAH...</h1>
+    
+}@else if(name == "Marcos"){
+    <h1>Hei Marcos...</h1>
+
+}@else {
+   <h1>NO...</h1>
+}
+
+@for(item of listItemsObject; track item.id){
+    <p>{{item.id}}</p>
+}
+
+@for(item of listItems;track item){
+    <p>{{item}}</p>
+}
+
+
+<h1 *ngIf="meuBoleano">if versões antigas</h1>
+
+
+<h2 *ngIf="meuBoleano">Mostrar H2</h2>
+
+
+<h1>for versões antigas</h1>
+
+<p *ngFor="let item of listItems">{{item}}</p>
+
+
+<button  (click)="submit($event)"  [type]="tipoButton" id={{idButton}}  [attr.aria-label]="idButton"> My Button One </button>
+ 
