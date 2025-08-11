@@ -1,102 +1,57 @@
-This message indicates that the SSH client on your local machine has detected a change in the remote host's key for the server at 108.181.223.106. This could happen for several reasons:
-
-Legitimate Key Change: The server might have changed its SSH keys, for example, if it was reinstalled or its SSH configuration was updated.
-
-Security Concern: It could be an indication of a man-in-the-middle (MITM) attack, where someone is intercepting your communication with the server. This is less likely but should be considered.
-
-How to resolve:
-Verify the key change: If you are confident that the server's SSH key change is legitimate (for example, the server was reinstalled or its keys were manually updated), you can remove the old key and add the new one.
-
-Remove the old key from known_hosts:
-
-Open the known_hosts file located at /c/Users/Israel/.ssh/known_hosts (based on your error message).
-
-Delete the line corresponding to the IP 108.181.223.106. In this case, it’s line 4, as mentioned by the error message.
-
-You can also use the ssh-keygen command to remove the offending key automatically:
-
-ssh-keygen -R 108.181.223.106
-
-ssh root@108.181.223.106
-
-
-
-Essa mensagem indica que o cliente SSH no seu computador local detectou uma mudança na chave do host remoto para o servidor 108.181.223.106. Isso pode acontecer por vários motivos:
-
-Mudança legítima da chave: O servidor pode ter alterado suas chaves SSH, por exemplo, se foi reinstalado ou a configuração do SSH foi atualizada.
-
-Problema de segurança: Pode ser um sinal de um ataque de "homem no meio" (man-in-the-middle), onde alguém está interceptando a sua comunicação com o servidor. Isso é menos provável, mas deve ser considerado.
-
-Como resolver:
-Verificar a mudança de chave: Se você tiver certeza de que a mudança de chave do servidor é legítima (por exemplo, o servidor foi reinstalado ou suas chaves foram manualmente atualizadas), você pode remover a chave antiga e adicionar a nova.
-
-Remover a chave antiga do arquivo known_hosts:
-
-Abra o arquivo known_hosts localizado em /c/Users/Israel/.ssh/known_hosts (conforme sua mensagem de erro).
-
-Delete a linha correspondente ao IP 108.181.223.106. No seu caso, é a linha 4, conforme indicado pela mensagem de erro.
-
-Você também pode usar o comando ssh-keygen para remover a chave problemática automaticamente:
-
-ssh-keygen -R 108.181.223.106
-
-ssh root@108.181.223.106
-
-
 como instalar docker:
 
 1. Atualizar os pacotes do sistema
 Primeiro, é sempre bom garantir que o sistema esteja com os pacotes mais recentes. Execute os seguintes comandos:
 
-sudo apt update
-sudo apt upgrade
+	sudo apt update
+	sudo apt upgrade
 
 
 2. Instalar pacotes necessários
 O Docker precisa de alguns pacotes para poder adicionar o repositório corretamente. Instale-os com:
 
-sudo apt install apt-transport-https ca-certificates curl software-properties-common
+	sudo apt install apt-transport-https ca-certificates curl software-properties-common
 
 
 3. Adicionar a chave GPG do Docker
 Agora, adicione a chave GPG oficial do Docker para garantir que os pacotes são confiáveis:
 
-curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
+	curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
 
 4. Adicionar o repositório do Docker
 Depois de adicionar a chave, você precisa adicionar o repositório do Docker ao seu sistema:
 
-echo "deb [arch=amd64 signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+	echo "deb [arch=amd64 signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
 
 
 5. Instalar o Docker
 Agora, atualize a lista de pacotes para incluir o repositório do Docker e, em seguida, instale o Docker:
 
 
-sudo apt update
-sudo apt install docker-ce
+	sudo apt update
+	sudo apt install docker-ce
 
 
 6. Verificar se o Docker está rodando
 Verifique se o serviço Docker está funcionando corretamente:
 
-sudo systemctl status docker
+	sudo systemctl status docker
 
 
 7. Rodar o Docker sem sudo (opcional)
 Para não precisar usar sudo toda vez que rodar um comando do Docker, adicione seu usuário ao grupo docker:
 
 
-sudo usermod -aG docker $USER
+	sudo usermod -aG docker $USER
 
 8. Testar a instalação do Docker
 Por fim, para garantir que o Docker foi instalado corretamente, execute o comando:
 
-docker --version
+	docker --version
 
 9. Além disso, rode um contêiner de teste:
 
-docker run hello-world
+	docker run hello-world
 
 
 Parece que você enviou um arquivo chamado docker-compose.yml. Para te ajudar a subir o seu projeto no Docker, o próximo passo seria analisar esse arquivo e verificar como ele está configurado. Vou dar uma olhada no conteúdo desse arquivo para poder orientar você.
@@ -144,25 +99,25 @@ Agora que temos o arquivo docker-compose.yml, o próximo passo é subir o projet
 Certifique-se de que o Docker e o Docker Compose estão instalados na sua máquina. Se não tiver o Docker Compose, instale com:
 
 
-sudo apt install docker-compose
+	sudo apt install docker-compose
 
 
 2) Verificar se o Docker Compose está funcionando:
 Execute:
 
-docker-compose --version
+	docker-compose --version
 
 
 3) Verificar o conteúdo do arquivo .env:
 Como o arquivo docker-compose.yml faz referência a um arquivo .env, você precisa garantir que ele esteja na mesma pasta e que contenha as variáveis de ambiente necessárias (como credenciais de banco de dados e outros).
 
-Subir os serviços:
-No diretório onde seu docker-compose.yml está localizado, execute:
+	Subir os serviços:
+	No diretório onde seu docker-compose.yml está localizado, execute:
 
 4) Subir os serviços:
 No diretório onde seu docker-compose.yml está localizado, execute:
 
-docker-compose up --build
+	docker-compose up --build
 
 
 O parâmetro --build garante que o Docker recompile as imagens se necessário.
@@ -174,14 +129,15 @@ Ele irá construir a imagem do seu aplicativo (app) usando o Dockerfile especifi
 Ele irá configurar os containers e iniciar os serviços.
 
 5) Verificar se os containers estão rodando:
-Você pode verificar o status dos containers com o comando:
+	
+	Você pode verificar o status dos containers com o comando:
 
-docker-compose ps
+	docker-compose ps
 
 Acessar o aplicativo:
 A aplicação estará disponível na porta 8080. Acesse pelo navegador ou com curl:
 
-curl http://localhost:8080
+	curl http://localhost:8080
 
 
 
@@ -190,57 +146,57 @@ Para baixar o projeto diretamente da URL do GitHub e rodar o seu docker-compose.
 1. Conectar-se à Máquina Virtual (VM)
 Primeiro, acesse a sua máquina virtual (suponho que você tenha as credenciais de acesso SSH ou algo similar). Se não tiver conectado, use o comando ssh para conectar-se:
 
-ssh username@ip_da_maquina_virtual
+	ssh username@ip_da_maquina_virtual
 
 
 2. Instalar Git (se necessário)
 Se você ainda não tem o Git instalado na sua máquina virtual, instale-o com:
 
-sudo apt update
-sudo apt install git
+	sudo apt update
+	sudo apt install git
 
 3. Clonar o Repositório do GitHub
 Depois de estar na sua máquina virtual, clone o repositório com o seguinte comando:
 
-git clone https://github.com/mahezer/bot-api.git
+	git clone https://github.com/mahezer/bot-api.git
 
 
 Isso criará uma pasta chamada bot-api no diretório atual, onde o repositório será baixado.
 
 4. Entrar no Diretório do Projeto
-Entre na pasta do projeto clonado:
+	Entre na pasta do projeto clonado:
 
 
-cd bot-api
+	cd bot-api
 
 
 5. Instalar Docker e Docker Compose (se necessário)
 Se o Docker e o Docker Compose não estiverem instalados na máquina virtual, siga os passos para instalá-los. Como você está em uma máquina virtual com o Ubuntu, os comandos são os mesmos que forneci anteriormente para a instalação.
 
-Instalar o Docker:
+	Instalar o Docker:
 
 
-sudo apt update
-sudo apt install docker.io
+	sudo apt update
+	sudo apt install docker.io
 
 
 Instalar o Docker Compose:
 
-sudo apt install docker-compose
+	sudo apt install docker-compose
 
 6. Verificar a Instalação do Docker e Docker Compose
 Verifique se o Docker e o Docker Compose foram instalados corretamente:
 
-docker --version
-docker-compose --version
+	docker --version
+	docker-compose --version
 
 
 7. Subir o Projeto com Docker Compose
 Com o repositório clonado e os serviços Docker instalados, navegue até o diretório onde está o arquivo docker-compose.yml. No seu caso, já deve estar na pasta bot-api que você acabou de clonar.
 
-Agora, execute o comando para iniciar o Docker Compose:
+	Agora, execute o comando para iniciar o Docker Compose:
 
-docker-compose up --build
+	docker-compose up --build
 
 
 Isso vai:
@@ -255,7 +211,7 @@ Iniciar os containers de acordo com a configuração do arquivo.
 Após rodar o comando acima, você pode verificar o status dos containers com:
 
 
-docker-compose ps
+	docker-compose ps
 
 
 Se estiver tudo certo, você verá os serviços em execução.
@@ -264,7 +220,7 @@ Se estiver tudo certo, você verá os serviços em execução.
 Se o seu projeto expuser algum serviço na máquina virtual, como uma API, você pode acessá-la na porta configurada no arquivo docker-compose.yml. No seu caso, a aplicação app está exposta na porta 8080, então você pode acessar:
 
 
-curl http://localhost:8080
+	curl http://localhost:8080
 
 
 Para acessar o GitHub utilizando uma chave SSH, você precisa gerar uma chave SSH em sua máquina local e, em seguida, adicioná-la à sua conta do GitHub. Aqui está o passo a passo de como fazer isso.
@@ -272,9 +228,9 @@ Para acessar o GitHub utilizando uma chave SSH, você precisa gerar uma chave SS
 1. Gerar a chave SSH
 Se você ainda não tem uma chave SSH, pode gerar uma usando o comando ssh-keygen. Se você já tem uma chave SSH, pode pular esta etapa.
 
-Abra o terminal e digite o seguinte comando:
+	Abra o terminal e digite o seguinte comando:
 
-ssh-keygen -t ed25519 -C "seu_email@exemplo.com"
+	ssh-keygen -t ed25519 -C "seu_email@exemplo.com"
 
 
 -t ed25519: Esse é o tipo de chave (ED25519 é uma opção mais segura e rápida, mas você pode usar rsa se preferir).
@@ -295,13 +251,13 @@ id_ed25519.pub: A chave pública (você deve compartilhá-la).
 Agora, você precisa adicionar a chave privada ao agente SSH, que gerencia as chaves para autenticação.
 
 
-Certifique-se de que o agente SSH está em execução:
+	Certifique-se de que o agente SSH está em execução:
 
-eval "$(ssh-agent -s)"
+		eval "$(ssh-agent -s)"
 
-Adicione sua chave privada ao agente SSH:
+	Adicione sua chave privada ao agente SSH:
 
-ssh-add ~/.ssh/id_ed25519
+		ssh-add ~/.ssh/id_ed25519
 
 
 Nota: Caso você tenha salvado sua chave SSH em um local diferente, substitua ~/.ssh/id_ed25519 pelo caminho correto.
@@ -312,7 +268,7 @@ Agora que você tem uma chave SSH configurada, você precisa adicionar a chave p
 Copiar a chave pública para a área de transferência:
 
 
-cat ~/.ssh/id_ed25519.pub
+	cat ~/.ssh/id_ed25519.pub
 
 
 Isso irá exibir o conteúdo da chave pública. Copie o conteúdo completo da chave (tudo começando com ssh-ed25519 até o seu e-mail).
@@ -334,9 +290,9 @@ Clique em Add SSH key para salvar.
 4. Testar a Conexão com o GitHub
 Agora que você adicionou a chave SSH ao GitHub, teste se a autenticação SSH está funcionando corretamente.
 
-No terminal, execute:
+	No terminal, execute:
 
-ssh -T git@github.com
+	ssh -T git@github.com
 
 
 Se a configuração estiver correta, você verá uma mensagem como:
@@ -348,7 +304,56 @@ Isso indica que a autenticação SSH foi bem-sucedida.
 5. Clonar Repositórios Usando SSH
 Agora que a chave SSH está configurada, você pode clonar repositórios do GitHub usando o protocolo SSH. Para clonar um repositório, use o comando:
 
-git clone git@github.com:username/repository.git
+	git clone git@github.com:username/repository.git
+
+
+
+
+This message indicates that the SSH client on your local machine has detected a change in the remote host's key for the server at 108.181.223.106. This could happen for several reasons:
+
+Legitimate Key Change: The server might have changed its SSH keys, for example, if it was reinstalled or its SSH configuration was updated.
+
+Security Concern: It could be an indication of a man-in-the-middle (MITM) attack, where someone is intercepting your communication with the server. This is less likely but should be considered.
+
+How to resolve:
+Verify the key change: If you are confident that the server's SSH key change is legitimate (for example, the server was reinstalled or its keys were manually updated), you can remove the old key and add the new one.
+
+Remove the old key from known_hosts:
+
+Open the known_hosts file located at /c/Users/Israel/.ssh/known_hosts (based on your error message).
+
+Delete the line corresponding to the IP 108.181.223.106. In this case, it’s line 4, as mentioned by the error message.
+
+You can also use the ssh-keygen command to remove the offending key automatically:
+
+	ssh-keygen -R 108.181.223.106
+
+	ssh root@108.181.223.106
+
+
+
+Essa mensagem indica que o cliente SSH no seu computador local detectou uma mudança na chave do host remoto para o servidor 108.181.223.106. Isso pode acontecer por vários motivos:
+
+Mudança legítima da chave: O servidor pode ter alterado suas chaves SSH, por exemplo, se foi reinstalado ou a configuração do SSH foi atualizada.
+
+Problema de segurança: Pode ser um sinal de um ataque de "homem no meio" (man-in-the-middle), onde alguém está interceptando a sua comunicação com o servidor. Isso é menos provável, mas deve ser considerado.
+
+Como resolver:
+Verificar a mudança de chave: Se você tiver certeza de que a mudança de chave do servidor é legítima (por exemplo, o servidor foi reinstalado ou suas chaves foram manualmente atualizadas), você pode remover a chave antiga e adicionar a nova.
+
+Remover a chave antiga do arquivo known_hosts:
+
+Abra o arquivo known_hosts localizado em /c/Users/Israel/.ssh/known_hosts (conforme sua mensagem de erro).
+
+Delete a linha correspondente ao IP 108.181.223.106. No seu caso, é a linha 4, conforme indicado pela mensagem de erro.
+
+Você também pode usar o comando ssh-keygen para remover a chave problemática automaticamente:
+
+	ssh-keygen -R 108.181.223.106
+
+	ssh root@108.181.223.106
+
+
 
 
 Resumo dos passos:
@@ -361,6 +366,24 @@ Copiar a chave pública e adicionar no GitHub.
 Testar a conexão com ssh -T git@github.com.
 
 Usar SSH para clonar repositórios.
+
+
+-- Instalar painel de controle Linux
+
+	easypanel.io
+
+	sudo -i
+
+	curl -sSL https://get.easypanel.io | sh
+
+	http://108.181.223.106:3000/
+
+	https://i40c3p.easypanel.host/
+
+retira fundo
+https://www.photoroom.com/
+
+
 
 
 
