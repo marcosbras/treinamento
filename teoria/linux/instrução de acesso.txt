@@ -376,12 +376,48 @@ Usar SSH para clonar repositórios.
 
 	curl -sSL https://get.easypanel.io | sh
 
-	http://108.181.223.106:3000/
+	http://3.235.154.239:3000/settings/server/general
 
-	https://i40c3p.easypanel.host/
+	https://zzvtdv.easypanel.host/
+
+	https://projectauto-evolution-api.zzvtdv.easypanel.host/
+
+	Gerador de key:
+        https://randomkeygen.com/
+
+        https://projectauto-evolution-api.zzvtdv.easypanel.host/manager
+        API MANAGER: 935CA8C22E6CB8BF5E2BDCEA74682
+
+n8nPackage Community nodes
+  n8n-nodes-evolution-api
+
+
+no evoluteAPI alterar variável de ambiente:
+    CONFIG_SESSION_PHONE_VERSION 
+    AUTHENTICATION_API_KEY
+
+https://www.youtube.com/watch?v=Ag8vGGzmiwc&ab_channel=PyFlet
+
+https://www.youtube.com/watch?v=CAedO3UaiU8&ab_channel=Rocketseat
+
+https://www.youtube.com/watch?v=vDBWjV7T-aM&ab_channel=Henrique-VorxIA
+
+https://dev.to/gsmatheus/easypanel-um-painel-moderno-para-gerenciamento-de-servidores-2o2n
 
 retira fundo
 https://www.photoroom.com/
+
+Configuração do fluxo
+https://projectauto-n8n.zzvtdv.easypanel.host/workflow/7Bbdi6a78WnGZAj8
+https://projectauto-evolution-api.zzvtdv.easypanel.host/manager/instance/f797c4bd-5cfb-4bb7-8170-26b0cbfa6dca/settings
+https://zzvtdv.easypanel.host/projects/projectauto/app/evolution-api/domains
+https://zzvtdv.easypanel.host/projects/projectauto/postgres/postgres-n8n/credentials
+http://3.235.154.239:3000/settings/server/general
+http://3.235.154.239:3000/
+
+https://lightsail.aws.amazon.com/ls/webapp/us-east-1/instances/Ubuntu-1/networking
+
+
 
 
 
