@@ -412,10 +412,13 @@ https://projectauto-n8n.zzvtdv.easypanel.host/workflow/7Bbdi6a78WnGZAj8
 https://projectauto-evolution-api.zzvtdv.easypanel.host/manager/instance/f797c4bd-5cfb-4bb7-8170-26b0cbfa6dca/settings
 https://zzvtdv.easypanel.host/projects/projectauto/app/evolution-api/domains
 https://zzvtdv.easypanel.host/projects/projectauto/postgres/postgres-n8n/credentials
+https://projectauto-evolution-api.zzvtdv.easypanel.host/manager/
 http://3.235.154.239:3000/settings/server/general
 http://3.235.154.239:3000/
 
 https://lightsail.aws.amazon.com/ls/webapp/us-east-1/instances/Ubuntu-1/networking
+
+https://www.youtube.com/watch?v=-Ka4YKW7RwM&t=288s&ab_channel=NoCodeStartUp
 
 
 
