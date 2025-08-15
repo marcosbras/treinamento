@@ -1,0 +1,1676 @@
+unit utransfDados;
+interface
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Data.DB, Data.Win.ADODB, Vcl.StdCtrls,
+  FireDAC.Stan.Intf, FireDAC.Stan.Option, FireDAC.Stan.Error, FireDAC.UI.Intf,
+  FireDAC.Phys.Intf, FireDAC.Stan.Def, FireDAC.Stan.Pool, FireDAC.Stan.Async,
+  FireDAC.Phys, FireDAC.VCLUI.Wait, FireDAC.Comp.Client, FireDAC.Phys.MySQL,
+  FireDAC.Phys.MySQLDef, FireDAC.Stan.Param, FireDAC.DatS, FireDAC.DApt.Intf,
+  FireDAC.DApt, FireDAC.Comp.DataSet, REST.Types, REST.Client,
+  Data.Bind.Components, Data.Bind.ObjectScope, System.JSON, IdBaseComponent,
+  IdComponent, IdTCPConnection, IdTCPClient, IdHTTP, IdIOHandler,
+  IdIOHandlerSocket, IdIOHandlerStack, IdSSL, IdSSLOpenSSL, Vcl.ExtCtrls,
+  IdExplicitTLSClientServerBase, IdFTP, IdSSLOpenSSLHeaders;
+
+
+
+type
+  TForm1 = class(TForm)
+    ADOConn: TADOConnection;
+    ADOProdutos: TADOQuery;
+    Button1: TButton;
+    Button2: TButton;
+    ADOClientes: TADOQuery;
+    ADOFornec: TADOQuery;
+    ADOGrupos: TADOQuery;
+    ADOVendedores: TADOQuery;
+    ADOConfigIni: TADOQuery;
+    Button3: TButton;
+    FDConn: TFDConnection;
+    FDQGrupos: TFDQuery;
+    FDQVendedores: TFDQuery;
+    FDQClientes: TFDQuery;
+    FDQFornec: TFDQuery;
+    FDQProdutos: TFDQuery;
+    FDQEmpresas: TFDQuery;
+    FDPhysMySQLDriverLink1: TFDPhysMySQLDriverLink;
+    RCVitrineOne: TRESTClient;
+    RRAddVitrineOneCategory: TRESTRequest;
+    RESTResponse: TRESTResponse;
+    FDQProdutos_geral: TFDQuery;
+    FDQGrupo_geral: TFDQuery;
+    Button4: TButton;
+    RESTRequest1: TRESTRequest;
+    FDQMarca_geral: TFDQuery;
+    Button5: TButton;
+    Button6: TButton;
+    Memo1: TMemo;
+    Button7: TButton;
+    Button8: TButton;
+    RRAddVitrineOneProdutos: TRESTRequest;
+    Button9: TButton;
+    IdHTTP: TIdHTTP;
+    Button10: TButton;
+    IdSSLIOHandlerSocketOpenSSL: TIdSSLIOHandlerSocketOpenSSL;
+    lblhost: TLabel;
+    lblnome: TLabel;
+    lblsenha: TLabel;
+    EdtHost: TEdit;
+    EdtNome: TEdit;
+    EdtSenha: TEdit;
+    Btn_Conectar: TButton;
+    Shape_Conectado: TShape;
+    EdtID: TEdit;
+    EdtNomeProd: TEdit;
+    Label4: TLabel;
+    Label5: TLabel;
+    Label6: TLabel;
+    EdtNomeRes: TEdit;
+    Btn_UpLoad: TButton;
+    Btn_Desconectar: TButton;
+    IdFTP1: TIdFTP;
+    OpenDialog1: TOpenDialog;
+    Edit1: TEdit;
+    Label1: TLabel;
+    Edit3: TEdit;
+    Label2: TLabel;
+    procedure Button1Click(Sender: TObject);
+    procedure Button2Click(Sender: TObject);
+    procedure Button3Click(Sender: TObject);
+    procedure Button4Click(Sender: TObject);
+    procedure Button5Click(Sender: TObject);
+    procedure Button7Click(Sender: TObject);
+    procedure Button8Click(Sender: TObject);
+    procedure Button9Click(Sender: TObject);
+    procedure Button10Click(Sender: TObject);
+    procedure Btn_ConectarClick(Sender: TObject);
+    procedure Btn_DesconectarClick(Sender: TObject);
+    procedure Btn_UpLoadClick(Sender: TObject);
+  private
+    { Private declarations }
+    Diretorio_Leitura : String;
+  public
+    { Public declarations }
+  end;
+var
+  Form1: TForm1;
+
+
+
+  implementation
+
+
+
+{$R *.dfm}
+
+
+
+
+procedure TForm1.Btn_ConectarClick(Sender: TObject);
+var
+      LHandler:TIdSSLIOHandlerSocketOpenSSL;
+      IIdSSLMode:Integer;
+begin
+  //Crendeciais
+  //idFTP1.Host := EdtHost.Text;
+  //idFTP1.Username := EdtNome.Text;
+  //idFTP1.Password := EdtSenha.Text;
+  //----
+
+
+  //LHandler := TIdSSLIOHandlerSocketOpenSSL.Create(nil);
+
+
+
+
+
+
+  //LHandler.SSLOptions.Method :=  sslvTLSv1_2;  //sslvSSLv3;
+  //LHandler.SSLOptions.Mode := sslmUnassigned;  //sslmClient;
+  //LHandler.SSLOptions.VerifyMode := [];
+  //LHandler.SSLOptions.VerifyDepth := 0;
+  //LHandler.sslOptions.SSLVersions := [sslvTLSv1, sslvTLSv1_1, sslvTLSv1_2];
+  //LHandler.sslOptions.SSLVersions := [sslvSSLv3];
+  //idFTP1.IOHandler := LHandler;
+
+  //idFTP1.UseTLS :=   utUseExplicitTLS;
+
+
+   //IdFTP1.DataPortProtection := TIdFTPDataPortSecurity.ftpdpsPrivate;
+
+
+   IdOpenSSLSetLibPath(extractfilepath(paramstr(0)));
+
+
+  try
+    idFTP1.Connect;
+  finally
+
+  if idFTP1.Connected = True Then
+     Shape_Conectado.Brush.Color := clLime;
+
+  Memo1.Lines.Add('Conectado ao endereço: ' + idFTP1.Host);
+  Memo1.Lines.Add('Servidor remoto: ' + idFTP1.SystemDesc);
+  Memo1.Lines.Add('');
+
+  Btn_Upload.Enabled := True;
+  Btn_Desconectar.Enabled := True;
+  Btn_Conectar.Enabled :=False;
+
+
+  //LHandler.Free;
+end;
+
+end;
+
+
+procedure TForm1.Btn_DesconectarClick(Sender: TObject);
+begin
+try
+idFTP1.Disconnect;
+finally
+if idFTP1.Connected = False then
+Shape_Conectado.Brush.Color := clGray;
+
+Memo1.Lines.Add('Desconectado');
+Memo1.Lines.Add('');
+
+Btn_Upload.Enabled := False;
+Btn_Desconectar.Enabled := False;
+Btn_Conectar.Enabled := True;
+end;
+
+end;
+
+
+procedure TForm1.Btn_UpLoadClick(Sender: TObject);
+var
+m : TStream;
+f : TStream;
+t : Cardinal;
+Nome_Arquivo,
+Auxiliar :String;
+contador : Integer;
+begin
+  Auxiliar := '';
+  f := nil;
+  m := nil;
+
+  Memo1.Lines.Add('Diretório original: ' + Diretorio_Leitura);
+  OpenDialog1.Filter := 'Arquivos(*.jpg)|*.jpg';
+
+  if OpenDialog1.Execute then
+  begin
+
+    Nome_Arquivo := OpenDialog1.FileName;
+
+    Memo1.Lines.Add ('Operação: troca de diretório local');
+    Memo1.Lines.Add ('Diretório do arquivo: ' + GetCurrentDir);
+    Memo1.Lines.Add ('');
+
+    Nome_Arquivo := AnsiStrRScan(PCHar(Nome_Arquivo), '\');
+    for contador := 2 To StrLen(PCHar(Nome_Arquivo)) do
+        Auxiliar := Auxiliar + Nome_Arquivo [contador];
+
+    Nome_Arquivo := Edit3.text+Auxiliar;
+
+    try
+      Memo1.Lines.Add('Operação: Upload');
+      Memo1.Lines.Add ('Arquivo local: ' + OpenDialog1.FileName);
+      Memo1.Lines.Add ('Gravado como: ' + Nome_Arquivo);
+
+      f := TFileStream.Create(OpenDialog1.FileName,fmOpenRead);
+      m := TMemoryStream.Create;
+      m.CopyFrom(f,f.Size);
+      m.Seek(0,0) ;
+      t := GetTickCount;
+
+
+
+
+
+
+      idFTP1.Put(m,Nome_Arquivo);
+
+      Memo1.Lines.Add(Format('tempo %d milesegundos',[GetTickCount - t]));
+      Memo1.Lines.Add(Format('Tamanho %d bytes',[m.Size]));
+      Memo1.Lines.Add('');
+
+    finally
+      m.Free;
+      f.Free;
+    end;
+  end;
+  SetCurrentDir (Diretorio_Leitura);
+  Memo1.Lines.Add('Operação: troca de diretorio local');
+  Memo1.Lines.Add ('Diretório após a operação: ' + GetCurrentDir);
+  Memo1.Lines.Add ('');
+
+end;
+
+
+
+procedure TForm1.Button10Click(Sender: TObject);
+var
+  Json: string;
+  sResponse: string;
+  JsonToSend: TStringStream;
+  LHandler: TIdSSLIOHandlerSocketOpenSSL;
+begin
+
+   LHandler := TIdSSLIOHandlerSocketOpenSSL.Create(nil);
+   IdHTTP.IOHandler := LHandler;
+   IdHTTP.Request.ContentType := 'application/json';
+
+   try
+
+
+     try
+
+       Json := '{ '+
+                  ' "name":"Ferragens",'+
+                  ' "id":2,'+
+                  ' "display":"Y",'+
+                  ' "mostrartopo":"N"} ';
+       JsonToSend := TStringStream.Create(Json, TEncoding.UTF8);
+       //sResponse := IdHTTP.Post('http://localhost:9000/category/insert', JsonToSend);
+       sResponse := IdHTTP.Post('http://45.35.6.18:9000/category/insert', JsonToSend);
+
+       showmessage(sResponse);
+
+       except
+           on e  : Exception  do
+           begin
+             showmessage('error: '+e.Message);
+           end;
+        end;
+
+      finally
+        JsonToSend.Free;
+      end;
+
+
+
+
+   try
+
+
+     try
+
+
+       Json := '  {  '+
+
+                    //2
+                    '"id":2,'+
+
+                    //1
+                    '"minimo_pessoa":1,'+
+
+                    //1
+                    '"user_id":1,'+
+
+                    //0
+                    '"city_id":0,'+
+
+                    //2
+                    '"group_id":2,'+
+
+                    //1
+                    '"partner_id":1,'+
+
+                    //100
+                    '"per_number":100,'+
+
+                    //1
+                    '"min_number":1,'+
+
+                    //1000
+                    '"max_number":1000,'+
+
+                    //0
+                    '"now_number":0,'+
+
+                    //0
+                    '"pre_number":0,'+
+
+                    //0
+                    '"credit":0,'+
+
+                    //0
+                    '"card":0,'+
+
+                    //0
+                    '"fare":0,'+
+
+                    //0
+                    '"farefree":0,'+
+
+                    //0
+                    '"bonus":0,'+
+
+                    //0
+                    '"sort_order":0,'+
+
+                    //1529418142
+                    '"expire_time":1529418142,'+
+
+                    //1529290800
+                    '"begin_time":1529290800,'+
+
+                    //1529377200
+                    '"end_time":1529377200,'+
+
+                    //0
+                    '"reach_time":0,'+
+
+                    //0
+                    '"close_time":0,'+
+
+                    //0
+                    '"semhtmldescricao":0,'+
+
+                    //0
+                    '"semhtmlregulamento":0,'+
+
+                    //0
+                    '"manterdimensao":0,'+
+
+                    //2
+                    '"altura":2,'+
+
+                    //16
+                    '"comprimento":16,'+
+
+                    //11
+                    '"largura":11,'+
+
+                    //0
+                    '"posicionamento":0,'+
+
+                    //0
+                    '"pontos":0,'+
+
+                    //0
+                    '"pontosgerados":0,'+
+
+                    //0
+                    '"idpacote":0,'+
+
+                    //0
+                    '"id_oferta_parceiro":0,'+
+
+                    //0
+                    '"contadorpedidos":0,'+
+
+                    //1
+                    '"avaliacaoclientes":1,'+
+
+                    //160
+                    '"team_price":160,'+
+
+                    //0
+                    '"preco_comissao":0,'+
+
+                    //300
+                    '"market_price":300,'+
+
+                    //0
+                    '"bonuslimite":0,'+
+
+                    //null
+                    '"layout":null,'+
+
+                    //Coluna 3M 3/8
+                    '"title":"Coluna 3M 3/8",'+
+
+                    //""
+                    '"summary":"",'+
+
+                    //Y
+                    '"system":"Y",'+
+
+                    //null
+                    '"product":null,'+
+
+                    //{110 volts}{220 volts}
+                    '"condbuy":"{110 volts}{220 volts}",'+
+
+                    //team\/2018\/0618\/15293389255152.jpg
+                    '"image":"team\/2018\/0618\/15293389255152.jpg",'+
+
+                    //team\/2018\/0618\/15293389252770.jpg
+                    '"image1":"team\/2018\/0618\/15293389252770.jpg",'+
+
+                    //team\/2018\/0618\/15293389255164.jpg
+                    '"image2":"team\/2018\/0618\/15293389255164.jpg",'+
+
+                    //null
+                    '"flv":null,'+
+
+                    //null
+                    '"mobile":null,'+
+
+                    //null
+                    '"address":null,'+
+
+                    //""
+                    '"detail":"",'+
+
+                    //null
+                    '"systemreview":null,'+
+
+                    //null
+                    '"userreview":null,'+
+
+                    //""
+                    '"notice":"",'+
+
+                    //null
+                    '"express":null,'+
+
+                    //coupon
+                    '"delivery":"coupon",'+
+
+                    //none
+                    '"state":"none",'+
+
+                    //Y
+                    '"conduser":"Y",'+
+
+                    //N
+                    '"buyonce":"N",'+
+
+                    //normal
+                    '"team_type":"normal",'+
+
+                    //null
+                    '"seo_title":null,'+
+
+                    //chapa
+                    '"seo_keyword":"chapa",'+
+
+                    //null
+                    '"seo_description":null,'+
+
+                    //team\/2018\/0618\/15293389254429.jpg
+                    '"gal_image1":"team\/2018\/0618\/15293389254429.jpg",'+
+
+                    //team\/2018\/0618\/15293389259585.jpg
+                    '"gal_image2":"team\/2018\/0618\/15293389259585.jpg",'+
+
+                    //null
+                    '"gal_image3":null,'+
+
+                    //null
+                    '"gal_image4":null,'+
+
+                    //null
+                    '"gal_image5":null,'+
+
+                    //null
+                    '"gal_image6":null,'+
+
+                    //null
+                    '"gal_image7":null,'+
+
+                    //""
+                    '"maisinformacoes":"",'+
+
+                    //null
+                    '"metodo_pagamento":null,'+
+
+                    //null
+                    '"retornoparticipe":null,'+
+
+                    //""
+                    '"url_comprar":"",'+
+
+                    //""
+                    '"posicionamentotitulo":null,'+
+
+                    //null
+                    '"marcadagua":null,'+
+
+                    //null
+                    '"processo_compra":null,'+
+
+                    //null
+                    '"categoria_agrupi":null,'+
+
+                    //null
+                    '"categoria_valejunto":null,'+
+
+                    //null
+                    '"cidade_valejunto":null,'+
+
+                    //null
+                    '"categoria_apontaofertas":null,'+
+
+                    //null
+                    '"cidade_apontaofertas":null,'+
+
+                    //null
+                    '"categoria_dsconto":null,'+
+
+                    //1
+                    '"frete":"1",'+
+
+                    //31280240
+                    '"ceporigem":"31280240",'+
+
+                    //02,0
+                    '"peso":"02,0",'+
+
+                    //0,00
+                    '"valorfrete":" 0,00",'+
+
+                    //0
+                    '"fretegratuito":"0",'+
+
+                    //null
+                    '"republicacao":null,'+
+
+                    //null
+                    '"estatica_home":null,'+
+
+                    //null
+                    '"estatica_direita":null,'+
+
+                    //null
+                    '"estatica_detalhe":null,'+
+
+                    //null
+                    '"estatica_recentes":null,'+
+
+                    //12312
+                    '"codreferencia":"12312",'+
+
+                    //null
+                    '"mostrarpreco":null,'+
+
+                    //""
+                    '"condicaoenvio":"",'+
+
+                    //0
+                    '"uploadarquivo":"0",'+
+
+                    //{Vermelho}{Azul}{Preto}
+                    '"condbuy2":"{Vermelho}{Azul}{Preto}",'+
+
+                    //""
+                    '"nomeaba1":"",'+
+
+                    //""
+                    '"nomeaba2":"",'+
+
+
+                    //""
+                    '"observacao_preco":"",'+
+
+                    //Escolha a cor
+                    '"titulo_opcao2":"Escolha a cor",'+
+
+
+                    //Escolha a voltagem
+                    '"titulo_opcao1":"Escolha a voltagem",'+
+
+
+                    //""
+                    '"titulo_upload":"",'+
+
+
+                    //Coluna 3M 3/8
+                    '"titleresumido":"Coluna 3M 3/8",'+
+
+
+                    //""
+                    '"video_team":""'+
+
+
+                    '}';
+
+
+
+       JsonToSend := TStringStream.Create(Json, TEncoding.UTF8);
+       //sResponse := IdHTTP.Post('http://localhost:9000/produtos/insert', JsonToSend);
+       sResponse := IdHTTP.Post('http://45.35.6.18:9000/produtos/insert', JsonToSend);
+
+       showmessage(sResponse);
+
+       except
+           on e  : Exception  do
+           begin
+             showmessage('error: '+e.Message);
+           end;
+        end;
+
+      finally
+        JsonToSend.Free;
+      end;
+
+
+
+
+
+
+
+
+   LHandler.Free;
+
+end;
+procedure TForm1.Button1Click(Sender: TObject);
+var
+ConfigBase, List:TStringList;
+vardir, StringConn, usuario, senha, base, server, workstationID:string;
+begin
+ vardir := ExtractFilePath(Application.ExeName);
+
+ try
+    ConfigBase := TStringList.Create;
+    ConfigBase.LoadFromFile(vardir+'conn.ini');
+    ADOConn.Connected := false;
+    //ADOConn.ConnectionString :=  pwidechar(ConfigBase);
+    ADOConn.Connected := true;
+ except
+    Application.MessageBox('Erro ao conectar base de dados local','Atenção',mb_ok);
+    ConfigBase.Free;
+    exit;
+ end;
+
+ if Application.MessageBox(pchar('Tem certeza que deseja transferir dados do cliente para banco de dados remoto?'),pchar('Verifique o nome do cliente antes de transferir'),mb_yesno) <> 6 then
+ begin
+    Application.MessageBox('Operação cancelada pelo usuário','Atenção',mb_ok);
+    exit;
+ end;
+
+  List := TStringList.Create;
+  try
+    ADOProdutos.Open;
+
+       List.add('Controle|'+
+                'Código|'+
+                'Produto|'+
+                'Fabricante|'+
+                'Preço Custo|'+
+                'Preço Venda|'+
+                'Lucro|'+
+                'Quantidade|'+
+                'Unidade|'+
+                'Obs|'+
+                'NCM|'+
+                'IPI|'+
+                'CST|'+
+                'ICMS|'+
+                'Base Cálculo|'+
+                'iva_st|'+
+                'cean|'+
+                'ceantrib' );
+
+    while not ADOProdutos.Eof do
+    begin
+       List.add(ADOProdutos.FieldByName('controle').asString+'|'+
+                ADOProdutos.FieldByName('codigo').asString+'|'+
+                ADOProdutos.FieldByName('produto').asString+'|'+
+                ADOProdutos.FieldByName('fabricante').asString+'|'+
+                StringReplace(ADOProdutos.FieldByName('precocusto').asString, ',', '.', [rfreplaceall, rfignorecase] )+'|'+
+                StringReplace(  ADOProdutos.FieldByName('precovenda').asString, ',', '.', [rfreplaceall, rfignorecase] )+'|'+
+                StringReplace( ADOProdutos.FieldByName('lucro').asString, ',', '.', [rfreplaceall, rfignorecase] )+'|'+
+                StringReplace( ADOProdutos.FieldByName('quantidade').asString, ',', '.', [rfreplaceall, rfignorecase] )+'|'+
+                StringReplace( ADOProdutos.FieldByName('unidade').asString, ',', '.', [rfreplaceall, rfignorecase] )+'|'+
+                ADOProdutos.FieldByName('obs').asString+'|'+
+                ADOProdutos.FieldByName('codipi').asString+'|'+
+                StringReplace( ADOProdutos.FieldByName('IPI').asString, ',', '.', [rfreplaceall, rfignorecase] )+'|'+
+                StringReplace( ADOProdutos.FieldByName('CST').asString, ',', '.', [rfreplaceall, rfignorecase] )+'|'+
+                StringReplace( ADOProdutos.FieldByName('ICMS').asString, ',', '.', [rfreplaceall, rfignorecase] )+'|'+
+                StringReplace( ADOProdutos.FieldByName('basecalculo').asString, ',', '.', [rfreplaceall, rfignorecase] )+'|'+
+                StringReplace( ADOProdutos.FieldByName('iva_st').asString, ',', '.', [rfreplaceall, rfignorecase] )+'|'+
+                ADOProdutos.FieldByName('cean').asString+'|'+
+                ADOProdutos.FieldByName('ceantrib').asString );
+
+      ADOProdutos.Next;
+    end;
+    List.SaveToFile(vardir+'Produtos.txt');
+
+    Showmessage('Arquivo texto criado com sucesso!');
+  finally
+     ConfigBase.free;
+     List.free;
+  end;
+
+
+end;
+procedure TForm1.Button2Click(Sender: TObject);
+var
+  List:TStrings;
+  Gravar:TStrings;
+  vardir:string;
+  i:integer;
+begin
+  vardir := ExtractFilePath(Application.ExeName);
+
+  List := TStringList.Create;
+  Gravar := TStringList.Create;
+  List.LoadFromFile(vardir+'Produtos.txt');
+  Gravar.Delimiter := '|';
+  Gravar.StrictDelimiter := true;
+  for i := 0 to pred(List.Count) do
+  begin
+    gravar.DelimitedText := List.Strings[i];
+
+    //Campos
+    //showmessage(Gravar.Strings[1]);
+  end;
+  Gravar.free;
+  List.free;
+end;
+procedure TForm1.Button3Click(Sender: TObject);
+var
+ConfigBase, List:TStringList;
+vardir, StringConn, usuario, senha, base, server, workstationID, cnpj, nome, baixou:string;
+icodemp:integer;
+
+begin
+   vardir := ExtractFilePath(Application.ExeName);
+
+   FDConn.Connected := true;
+   ADOConn.Connected := true;
+
+   try
+      ConfigBase := TStringList.Create;
+      ConfigBase.LoadFromFile(vardir+'conn.ini');
+      ADOConn.Connected := false;
+      //ADOConn.ConnectionString :=  pwidechar(ConfigBase);
+      ADOConn.Connected := true;
+   except
+      Application.MessageBox('Erro ao conectar base de dados local','Atenção',mb_ok);
+      ConfigBase.Free;
+      exit;
+   end;
+   try
+      FDConn.Connected;
+   except
+     Application.MessageBox('Erro ao conectar base de dados remota','Atenção',mb_ok);
+     exit;
+   end;
+
+   if Application.MessageBox(pchar('Tem certeza que deseja transferir dados do cliente para banco de dados remoto?'),pchar('Verifique o nome do cliente antes de transferir'),mb_yesno) <> 6 then
+   begin
+      Application.MessageBox('Operação cancelada pelo usuário','Atenção',mb_ok);
+      exit;
+   end;
+
+  ADOConfigIni.close;
+  ADOConfigIni.sql.Clear;
+  ADOConfigini.sql.Add('select * from TABSICINI where IDENT = ''CNPJ'' ');
+  ADOConfigini.Open;
+  cnpj := ADOConfigIni.fieldbyname('VALOR').asString;
+  ADOConfigIni.close;
+  ADOConfigIni.sql.Clear;
+  ADOConfigini.sql.Add('select * from TABSICINI where IDENT = ''NomeFantasia'' ');
+  ADOConfigini.Open;
+  nome := ADOConfigIni.fieldbyname('VALOR').asString;
+  cnpj :=    StringReplace(cnpj,'.','',[rfReplaceAll,rfIgnoreCase]);
+  cnpj :=    StringReplace(cnpj,'/','',[rfReplaceAll,rfIgnoreCase]);
+  cnpj :=    StringReplace(cnpj,'-','',[rfReplaceAll,rfIgnoreCase]);
+  FDQEmpresas.close;
+  FDQEmpresas.sql.Clear;
+  FDQEmpresas.sql.add('select * from empresas e where e.cnpj='+cnpj);
+  FDQEmpresas.Open;
+  if (FDQEmpresas.IsEmpty) then
+  begin
+    FDQEmpresas.Close;
+    FDQEmpresas.sql.Clear;
+    FDQEmpresas.sql.add('insert empresas(cnpj, nome) values (:cnpj, :nome)');
+    FDQEmpresas.Params.ParamByName('cnpj').AsString := cnpj;
+    FDQEmpresas.Params.ParamByName('nome').AsString := nome;
+    FDQEmpresas.Params.ParamByName('nome').AsString := 'N';
+    FDQEmpresas.ExecSQL;
+  end;
+
+  FDQEmpresas.close;
+  FDQEmpresas.sql.Clear;
+  FDQEmpresas.sql.add('select * from empresas e where e.cnpj='+cnpj);
+  FDQEmpresas.Open;
+  icodemp := FDQEmpresas.FieldByName('codigo').asInteger;
+  baixou := FDQEmpresas.FieldByName('baixou').asString;
+
+  if baixou <> 'N' then
+  begin
+    Showmessage('Esta empresa já tem base de dados transferido, processo cancelado!');
+    exit;
+  end;
+
+
+
+  try
+
+
+
+    {
+
+      <---------- Fornecedor ------------->
+
+    }
+
+    //Fornec SICNET
+    ADOFornec.Open;
+
+    //Fornec Remoto
+    FDQFornec.Close;
+    FDQFornec.sql.Clear;
+    FDQFornec.sql.add('delete from fornec where cemp = '+icodemp.ToString);
+    FDQFornec.ExecSQL;
+
+    FDQFornec.Close;
+    FDQFornec.sql.Clear;
+    FDQFornec.sql.add('select * from fornec where cemp = '+icodemp.ToString);
+    FDQFornec.Open;
+
+
+
+    while not ADOFornec.Eof do
+    begin
+
+      FDQFornec.Append;
+      FDQFornec.FieldByName('codigo').asInteger := ADOFornec.FieldByName('controle').asInteger;
+      FDQFornec.FieldByName('nome').asString := ADOFornec.FieldByName('empresa').asString;
+      FDQFornec.FieldByName('fantasia').asString := ADOFornec.FieldByName('empresa').asString;
+      FDQFornec.FieldByName('endereco').asString := ADOFornec.FieldByName('endereco').asString;
+      FDQFornec.FieldByName('complement').asString := ADOFornec.FieldByName('bairro').asString;
+      FDQFornec.FieldByName('cidade').asString := ADOFornec.FieldByName('cidade').asString;
+      FDQFornec.FieldByName('estado').asString := ADOFornec.FieldByName('estado').asString;
+      FDQFornec.FieldByName('cep').asString := ADOFornec.FieldByName('cep').asString;
+      FDQFornec.FieldByName('telefones').asString := ADOFornec.FieldByName('telefone').asString;
+      FDQFornec.FieldByName('fax').asString := ADOFornec.FieldByName('fax').asString;
+      FDQFornec.FieldByName('obs1').asString := ADOFornec.FieldByName('refban').asString;
+      FDQFornec.FieldByName('obs2').asString := ADOFornec.FieldByName('data').asString;
+      FDQFornec.FieldByName('email').asString := ADOFornec.FieldByName('email').asString;
+      FDQFornec.FieldByName('cnpj').asString := ADOFornec.FieldByName('cgc').asString;
+      FDQFornec.FieldByName('contato').asString := ADOFornec.FieldByName('contato').asString;
+      FDQFornec.FieldByName('ie').asString := ADOFornec.FieldByName('insc').asString;
+      FDQFornec.FieldByName('fax').asString := ADOFornec.FieldByName('fax').asString;
+      FDQFornec.FieldByName('cemp').asInteger := icodemp;
+      FDQFornec.post;
+
+      ADOFornec.Next;
+    end;
+
+
+    {
+          <------  Produtos  ----------->
+    }
+
+    //Produtos SICNET
+    ADOProdutos.Open;
+
+    //Produtos Remoto
+    FDQProdutos.Close;
+    FDQProdutos.sql.Clear;
+    FDQProdutos.sql.add('delete from produtos where cemp = '+icodemp.ToString);
+    FDQProdutos.ExecSQL;
+
+    FDQProdutos.Close;
+    FDQProdutos.sql.Clear;
+    FDQProdutos.sql.add('select * from produtos where cemp = '+icodemp.ToString);
+    FDQProdutos.Open;
+
+
+    while not ADOProdutos.Eof do
+    begin
+
+      FDQProdutos.Append;
+      FDQProdutos.FieldByName('codigo').asInteger := ADOProdutos.FieldByName('controle').AsInteger;
+      if copy(ADOProdutos.FieldByName('codigo').AsString,1,3) = '789' then
+          begin
+             FDQProdutos.FieldByName('codbar').AsString := ADOProdutos.FieldByName('codigo').AsString;
+          end;
+      //endif
+      FDQProdutos.FieldByName('nome').asString := ADOProdutos.FieldByName('produto').asString;
+
+
+      if ADOProdutos.FieldByName('precocusto').asfloat <> 0 then
+         FDQProdutos.FieldByName('per1').asFloat := (ADOProdutos.FieldByName('precovenda').asfloat - ADOProdutos.FieldByName('precocusto').asfloat)*100 / ADOProdutos.FieldByName('precocusto').asfloat;
+      FDQProdutos.FieldByName('prve1').asfloat := ADOProdutos.FieldByName('precovenda').asfloat;
+      FDQProdutos.FieldByName('qua').asFloat := ADOProdutos.FieldByName('quantidade').asFloat;
+      FDQProdutos.FieldByName('prcu').asfloat := ADOProdutos.FieldByName('precocusto').asfloat;
+      FDQProdutos.FieldByName('nome').asString := ADOProdutos.FieldByName('produto').asString;
+      FDQProdutos.FieldByName('uni').asString := ADOProdutos.FieldByName('unidade').asString;
+
+
+      FDQProdutos.FieldByName('codbar').asString := ADOProdutos.FieldByName('cean').asString;
+      FDQProdutos.FieldByName('classif').asString := ADOProdutos.FieldByName('codipi').asString;
+
+      try
+         FDQProdutos.FieldByName('cgru').asString := ADOProdutos.FieldByName('lksetor').asString;
+      except
+
+      end;
+{     FDQProdutos.FieldByName('obs1').asString := ADOProdutos.FieldByName('fornecedor').asString;
+      FDQProdutos.FieldByName('obs2').asString := ADOProdutos.FieldByName('prateleira').asString;}
+      FDQProdutos.fieldByName('embalagem').AsFloat := 1;
+      FDQProdutos.FieldByName('cemp').asInteger := icodemp;
+      FDQProdutos.post;
+
+
+      ADOProdutos.Next;
+    end;
+
+    {
+       <------- Clientes --------->
+
+    }
+
+    //Clientes SICNET
+    ADOClientes.Open;
+
+    //Clientes Remoto
+    FDQClientes.Close;
+    FDQClientes.sql.Clear;
+    FDQClientes.sql.add('delete from cliente where cemp = '+icodemp.ToString);
+    FDQClientes.ExecSQL;
+
+    FDQClientes.Close;
+    FDQClientes.sql.Clear;
+    FDQClientes.sql.add('select * from cliente where cemp = '+icodemp.ToString);
+    FDQClientes.Open;
+
+
+    while not ADOClientes.Eof do
+    begin
+      FDQClientes.Append;
+      FDQClientes.FieldByName('codigo').asInteger := ADOClientes.FieldByName('controle').asInteger;
+      FDQClientes.FieldByName('nome').asString := ADOClientes.FieldByName('nome').asString;
+      FDQClientes.FieldByName('fantasia').asString := ADOClientes.FieldByName('nome').asString;
+      FDQClientes.FieldByName('endereco').asString := ADOClientes.FieldByName('endereco').asString;
+      FDQClientes.FieldByName('complement').asString := ADOClientes.FieldByName('bairro').asString;
+      FDQClientes.FieldByName('cidade').asString := ADOClientes.FieldByName('cidade').asString;
+      FDQClientes.FieldByName('estado').asString := ADOClientes.FieldByName('estado').asString;
+      FDQClientes.FieldByName('cep').asString := ADOClientes.FieldByName('cep').asString;
+      FDQClientes.FieldByName('telefones').asString := ADOClientes.FieldByName('telefone').asString;
+      FDQClientes.FieldByName('fax').asString := ADOClientes.FieldByName('fax').asString;
+      FDQClientes.FieldByName('obs1').asString := ADOClientes.FieldByName('refban').asString;
+      FDQClientes.FieldByName('obs2').asString := ADOClientes.FieldByName('data').asString;
+      FDQClientes.FieldByName('email').asString := ADOClientes.FieldByName('email').asString;
+      FDQClientes.FieldByName('cnpj').asString := ADOClientes.FieldByName('cgc').asString;
+      FDQClientes.FieldByName('contato').asString := ADOClientes.FieldByName('contato').asString;
+      if ADOClientes.FieldByName('insc').AsString <> '' then
+         begin
+            FDQClientes.FieldByName('ie').asString := ADOClientes.FieldByName('insc').asString;
+         end
+      else
+         begin
+            FDQClientes.FieldByName('ie').asString := ADOClientes.FieldByName('identidade').asString;
+         end;
+      //endif
+
+            FDQClientes.FieldByName('endcobra').asstring := ADOClientes.FieldByName('endereco').asString;
+            FDQClientes.FieldByName('compcobra').asString := ADOClientes.FieldByName('bairro').asString;
+            FDQClientes.FieldByName('cidcobra').asString := ADOClientes.FieldByName('cidade').asString;
+            FDQClientes.FieldByName('estcobra').asString := ADOClientes.FieldByName('estado').asString;
+            FDQClientes.FieldByName('cepcobra').asString := ADOClientes.FieldByName('cep').asString;
+
+      FDQClientes.FieldByName('fax').asString := ADOClientes.FieldByName('fax').asString;
+      FDQClientes.FieldByName('contato').asString := ADOClientes.FieldByName('contato').asString;
+      try
+         FDQClientes.FieldByName('dtnasc').asString := ADOClientes.FieldByName('nascimento').asString;
+      except
+      end;
+      FDQClientes.FieldByName('cargo').asString := ADOClientes.FieldByName('profissao').asString;
+
+       FDQClientes.FieldByName('cemp').asInteger := icodemp;
+      FDQClientes.post;
+
+      ADOClientes.Next;
+    end;
+
+   {
+     <-------- Grupo ----------->
+
+   }
+
+    //Grupos SICNET
+    ADOGrupos.Open;
+
+    //Grupos Remoto
+    FDQGrupos.Close;
+    FDQGrupos.sql.Clear;
+    FDQGrupos.sql.add('delete from grupo where cemp = '+icodemp.ToString);
+    FDQGrupos.ExecSQL;
+
+    FDQGrupos.Close;
+    FDQGrupos.sql.Clear;
+    FDQGrupos.sql.add('select * from grupo where cemp = '+icodemp.ToString);
+    FDQGrupos.Open;
+
+    //Apaga Grupos remoto
+    FDQGrupos.EmptyDataSet;
+
+    while not ADOGrupos.Eof do
+    begin
+      FDQGrupos.Append;
+
+      FDQGrupos.FieldByName('codigo').asString := ADOGrupos.FieldByName('controle').asString;
+      FDQGrupos.FieldByName('nome').asString := ADOGrupos.FieldByName('setor').asString;
+      FDQGrupos.FieldByName('cemp').asInteger := icodemp;
+
+      FDQGrupos.post;
+      ADOGrupos.Next;
+    end;
+
+
+   {
+     <-------- Vendedores ----------->
+
+   }
+
+    //Vendedores SICNET
+    ADOVendedores.Open;
+
+    //Vendedores Remoto
+    FDQVendedores.Close;
+    FDQVendedores.sql.Clear;
+    FDQVendedores.sql.add('delete from vendedor where cemp = '+icodemp.ToString);
+    FDQVendedores.ExecSQL;
+
+    FDQVendedores.Close;
+    FDQVendedores.sql.Clear;
+    FDQVendedores.sql.add('select * from vendedor where cemp = '+icodemp.ToString);
+    FDQVendedores.Open;
+
+
+    while not ADOVendedores.Eof do
+    begin
+      FDQVendedores.Append;
+
+      FDQVendedores.FieldByName('codigo').asString := ADOVendedores.FieldByName('controle').asString;
+      FDQVendedores.FieldByName('nome').asString := ADOVendedores.FieldByName('nome').asString;
+      FDQVendedores.FieldByName('cemp').asInteger := icodemp;
+
+      FDQVendedores.post;
+      ADOVendedores.Next;
+    end;
+
+
+  finally
+    Showmessage('Base de dados transferida com sucesso!');
+
+  end;
+
+
+   FDConn.Connected := false;
+   ADOConn.Connected := false;
+
+
+
+end;
+
+
+
+procedure TForm1.Button4Click(Sender: TObject);
+var
+ConfigBase, List:TStringList;
+vardir, StringConn, usuario, senha, base, server, workstationID, cnpj, nome, baixou:string;
+icodemp:integer;
+
+Json:TJSonObject;
+
+erro:TStringList;
+
+
+
+
+begin
+
+
+   vardir :=  extractfilepath(application.ExeName);
+
+
+   try
+      FDConn.Connected;
+   except
+     Application.MessageBox('Erro ao conectar base de dados remota','Atenção',mb_ok);
+     exit;
+   end;
+
+   if Application.MessageBox(pchar('Tem certeza que deseja copiar dados para vitrine?'),pchar('Verifique o nome do cliente antes de transferir'),mb_yesno) <> 6 then
+   begin
+      Application.MessageBox('Operação cancelada pelo usuário','Atenção',mb_ok);
+      exit;
+   end;
+
+
+    erro := TStringList.Create;
+
+
+    //Base Local
+    FDQGrupo_geral.Close;
+    FDQGrupo_geral.sql.Clear;
+    FDQGrupo_geral.sql.add('select * from grupo_geral');
+    FDQGrupo_geral.Open;
+
+
+    while not FDQGrupo_geral.Eof do
+    begin
+
+      //Append;
+
+
+      try
+
+          with RRAddVitrineOneCategory do
+          begin
+
+            params.Clear;
+
+            AddParameter('body','{"id":"'+  FDQGrupo_geral.FieldByName('codigo').AsString +'","name":"'+ FDQGrupo_geral.FieldByName('nome').AsString +'","display":"Y","imagemnavegacao":"Y"}',trestrequestparameterkind.pkREQUESTBODY);
+            params[0].ContentType := ctAPPLICATION_JSON;
+
+
+            Execute;
+
+          end;
+
+      except
+
+
+         erro.Add('Grupo -> '+'{"id":"'+  FDQGrupo_geral.FieldByName('codigo').AsString +'","name":"'+ FDQGrupo_geral.FieldByName('nome').AsString +'","display":"Y","imagemnavegacao":"Y"}' );
+
+
+      end;
+
+
+
+      //post;
+
+      FDQGrupo_geral.Next;
+    end;
+
+
+    //Base Local
+    FDQProdutos_geral.Close;
+    FDQProdutos_geral.sql.Clear;
+    FDQProdutos_geral.sql.add('select * from produtos_geral');
+    FDQProdutos_geral.Open;
+
+
+    JSon  := TJSONObject.Create;
+
+    try
+
+
+      while not FDQProdutos_geral.Eof do
+      begin
+
+        //Append;
+        //'{"id":"'+  FDQProdutos_geral.FieldByName('codigo').AsString +'","name":"'+ FDQProdutos_geral.FieldByName('nome').AsString +'","display":"Y","imagemnavegacao":"Y"}'
+        //AddParameter('boby','{"id":"'+  FDQProdutos_geral.FieldByName('codigo').AsString +'","title":"'+ FDQProdutos_geral.FieldByName('nome').AsString +'"}',trestrequestparameterkind.pkREQUESTBODY);
+
+
+        try
+
+          with RRAddVitrineOneProdutos do
+          begin
+
+            params.Clear;
+            //Json.AddPair('id', FDQProdutos_geral.FieldByName('codigo').AsString);
+            //Json.AddPair('title', FDQProdutos_geral.FieldByName('nome').AsString);
+            //AddParameter('boby',json.ToString,trestrequestparameterkind.pkREQUESTBODY);
+
+            AddParameter('body','{"id":"'+FDQProdutos_geral.FieldByName('codigo').AsString +'","title":"'+ FDQProdutos_geral.FieldByName('nome').AsString +'","minimo_pessoa":1,"user_id":1,"city_id":0,"partner_id":1}',trestrequestparameterkind.pkREQUESTBODY);
+            params[0].ContentType := ctAPPLICATION_JSON;
+
+            Execute;
+
+          end;
+
+
+        except
+
+
+            erro.add('Produto-> '+ '{"id":"'+  FDQProdutos_geral.FieldByName('codigo').AsString +'","title":"'+ FDQProdutos_geral.FieldByName('nome').AsString +'"}');
+
+        end;
+
+
+        //post;
+
+        FDQProdutos_geral.Next;
+      end;
+
+
+
+
+
+
+
+    finally
+      JSon.DisposeOf;
+    end;
+
+
+    erro.SaveToFile(vardir+'log.txt');
+
+
+    erro.DisposeOf;
+
+
+
+
+
+end;
+
+procedure TForm1.Button5Click(Sender: TObject);
+var
+   JsonOBJ:TJSONObject;
+
+   ConfigBase, List:TStringList;
+   vardir, StringConn, usuario, senha, base, server, workstationID, cnpj, nome, baixou:string;
+   icodemp:integer;
+
+
+begin
+
+
+   try
+      FDConn.Connected;
+   except
+     Application.MessageBox('Erro ao conectar base de dados remota','Atenção',mb_ok);
+     exit;
+   end;
+
+   if Application.MessageBox(pchar('Tem certeza que deseja criar arquivo json?'),pchar('Verifique o nome do cliente antes de transferir'),mb_yesno) <> 6 then
+   begin
+      Application.MessageBox('Operação cancelada pelo usuário','Atenção',mb_ok);
+      exit;
+   end;
+
+    memo1.lines.Clear;
+
+
+
+    //Base Local
+    FDQmarca_geral.Close;
+    FDQmarca_geral.sql.Clear;
+    FDQmarca_geral.sql.add('select * from marca_geral');
+    FDQmarca_geral.Open;
+
+
+    while not FDQmarca_geral.Eof do
+    begin
+
+      //Append;
+
+
+      try
+        JSonOBJ := TJSONObject.Create;
+        JSonOBJ.AddPair('codigo', FDQmarca_geral.FieldByName('codigo').AsString);
+        JSonOBJ.AddPair('nome',FDQmarca_geral.FieldByName('nome').AsString);
+
+        //Adicinando pair no memo
+        memo1.lines.add(JSonOBJ.ToString);
+
+        //Criando dados numéricos
+        //JSonOBJ.AddPair('valor1',TJSONNumber.Create(40));
+        //JSonOBJ.AddPair('valor2',TJSONNumber.Create(85.1));
+
+      finally
+        JsonOBJ.DisposeOf;
+      end;
+
+      //Consumindo API inserindo category
+      //with RRAddVitrineOneCategory do
+      //begin
+
+      //  params.Clear;
+
+     //   AddParameter('boby','{"id":"'+  FDQmarca_geral.FieldByName('codigo').AsString +'","name":"'+ FDQmarca_geral.FieldByName('nome').AsString +'","display":"Y","imagemnavegacao":"Y"}',trestrequestparameterkind.pkREQUESTBODY);
+     //   params[0].ContentType := ctAPPLICATION_JSON;
+
+
+      //  Execute;
+
+      //end;
+
+      //post;
+
+      FDQmarca_geral.Next;
+    end;
+
+
+end;
+
+procedure TForm1.Button7Click(Sender: TObject);
+var
+   JSonObjectPed, JSonObjectItem:TJSONObject;
+   JSonArrayPed, JSonArrayAllPed:TJsonArray;
+   x,y:integer;
+
+begin
+
+   memo1.lines.Clear;
+
+
+   try
+     //Criando Array todos os pedidos : Envio de vários pedidos numa única array
+     JsonArrayAllPed := TJsonArray.Create;
+
+
+     for x := 1 to 2 do
+     begin
+
+
+
+         JSonObjectPed := TJSONObject.Create;
+         JSonObjectPed.AddPair('pedido',formatfloat('0000000000',x));
+         JSonObjectPed.AddPair('cliente','XKZ ZYB Zeta Lambida');
+         JSonObjectPed.AddPair('total',TJSONNumber.Create(300.90));
+         JsonObjectPed.AddPair('pendente',TJSONBool.Create(false));
+
+         //Criando Elemento
+         JsonArrayPed := TJsonArray.Create;
+
+         for y := 1 to 2 do
+         begin
+
+
+           //Objeto Item
+           JSonObjectItem := TJSonObject.Create;
+           JSonObjectItem.AddPair('Produto',formatfloat('00000',y));
+           JSonObjectItem.AddPair('descricao','Produto '+y.ToString);
+           JSonObjectItem.AddPair('qtde',TJsonNumber.Create(5));
+
+           //Incluindo elemento
+           JSonArrayPed.AddElement(JSonObjectItem);
+
+         end;
+
+
+         //Incluindo Array
+         JSonObjectPed.AddPair('itens',JSonArrayPed);
+
+
+         //Incluindo pedido
+         JSonArrayAllPed.AddElement(JSonObjectPed);
+
+
+     end;
+
+
+     memo1.lines.add(JsonArrayAllPed.ToString);
+
+
+   finally
+     JsonArrayAllPed.DisposeOf;
+
+   end;
+
+
+end;
+
+procedure TForm1.Button8Click(Sender: TObject);
+var ArrayAllPed, ArrayItens:TJSONArray;
+    json:String;
+    x,j:integer;
+begin
+  //Simulando consumo API
+  json := Memo1.lines.Text;
+
+  //Desmontando JSON em uma Array  ou seja populando array de pedido
+  ArrayAllPed := TJSONObject.ParseJSONValue(TEncoding.UTF8.getbytes(json),0 ) as TJSONArray;
+
+
+  for x := 0 to ArrayAllPed.size - 1 do
+  begin
+
+    //Lendo elemento da array
+    memo1.lines.add(  'Pedido: '+ArrayAllPed.get(x).GetValue<integer>('pedido',0).ToString );
+    memo1.lines.add(  'Cliente: '+ArrayAllPed.get(x).GetValue<string>('cliente','') );
+    memo1.lines.add(  'total: '+ArrayAllPed.get(x).GetValue<double>('total',0).ToString );
+
+
+    //Populando array Itens
+    ArrayItens :=  ArrayAllPed.Get(x).GetValue<TJSonArray>('itens');
+
+    for j := 0 to ArrayItens.size - 1  do
+    begin
+      memo1.lines.add(  'Produto: '+ArrayItens.get(j).GetValue<Integer>('Produto', 0).ToString );
+      memo1.lines.add(  'Descrição: '+Arrayitens.get(j).GetValue<string>('descricao', ''));
+      memo1.lines.add(  'Quantidade: '+Arrayitens.get(j).getvalue<double>('qtde',0).ToString );
+    end;
+
+
+
+  end;
+
+  ArrayAllPed.DisposeOf;
+
+
+end;
+
+procedure TForm1.Button9Click(Sender: TObject);
+var
+  HTTP: TIdHTTP;
+  vJsonAEnviar: TStringStream;
+  sresponse:string;
+begin
+  HTTP:= TIdHTTP.Create;
+  HTTP.Request.UserAgent := 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:12.0) Gecko/20100101 Firefox/12.0';
+  HTTP.Request.ContentType := 'application/json';
+
+  //sresponse := HTTP.Get('http://45.35.6.18:9000/category/list' );  //\api\dados={json}
+  sresponse := HTTP.Get('http://localhost:9000/category/list' );  //\api\dados={json}
+
+  //ou
+
+  //vJsonAEnviar := TStringStream.Create(UTF8Encode('{"id":14,  "name":"MATERIAL ESSENCIAL"}'));
+  //sresponse :=  HTTP.Post('http://45.35.6.18:9000/category/insert', vJsonAEnviar);
+
+  showmessage(sresponse);
+  FreeAndNil(HTTP);
+  FreeAndNil(vJsonAEnviar);
+end;
+
+
+  Initialization
+  //showmessage('Inicializando...');
+
+  //IdOpenSSLSetLibPath(ExtractFilePath(Application.ExeName));
+
+
+
+end.
+
+
+//Validador JSON
+//https://jsonlint.com/
+
+//API
+//https://openweathermap.org/api
+
+//https://www.devmedia.com.br/forum/ler-um-arquivo-txt-delphi/603591
+//https://delphiforall.wordpress.com/2008/08/28/importar-um-arquivo-delimitado-de-forma-pratica/
+//https://www.devmedia.com.br/delphi-stringreplace-como-utilizar-a-funcao-stringreplace-no-delphi/13222
+//http://www.planetadelphi.com.br/dica/7366/-limpar-dados-memoria-clientdataset-
+//https://life4sec.com.br/entry/477-descubra-50-c%C3%B3digos-secretos-para-testar-no-android/
+
+//comando básico  initialization
+//http://www.delphibasics.co.uk/RTL.asp?Name=Unit&ExpandCode1=Yes
+//https://vinicius-sanchez.medium.com/delphi-anatomia-de-uma-unit-4131e771ba27
+//https://titanwolf.org/Network/Articles/Article?AID=ba07c2e5-a84d-4f15-be54-bf535ab63cf6
+
+
+
+//JavaScript Object Notation (JSON)
+//https://www.youtube.com/watch?v=_975rlVSXJI
+
+{
+
+    //Produtos SICNET
+    ADOProdutos.Open;
+
+    //Produtos Remoto
+    FDQProdutos.Close;
+    FDQProdutos.sql.Clear;
+    FDQProdutos.sql.add('select * from produtos where cemp = '+icodemp.ToString);
+    FDQProdutos.Open;
+
+    //Apaga produtos remoto
+    FDQProdutos.EmptyDataSet;
+
+    while not ADOProdutos.Eof do
+    begin
+
+      FDQProdutos.Append;
+      FDQProdutos.post;
+
+      ADOProdutos.Next;
+    end;
+
+
+
+
+    https://makandracards.com/makandra/5899-how-to-fix-a-corrupt-git-index
+
+    How to fix a corrupt git index
+    If your git index for some reason becomes invalid, no need to worry.
+
+    Your index is corrupt when you see this error running usual git commands like git pull, git status, etc.:
+
+    error: bad index file sha1 signature
+    fatal: index file corrupt
+    Though it sounds bad, your changes are still there. Fix it by first removing the index file, then resetting the branch:
+
+    rm .git/index
+    git reset
+    You should be all good now.
+
+    To be safe, make a backup of .git/index before you delete it.
+
+
+
+
+
+
+}
+
+ //Sintexe básica do JSON
+ //{} = Objeto
+ //[] =  array
+// : = Separa chave : valor
+// , = sepera conjunto de chave e valor
+
+//Exemplo:
+
+//  {
+//  "nome":"Marcos",
+//  "idade":48,
+//  "peso":78.7,
+//  "ativo": true,
+//  "cliente":false,
+//  "credito":null
+//  }
+
+//Vários Objetos JSON sempre dentro [] array
+//[
+//     {"nome":"Marcos", "idade":48, "peso":78.7},
+//     {"nome":"Mauro", "idade":41, "peso":85.7}
+//]
+
+
+//JSON mestre detalhe
+//   [
+//
+//              {
+//                     "pedido":1000,
+//                     "cliente":"99 Coders",
+//                     "total": 500.25,
+//                     "itens": [
+//                                   {"produto":"XYZ123", "descricao":"Produto XYZ", "qtde":2},
+//                                   {"produto":"ZYB321", "descricao":"Produto ZYB", "qtde":5}
+//                              ]
+//               },
+//
+
+
+//              {
+//                     "pedido":2000,
+//                     "cliente":"Beta Max",
+//                     "total": 1700.35,
+//                     "itens": [
+//                                   {"produto":"XYZ123", "descricao":"Produto XYZ", "qtde":2},
+//                                   {"produto":"ZYB321", "descricao":"Produto ZYB", "qtde":5}
+//                              ]
+//               }
+//
+//     ]
+//
+
+
+
+
+//Outros exemplos JSON
+// https://openweathermap.org/current
+//{
+//  "coord": {
+//    "lon": -122.08,
+//    "lat": 37.39
+//  },
+//  "weather": [
+//    {
+//      "id": 800,
+//      "main": "Clear",
+//      "description": "clear sky",
+//      "icon": "01d"
+//    }
+//  ],
+//  "base": "stations",
+//  "main": {
+//    "temp": 282.55,
+//    "feels_like": 281.86,
+//    "temp_min": 280.37,
+//    "temp_max": 284.26,
+//    "pressure": 1023,
+//    "humidity": 100
+//  },
+//  "visibility": 16093,
+//  "wind": {
+//    "speed": 1.5,
+//    "deg": 350
+//  },
+//  "clouds": {
+//    "all": 1
+//  },
+//  "dt": 1560350645,
+//  "sys": {
+//    "type": 1,
+//    "id": 5122,
+//    "message": 0.0139,
+//    "country": "US",
+//    "sunrise": 1560343627,
+//    "sunset": 1560396563
+//  },
+//  "timezone": -25200,
+//  "id": 420006353,
+//  "name": "Mountain View",
+//  "cod": 200
+//  }
+
+//[OFF] Super Promoção
+//Curso ChatBot com Interação
+//Fala Galera, estamos com uma super promoção 30% desconto utilizando o cupom DevWAPP
+//na aquisição do curso... não fique de fora..
+//https://www.youtube.com/watch?v=wG8FlqK-XEo&t=158s&ab_channel=Napole%C3%A3oNeto
+//https://sun.eduzz.com/969171?cupom=DevWAPP
+
+//Consumindo API Game
+//https://www.youtube.com/watch?v=Obzc3uQFdqQ&t=9s
+
+//Horse
+//https://www.youtube.com/watch?v=l5JpHzxGGE8
+
+//Consumindo API Indy
+//https://www.youtube.com/watch?v=bDP7BUG7S-o
+
+//Código simples
+//https://codigosimples.net/2021/05/26/happy-hour-com-dados-17-azure-vs-aws-vs-gcp/

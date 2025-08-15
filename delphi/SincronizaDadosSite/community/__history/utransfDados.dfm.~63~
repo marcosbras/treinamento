@@ -1,0 +1,538 @@
+object Form1: TForm1
+  Left = 0
+  Top = 0
+  Caption = 'Form1'
+  ClientHeight = 727
+  ClientWidth = 1065
+  Color = clBtnFace
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -11
+  Font.Name = 'Tahoma'
+  Font.Style = []
+  OldCreateOrder = False
+  PixelsPerInch = 96
+  TextHeight = 13
+  object lblhost: TLabel
+    Left = 16
+    Top = 373
+    Width = 26
+    Height = 13
+    Caption = 'Host:'
+  end
+  object lblnome: TLabel
+    Left = 16
+    Top = 402
+    Width = 31
+    Height = 13
+    Caption = 'Nome:'
+  end
+  object lblsenha: TLabel
+    Left = 16
+    Top = 431
+    Width = 34
+    Height = 13
+    Caption = 'Senha:'
+  end
+  object Shape_Conectado: TShape
+    Left = 360
+    Top = 486
+    Width = 41
+    Height = 25
+    Shape = stCircle
+  end
+  object Label4: TLabel
+    Left = 16
+    Top = 536
+    Width = 11
+    Height = 13
+    Caption = 'ID'
+  end
+  object Label5: TLabel
+    Left = 19
+    Top = 563
+    Width = 72
+    Height = 13
+    Caption = 'Nome Produto:'
+  end
+  object Label6: TLabel
+    Left = 16
+    Top = 589
+    Width = 80
+    Height = 13
+    Caption = 'Nome Resumido:'
+  end
+  object Label1: TLabel
+    Left = 16
+    Top = 617
+    Width = 47
+    Height = 13
+    Caption = 'ID Grupo:'
+  end
+  object Label2: TLabel
+    Left = 19
+    Top = 454
+    Width = 107
+    Height = 13
+    Caption = 'Em qual pasta gravar?'
+  end
+  object Button1: TButton
+    Left = 16
+    Top = 149
+    Width = 281
+    Height = 25
+    Caption = 'Somente Gerar SICNET Arquivo Texto na pasta local'
+    TabOrder = 1
+    OnClick = Button1Click
+  end
+  object Button2: TButton
+    Left = 16
+    Top = 178
+    Width = 281
+    Height = 25
+    Caption = 'Somente Ler SICNET Arquivo Texto gerado'
+    TabOrder = 2
+    OnClick = Button2Click
+  end
+  object Button3: TButton
+    Left = 16
+    Top = 8
+    Width = 281
+    Height = 25
+    Caption = 'Transferir dados SICNET para base de dados remota'
+    TabOrder = 0
+    OnClick = Button3Click
+  end
+  object Button4: TButton
+    Left = 16
+    Top = 39
+    Width = 281
+    Height = 25
+    Caption = 'Transferir dados Vitrine VIPCom'
+    TabOrder = 3
+    OnClick = Button4Click
+  end
+  object Button5: TButton
+    Left = 16
+    Top = 222
+    Width = 281
+    Height = 25
+    Caption = 'Criar JSON'
+    TabOrder = 4
+    OnClick = Button5Click
+  end
+  object Button6: TButton
+    Left = 16
+    Top = 253
+    Width = 281
+    Height = 25
+    Caption = 'Ler JSON'
+    TabOrder = 5
+  end
+  object Memo1: TMemo
+    Left = 303
+    Top = 8
+    Width = 489
+    Height = 353
+    Lines.Strings = (
+      'Memo1')
+    TabOrder = 6
+  end
+  object Button7: TButton
+    Left = 16
+    Top = 299
+    Width = 281
+    Height = 25
+    Caption = 'Criar Pedido JSON'
+    TabOrder = 7
+    OnClick = Button7Click
+  end
+  object Button8: TButton
+    Left = 16
+    Top = 330
+    Width = 281
+    Height = 25
+    Caption = 'Ler Pedido JSON'
+    TabOrder = 8
+    OnClick = Button8Click
+  end
+  object Button9: TButton
+    Left = 16
+    Top = 70
+    Width = 281
+    Height = 25
+    Caption = 'Transferir dados Vitrine VIPCOM INDY Components'
+    TabOrder = 9
+    OnClick = Button9Click
+  end
+  object Button10: TButton
+    Left = 16
+    Top = 101
+    Width = 281
+    Height = 25
+    Caption = 'Button10'
+    TabOrder = 10
+    OnClick = Button10Click
+  end
+  object EdtHost: TEdit
+    Left = 132
+    Top = 370
+    Width = 269
+    Height = 21
+    TabOrder = 11
+    Text = 'ftp.uhserver.com'
+  end
+  object EdtNome: TEdit
+    Left = 132
+    Top = 397
+    Width = 269
+    Height = 21
+    TabOrder = 12
+    Text = 'novalouza2'
+  end
+  object EdtSenha: TEdit
+    Left = 132
+    Top = 424
+    Width = 269
+    Height = 21
+    PasswordChar = '*'
+    TabOrder = 13
+    Text = 'Bios@449'
+  end
+  object Btn_Conectar: TButton
+    Left = 8
+    Top = 486
+    Width = 346
+    Height = 25
+    Caption = 'CONECTAR'
+    TabOrder = 14
+    OnClick = Btn_ConectarClick
+  end
+  object EdtID: TEdit
+    Left = 132
+    Top = 533
+    Width = 261
+    Height = 21
+    TabOrder = 15
+    Text = 'EdtID'
+  end
+  object EdtNomeProd: TEdit
+    Left = 132
+    Top = 560
+    Width = 261
+    Height = 21
+    TabOrder = 16
+    Text = 'EdtNomeProd'
+  end
+  object EdtNomeRes: TEdit
+    Left = 132
+    Top = 587
+    Width = 261
+    Height = 21
+    TabOrder = 17
+    Text = 'EdtNomeRes'
+  end
+  object Btn_UpLoad: TButton
+    Left = 8
+    Top = 643
+    Width = 385
+    Height = 25
+    Caption = 'UPLOAD FOTO'
+    TabOrder = 18
+    OnClick = Btn_UpLoadClick
+  end
+  object Btn_Desconectar: TButton
+    Left = 8
+    Top = 669
+    Width = 385
+    Height = 25
+    Caption = 'DESCONECTAR'
+    TabOrder = 19
+    OnClick = Btn_DesconectarClick
+  end
+  object Edit1: TEdit
+    Left = 132
+    Top = 614
+    Width = 261
+    Height = 21
+    TabOrder = 20
+    Text = 'EdtGrupo'
+  end
+  object Edit3: TEdit
+    Left = 132
+    Top = 451
+    Width = 261
+    Height = 21
+    TabOrder = 21
+    Text = '/novalouzada.com.br/web/media/team/2021/1201/'
+  end
+  object Button11: TButton
+    Left = 416
+    Top = 367
+    Width = 376
+    Height = 25
+    Caption = 'Nova Categoria'
+    TabOrder = 22
+    OnClick = Button11Click
+  end
+  object Button12: TButton
+    Left = 416
+    Top = 398
+    Width = 376
+    Height = 25
+    Caption = 'Novo Produto'
+    TabOrder = 23
+  end
+  object Button13: TButton
+    Left = 416
+    Top = 429
+    Width = 376
+    Height = 25
+    Caption = 'Incluir diversos produtos da base intermedi'#225'ria'
+    TabOrder = 24
+  end
+  object ADOConn: TADOConnection
+    ConnectionString = 
+      'Provider=SQLOLEDB.1;Integrated Security=SSPI;Persist Security In' +
+      'fo=False;Initial Catalog=SICNET;Data Source=DESKTOP-I5\SQLEXPRES' +
+      'S;Use Procedure for Prepare=1;Auto Translate=True;Packet Size=40' +
+      '96;Workstation ID=CASA;Use Encryption for Data=False;Tag with co' +
+      'lumn collation when possible=False;'
+    LoginPrompt = False
+    Provider = 'SQLOLEDB.1'
+    Left = 336
+    Top = 541
+  end
+  object ADOProdutos: TADOQuery
+    Connection = ADOConn
+    CursorType = ctStatic
+    Parameters = <>
+    SQL.Strings = (
+      'Select * from dbo.TABEST1')
+    Left = 680
+    Top = 512
+  end
+  object ADOClientes: TADOQuery
+    Connection = ADOConn
+    CursorType = ctStatic
+    Parameters = <>
+    SQL.Strings = (
+      'Select * from dbo.TABCLI')
+    Left = 544
+    Top = 512
+  end
+  object ADOFornec: TADOQuery
+    Connection = ADOConn
+    CursorType = ctStatic
+    Parameters = <>
+    SQL.Strings = (
+      'Select * from dbo.TABFOR'
+      '')
+    Left = 608
+    Top = 512
+  end
+  object ADOGrupos: TADOQuery
+    Connection = ADOConn
+    CursorType = ctStatic
+    Parameters = <>
+    SQL.Strings = (
+      'Select * from dbo.TABEST8')
+    Left = 392
+    Top = 512
+  end
+  object ADOVendedores: TADOQuery
+    Connection = ADOConn
+    CursorType = ctStatic
+    Parameters = <>
+    SQL.Strings = (
+      'Select * from dbo.TABVEND')
+    Left = 464
+    Top = 512
+  end
+  object ADOConfigIni: TADOQuery
+    Connection = ADOConn
+    CursorType = ctStatic
+    Parameters = <>
+    SQL.Strings = (
+      'select * from TABSICINI where IDENT='#39'CNPJ'#39)
+    Left = 760
+    Top = 512
+  end
+  object FDConn: TFDConnection
+    Params.Strings = (
+      'Database=transferdados'
+      'Server=transferdados.mysql.uhserver.com'
+      'User_Name=construtor'
+      'Password=1!P@SSword'
+      'DriverID=MySQL')
+    LoginPrompt = False
+    Left = 328
+    Top = 392
+  end
+  object FDQGrupos: TFDQuery
+    Connection = FDConn
+    Left = 392
+    Top = 392
+  end
+  object FDQVendedores: TFDQuery
+    Connection = FDConn
+    Left = 472
+    Top = 392
+  end
+  object FDQClientes: TFDQuery
+    Connection = FDConn
+    Left = 552
+    Top = 392
+  end
+  object FDQFornec: TFDQuery
+    Connection = FDConn
+    Left = 616
+    Top = 392
+  end
+  object FDQProdutos: TFDQuery
+    Connection = FDConn
+    Left = 688
+    Top = 392
+  end
+  object FDQEmpresas: TFDQuery
+    Connection = FDConn
+    Left = 760
+    Top = 392
+  end
+  object FDPhysMySQLDriverLink1: TFDPhysMySQLDriverLink
+    VendorLib = 
+      'C:\Users\I5\Documents\Embarcadero\Studio\Projects\wagner\Transf_' +
+      'BaseDeDados\community\Win32\Debug\libmysql.dll'
+    Left = 888
+    Top = 232
+  end
+  object RCVitrineOne: TRESTClient
+    Accept = 'application/json, text/plain; q=0.9, text/html;q=0.8,'
+    AcceptCharset = 'utf-8, *;q=0.8'
+    BaseURL = 'http://localhost:9000'
+    ContentType = 'application/json'
+    Params = <>
+    Left = 928
+    Top = 88
+  end
+  object RRAddVitrineOneCategory: TRESTRequest
+    AssignedValues = [rvConnectTimeout, rvReadTimeout]
+    Client = RCVitrineOne
+    Method = rmPOST
+    Params = <
+      item
+        Kind = pkREQUESTBODY
+        Name = 'body36139AFD3C46494287131D3A89D3742D'
+        Value = '{"name":"Teste9","display":"Y","imagemnavegacao":"Y"}'
+        ContentType = ctAPPLICATION_JSON
+      end>
+    Resource = 'category/insert'
+    Response = RESTResponse
+    Left = 808
+    Top = 160
+  end
+  object RESTResponse: TRESTResponse
+    Left = 800
+    Top = 232
+  end
+  object FDQProdutos_geral: TFDQuery
+    Connection = FDConn
+    Left = 392
+    Top = 448
+  end
+  object FDQGrupo_geral: TFDQuery
+    Connection = FDConn
+    Left = 496
+    Top = 448
+  end
+  object RESTRequest1: TRESTRequest
+    AssignedValues = [rvConnectTimeout, rvReadTimeout]
+    Client = RCVitrineOne
+    Method = rmPOST
+    Params = <
+      item
+        Kind = pkREQUESTBODY
+        Name = 'body'
+        Value = '{"name":"Teste11","display":"Y","imagemnavegacao":"Y"}'
+        ContentType = ctAPPLICATION_JSON
+      end>
+    Resource = 'category/insert'
+    Response = RESTResponse
+    Left = 928
+    Top = 152
+  end
+  object FDQMarca_geral: TFDQuery
+    Connection = FDConn
+    Left = 592
+    Top = 448
+  end
+  object RRAddVitrineOneProdutos: TRESTRequest
+    AssignedValues = [rvConnectTimeout, rvReadTimeout]
+    Client = RCVitrineOne
+    Method = rmPOST
+    Params = <
+      item
+        Kind = pkREQUESTBODY
+        Name = 'body36139AFD3C46494287131D3A89D3742D'
+        Value = '{"name":"Teste9","display":"Y","imagemnavegacao":"Y"}'
+        ContentType = ctAPPLICATION_JSON
+      end>
+    Resource = 'produtos/insert'
+    Response = RESTResponse
+    Left = 816
+    Top = 96
+  end
+  object IdHTTP: TIdHTTP
+    ProxyParams.BasicAuthentication = False
+    ProxyParams.ProxyPort = 0
+    Request.ContentLength = -1
+    Request.ContentRangeEnd = -1
+    Request.ContentRangeStart = -1
+    Request.ContentRangeInstanceLength = -1
+    Request.Accept = 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8'
+    Request.BasicAuthentication = False
+    Request.UserAgent = 'Mozilla/3.0 (compatible; Indy Library)'
+    Request.Ranges.Units = 'bytes'
+    Request.Ranges = <>
+    HTTPOptions = [hoForceEncodeParams]
+    Left = 816
+    Top = 24
+  end
+  object IdSSLIOHandlerSocketOpenSSL: TIdSSLIOHandlerSocketOpenSSL
+    Destination = 'ftp.uhserver.com:21'
+    Host = 'ftp.uhserver.com'
+    MaxLineAction = maException
+    Port = 21
+    DefaultPort = 0
+    ReadTimeout = 60000
+    SSLOptions.Method = sslvTLSv1_2
+    SSLOptions.SSLVersions = [sslvTLSv1_2]
+    SSLOptions.Mode = sslmUnassigned
+    SSLOptions.VerifyMode = []
+    SSLOptions.VerifyDepth = 0
+    Left = 936
+    Top = 24
+  end
+  object IdFTP1: TIdFTP
+    IOHandler = IdSSLIOHandlerSocketOpenSSL
+    Host = 'ftp.uhserver.com'
+    Passive = True
+    DataPortProtection = ftpdpsPrivate
+    ConnectTimeout = 0
+    Password = 'Bios@449'
+    TransferType = ftBinary
+    Username = 'novalouza2'
+    NATKeepAlive.UseKeepAlive = False
+    NATKeepAlive.IdleTimeMS = 0
+    NATKeepAlive.IntervalMS = 0
+    ProxySettings.ProxyType = fpcmNone
+    ProxySettings.Port = 0
+    UseTLS = utUseExplicitTLS
+    Left = 608
+    Top = 584
+  end
+  object OpenDialog1: TOpenDialog
+    Left = 672
+    Top = 584
+  end
+end

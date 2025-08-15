@@ -1,0 +1,23 @@
+program ptransferencia;
+
+uses
+  Vcl.Forms,
+  utransfDados in 'utransfDados.pas' {Form1},
+  uCategoria in 'uCategoria.pas' {FCategoria};
+
+{$R *.res}
+
+begin
+
+  ReportMemoryLeaksOnShutdown := true;
+  Application.Initialize;
+  Application.MainFormOnTaskbar := True;
+  Application.CreateForm(TForm1, Form1);
+  Application.CreateForm(TFCategoria, FCategoria);
+  Application.Run;
+
+
+
+end.
+
+

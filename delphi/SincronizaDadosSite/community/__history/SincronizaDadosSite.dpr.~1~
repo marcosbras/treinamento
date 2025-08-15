@@ -1,0 +1,18 @@
+program SincronizaDadosSite;
+uses
+  Vcl.Forms,
+  utransfDados in 'utransfDados.pas' {Form1},
+  uProdutos in 'uProdutos.pas' {FProdutos},
+  uCategoria in 'uCategoria.pas' {FCategoria};
+
+{$R *.res}
+begin
+  ReportMemoryLeaksOnShutdown := true;
+  Application.Initialize;
+  Application.MainFormOnTaskbar := True;
+  Application.CreateForm(TFProdutos, FProdutos);
+  Application.Run;
+
+
+end.
+

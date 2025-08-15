@@ -1,0 +1,1166 @@
+unit uProdutos;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, Vcl.ExtCtrls,
+  FireDAC.Stan.Intf, FireDAC.Stan.Option, FireDAC.Stan.Error, FireDAC.UI.Intf,
+  FireDAC.Phys.Intf, FireDAC.Stan.Def, FireDAC.Stan.Pool, FireDAC.Stan.Async,
+  FireDAC.Phys, FireDAC.Phys.MySQL, FireDAC.Phys.MySQLDef, FireDAC.VCLUI.Wait,
+  FireDAC.DatS, FireDAC.DApt.Intf, FireDAC.DApt, FireDAC.Comp.Client, Data.DB,
+  FireDAC.Stan.Param, FireDAC.Comp.DataSet, Vcl.Imaging.jpeg, IdBaseComponent,
+  IdComponent, IdIOHandler, IdIOHandlerSocket, IdIOHandlerStack, IdSSL,
+  IdSSLOpenSSL, IdTCPConnection, IdTCPClient, IdExplicitTLSClientServerBase,
+  IdFTP, IdHTTP, System.JSON;
+
+type
+  TFProdutos = class(TForm)
+    edtzone: TEdit;
+    edtczone: TEdit;
+    edtname: TEdit;
+    edttipo: TEdit;
+    edtename: TEdit;
+    edtletter: TEdit;
+    edtlink: TEdit;
+    edtimagemnavegacao: TEdit;
+    edtimagemcateg: TEdit;
+    edtsort_order: TEdit;
+    edtdisplay: TEdit;
+    edtbannercategoria: TEdit;
+    edtlinkexterno: TEdit;
+    edttarget: TEdit;
+    edtidpai: TEdit;
+    edtbannernavegacao: TEdit;
+    edtmostrartopo: TEdit;
+    edtseo_cat_key: TEdit;
+    edtseo_cat_descricao: TEdit;
+    edtseo_cat_title: TEdit;
+    edtenviarfoto: TEdit;
+    Label1: TLabel;
+    Label2: TLabel;
+    Label3: TLabel;
+    Label4: TLabel;
+    Label5: TLabel;
+    Label6: TLabel;
+    Label7: TLabel;
+    Label8: TLabel;
+    Label9: TLabel;
+    Label10: TLabel;
+    Label11: TLabel;
+    Label12: TLabel;
+    Label13: TLabel;
+    Label14: TLabel;
+    Label15: TLabel;
+    Label16: TLabel;
+    Label17: TLabel;
+    Label18: TLabel;
+    Label19: TLabel;
+    Label20: TLabel;
+    Label21: TLabel;
+    edtorigemfoto: TEdit;
+    Label22: TLabel;
+    Button1: TButton;
+    Button2: TButton;
+    Image1: TImage;
+    Button3: TButton;
+    Button4: TButton;
+    Button5: TButton;
+    FDConn: TFDConnection;
+    FDQuery: TFDQuery;
+    AbreFoto: TOpenDialog;
+    Button6: TButton;
+    Shape_Conectado: TShape;
+    Memo1: TMemo;
+    IdSSLIOHandlerSocketOpenSSL1: TIdSSLIOHandlerSocketOpenSSL;
+    IdFTP1: TIdFTP;
+    edtdirdest: TEdit;
+    Label23: TLabel;
+    edtiderp: TEdit;
+    Label24: TLabel;
+    edtserver: TEdit;
+    Label25: TLabel;
+    Button7: TButton;
+    edtbasebdlocal: TEdit;
+    Label26: TLabel;
+    FDPhysMySQLDriverLink: TFDPhysMySQLDriverLink;
+    procedure Button5Click(Sender: TObject);
+    procedure FormCreate(Sender: TObject);
+    procedure Button1Click(Sender: TObject);
+    procedure Button3Click(Sender: TObject);
+    procedure Button4Click(Sender: TObject);
+    procedure Button6Click(Sender: TObject);
+    procedure Button7Click(Sender: TObject);
+    procedure FDConnBeforeConnect(Sender: TObject);
+
+  private
+    procedure clearMemory;
+    procedure enviarFotoFTP(origemFoto,diretorioDestino:string; pre_complemento:string = ''; pos_complemento:string = '');
+    function desmontaNomeArquivo(nomeArquivo: string; pre_coomplemento:string = ''; pos_complemento:string = ''):string;
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+var
+  FProdutos: TFProdutos;
+
+
+implementation
+
+{$R *.dfm}
+
+procedure TFProdutos.Button1Click(Sender: TObject);
+begin
+  try
+    FDConn.Connected := true;
+  except on e:exception do
+
+    showmessage(e.Message);
+
+
+  end;
+
+  FDQuery.close;
+  FDQuery.sql.Clear;
+  FDQuery.sql.add('insert into category(zone,            czone,       name,              tipo,            ename,         	letter,      link,        imagemnavegacao,    ');
+  FDQuery.sql.add('                     imagemcateg,     sort_order,  display,           bannercategoria, linkexterno,    target,      idpai,       bannernavegacao,    ');
+  FDQuery.sql.add('                     mostrartopo,     seo_cat_key, seo_cat_descricao, seo_cat_title,   enviarfoto,     origemfoto,  dirdest,     iderp  )  ');
+
+  FDQuery.sql.add('            values  (:zone,            :czone,       :name,              :tipo,            :ename,         	:letter,      :link,        :imagemnavegacao,      ');
+  FDQuery.sql.add('                     :imagemcateg,     :sort_order,  :display,           :bannercategoria, :linkexterno,     :target,      :idpai,       :bannernavegacao,      ');
+  FDQuery.sql.add('                     :mostrartopo,     :seo_cat_key, :seo_cat_descricao, :seo_cat_title,   :enviarfoto,      :origemfoto,  :dirdest,     :iderp)');
+
+  FDQuery.Params.ParamByName('zone').AsString :=   edtzone.text;
+	FDQuery.Params.ParamByName('czone').AsString :=	 edtczone.Text;
+	FDQuery.Params.ParamByName('name').AsString :=	 edtname.Text;
+	FDQuery.Params.ParamByName('tipo').AsString :=	 edttipo.Text;
+	FDQuery.Params.ParamByName('ename').AsString :=	 edtename.Text;
+	FDQuery.Params.ParamByName('letter').AsString :=	 edtletter.Text;
+	FDQuery.Params.ParamByName('link').AsString :=	 edtlink.Text;
+	FDQuery.Params.ParamByName('imagemnavegacao').AsString :=	 edtimagemnavegacao.Text;
+	FDQuery.Params.ParamByName('imagemcateg').AsString :=	 edtimagemcateg.Text;
+	FDQuery.Params.ParamByName('sort_order').AsString :=	 edtsort_order.Text;
+	FDQuery.Params.ParamByName('display').AsString :=	 edtdisplay.Text;
+	FDQuery.Params.ParamByName('bannercategoria').AsString :=	 edtbannercategoria.Text;
+	FDQuery.Params.ParamByName('linkexterno').AsString :=	 edtlinkexterno.text;
+	FDQuery.Params.ParamByName('target').AsString :=	 edttarget.text;
+
+	FDQuery.Params.ParamByName('idpai').AsString :=	 edtidpai.Text;
+	FDQuery.Params.ParamByName('bannernavegacao').AsString :=	 edtbannernavegacao.Text;
+	FDQuery.Params.ParamByName('mostrartopo').AsString :=	 edtmostrartopo.Text;
+	FDQuery.Params.ParamByName('seo_cat_key').AsString :=	 edtseo_cat_key.Text;
+	FDQuery.Params.ParamByName('seo_cat_descricao').AsString :=	 edtseo_cat_descricao.Text;
+	FDQuery.Params.ParamByName('seo_cat_title').AsString :=	 edtseo_cat_title.Text;
+  FDQuery.Params.ParamByName('enviarfoto').AsString :=   edtenviarfoto.Text;
+  FDQuery.Params.ParamByName('origemfoto').AsString :=   edtorigemfoto.Text;
+  FDQuery.Params.ParamByName('dirdest').AsString :=   edtdirdest.Text;
+  FDQuery.Params.ParamByName('iderp').AsString :=   edtiderp.Text;
+
+  FDquery.ExecSQL;
+
+
+  FDConn.Connected := false;
+  showmessage('Registro inserido com sucesso!');
+
+end;
+
+procedure TFProdutos.Button3Click(Sender: TObject);
+var
+  Hora, Min, Sec,MSec:Word;
+
+  NomeArquivo, Auxiliar:string;
+
+
+  contador:integer;
+begin
+
+ //Erro ao carregar JPEG
+ //https://www.askingbox.com/question/delphi-loading-jpeg-image-in-timage-does-not-work-exception-einvalidgraphic-unknown-picture-file-extension-jpg
+
+
+  //Foto
+  //http://www.planetadelphi.com.br/dica/6779/incluir-foto
+
+  AbreFoto.DefaultExt := '*.jpg;*.jpeg;*.psd;*.tga*.png;*.gif;*.bmp';
+  AbreFoto.Filter := 'Arquivos de Imagem|*.jpg;*.jpeg;*.psd;*.tga;*.png;*.gif;*.bmp';
+
+  if AbreFoto.Execute then
+  begin
+
+     Image1.Picture.LoadFromFile( AbreFoto.FileName  );
+     //edtimagemcateg.Text := 'categoria\/'+formatdatetime('yyyy',date)+'\/'+formatdatetime('mm',date)+formatdatetime('dd',date)  +'\/'+inttostr(Hora)+inttostr(Min)+inttostr(Sec)+inttostr(MSec)+'.jpg';
+
+
+     NomeArquivo := AbreFoto.FileName;
+
+
+     //Extrai nome do arquivo
+     NomeArquivo := AnsiStrRScan(PCHar(NomeArquivo), '\');
+     for contador := 2 To StrLen(PCHar(NomeArquivo)) do
+         Auxiliar := Auxiliar + NomeArquivo [contador];
+
+
+     edtimagemcateg.Text := 'categoria/construtor/'+Auxiliar;
+     edtdirdest.Text := 'categoria/construtor/';
+
+     edtorigemfoto.Text :=  AbreFoto.FileName;
+     edtenviarfoto.Text := 'Y';
+
+
+  end;
+end;
+
+procedure TFProdutos.Button4Click(Sender: TObject);
+begin
+   edtenviarfoto.Text := 'N';
+   edtorigemfoto.Text := '';
+   edtimagemcateg.Text := '';
+   edtdirdest.Text := '';
+   image1.Picture := nil;
+end;
+
+procedure TFProdutos.Button5Click(Sender: TObject);
+var
+  Hora, Min, Sec,MSec:Word;
+begin
+
+    //Como extrair Dia, mês e ano
+    // http://www.planetadelphi.com.br/dica/7289/-extrair-dia,mes,ano-de-uma-data-especifica-
+
+
+    //Como extrair Hora
+    //http://www.planetadelphi.com.br/dica/1094/rotina-para-retornar-a-hora,-minutos,-segundos-e-milisegundos.
+
+    //Verificar
+    //https://www.devmedia.com.br/forum/verificar-se-diretorio-existe/444004
+
+
+    //verifica se firebird está instalado
+    //https://pt.scribd.com/doc/187611861/Como-testar-se-o-firebird-esta-instalado-no-inno-setup-doc
+
+     DecodeTime(Now, Hora, Min, Sec, MSec);
+
+     edtzone.text := '';
+		 edtczone.Text := '';
+		 //edtname.Text := 'Informática';
+		 edttipo.Text := '';
+		 edtename.Text:= '';
+		 edtletter.Text := '';
+		 edtlink.Text := '';
+		 edtimagemnavegacao.Text := 'Y';
+		 //edtimagemcateg.Text := 'categoria\/'+formatdatetime('yyyy',date)+'\/'+formatdatetime('mm',date)+formatdatetime('dd',date)  +'\/'+inttostr(Hora)+inttostr(Min)+inttostr(Sec)+inttostr(MSec)+'.jpg';
+		 edtsort_order.Text :=  '0';
+		 edtdisplay.Text := 'Y';
+		 //edtbannercategoria.Text := '<p><a title=\"Notebooks\" href=\"departamento\/notebooks\/140\"><img title=\"Informática\" src=\"..\/..\/..\/uploads\/images\/informatica.png\" alt=\"Banner Informática\" width=\"1094\" height=\"263\" \/><\/a><\/p>';
+		 edtlinkexterno.text := '';
+		 edttarget.text :=  '';
+		 edtidpai.Text := '0';
+		 //edtbannernavegacao.Text := '<p><a title=\"Notebooks\" href=\"departamento\/acessórios\/131\"><img title=\"Informática\" src=\"..\/..\/..\/uploads\/images\/bm_0107_info_notebook-acer_2.png\" alt=\"Categoria Informática\" width=\"333\" height=\"333\" \/><\/a><\/p>';
+		 edtmostrartopo.Text := 'Y';
+		 edtseo_cat_key.Text := '';
+		 edtseo_cat_descricao.Text := '';
+		 edtseo_cat_title.Text := '';
+     edtenviarfoto.Text := 'N';
+     edtorigemfoto.Text := '';
+     edtdirdest.text := '';
+     edtiderp.Text := '0';
+
+     Image1.Picture := nil;
+
+end;
+
+
+procedure TFProdutos.enviarFotoFTP(origemFoto,diretorioDestino:string; pre_complemento:string = ''; pos_complemento:string = '');
+var
+      LHandler:TIdSSLIOHandlerSocketOpenSSL;
+      IIdSSLMode:Integer;
+
+      m : TStream;
+      f : TStream;
+      t : Cardinal;
+      Nome_Arquivo,
+      Auxiliar :String;
+      contador : Integer;
+
+
+
+begin
+
+
+  try
+    idFTP1.Connect;
+  finally
+
+  if idFTP1.Connected = True Then
+     Shape_Conectado.Brush.Color := clLime;
+
+  Memo1.Lines.Add('Conectado ao endereço: ' + idFTP1.Host);
+  Memo1.Lines.Add('Servidor remoto: ' + idFTP1.SystemDesc);
+  Memo1.Lines.Add('');
+
+
+
+
+  //try
+  //  FileList:= TStrings.Create();
+  //  idFTP1.List(FileList,'',true);
+  //  Memo1.Lines.Add(FileList.Count.ToString);
+  //finally
+  //  FileList.DisposeOf;
+  //end;
+
+
+  //try
+   // idFTP1.ChangeDir('/novalouzada.com.br/web/media/categoria/2022/0104/');
+
+  //except
+    //idFTP1.ChangeDir(diretorioDestino);
+
+  //end;
+
+
+
+  Auxiliar := '';
+  f := nil;
+  m := nil;
+
+  Memo1.Lines.Add('Diretório original: ' + origemFoto);
+
+  Nome_Arquivo :=  origemFoto;
+
+
+  Memo1.Lines.Add ('Operação: troca de diretório local');
+  Memo1.Lines.Add ('Diretório do arquivo: ' + GetCurrentDir);
+  Memo1.Lines.Add ('');
+
+  Nome_Arquivo := AnsiStrRScan(PCHar(Nome_Arquivo), '\');
+  for contador := 2 To StrLen(PCHar(Nome_Arquivo)) do
+      Auxiliar := Auxiliar + Nome_Arquivo [contador];
+
+  Auxiliar :=   desmontanomearquivo(Auxiliar,pre_complemento,pos_complemento);
+
+  Nome_Arquivo := diretorioDestino+Auxiliar;
+
+
+  try
+    Memo1.Lines.Add('Operação: Upload');
+    Memo1.Lines.Add ('Arquivo local: ' + origemFoto);
+    Memo1.Lines.Add ('Gravado como: ' + Nome_Arquivo);
+
+    f := TFileStream.Create(origemFoto,fmOpenRead);
+    m := TMemoryStream.Create;
+    m.CopyFrom(f,f.Size);
+    m.Seek(0,0) ;
+    t := GetTickCount;
+
+
+    idFTP1.Put(m,Nome_Arquivo);
+
+    Memo1.Lines.Add(Format('tempo %d milesegundos',[GetTickCount - t]));
+    Memo1.Lines.Add(Format('Tamanho %d bytes',[m.Size]));
+    Memo1.Lines.Add('');
+
+  finally
+    m.Free;
+    f.Free;
+  end;
+
+
+  SetCurrentDir (diretorioDestino);
+  Memo1.Lines.Add('Operação: troca de diretorio local');
+  Memo1.Lines.Add ('Diretório após a operação: ' + GetCurrentDir);
+  Memo1.Lines.Add ('');
+
+  try
+  idFTP1.Disconnect;
+  finally
+  if idFTP1.Connected = False then
+  Shape_Conectado.Brush.Color := clGray;
+  end;
+
+
+  end;
+
+
+
+
+
+
+
+end;
+
+
+
+
+procedure TFProdutos.Button6Click(Sender: TObject);
+  var
+    Nome_Arquivo, nome, extensao, Auxiliar:string;
+    contador:integer;
+
+begin
+
+  FDQuery.close;
+  FDQuery.sql.Clear;
+  FDQuery.sql.add('select * from team');
+  FDQuery.Open;
+
+  while not FDQuery.Eof do
+  begin
+
+
+     //IdOpenSSLSetLibPath(extractfilepath(paramstr(0)));
+
+
+     if FDQuery.FieldByName('enviarfoto').asString  = 'Y' then
+     begin
+
+        enviarFotoFTP(FDQuery.fieldbyname('origemfoto').AsString ,FDQuery.FieldByName('dirdest').asString,'','_fit');
+
+     end;
+
+
+     if FDQuery.FieldByName('enviarfoto_1').asString  = 'Y' then
+     begin
+
+        enviarFotoFTP(FDQuery.FieldByName('origemfoto_1').asString  ,FDQuery.FieldByName('dirdest').asString, 'f_1');
+
+     end;
+
+
+     if FDQuery.FieldByName('enviarfoto_2').asString  = 'Y' then
+     begin
+
+        enviarFotoFTP(FDQuery.FieldByName('origemfoto_2').asString  ,FDQuery.FieldByName('dirdest').asString, 'f_2');
+
+     end;
+
+
+     if FDQuery.FieldByName('enviarfoto_gal_1').asString  = 'Y' then
+     begin
+
+        enviarFotoFTP(FDQuery.FieldByName('origemfoto_gal_1').asString  ,FDQuery.FieldByName('dirdest').asString, 'f_gal_1');
+
+     end;
+
+
+     if FDQuery.FieldByName('enviarfoto_gal_2').asString  = 'Y' then
+     begin
+
+        enviarFotoFTP(FDQuery.FieldByName('origemfoto_gal_2').asString  ,FDQuery.FieldByName('dirdest').asString, 'f_gal_2');
+
+     end;
+
+
+     if FDQuery.FieldByName('enviarfoto_gal_3').asString  = 'Y' then
+     begin
+
+        enviarFotoFTP(FDQuery.FieldByName('origemfoto_gal_3').asString  ,FDQuery.FieldByName('dirdest').asString, 'f_gal_3');
+
+     end;
+
+
+     if FDQuery.FieldByName('enviarfoto_gal_4').asString  = 'Y' then
+     begin
+
+        enviarFotoFTP(FDQuery.FieldByName('origemfoto_gal_4').asString  ,FDQuery.FieldByName('dirdest').asString, 'f_gal_4');
+
+     end;
+
+
+     if FDQuery.FieldByName('enviarfoto_gal_5').asString  = 'Y' then
+     begin
+
+        enviarFotoFTP(FDQuery.FieldByName('origemfoto_gal_5').asString  ,FDQuery.FieldByName('dirdest').asString, 'f_gal_5');
+
+     end;
+
+
+     if FDQuery.FieldByName('enviarfoto_gal_6').asString  = 'Y' then
+     begin
+
+        enviarFotoFTP(FDQuery.FieldByName('origemfoto_gal_6').asString  ,FDQuery.FieldByName('dirdest').asString, 'f_gal_6');
+
+     end;
+
+
+     if FDQuery.FieldByName('enviarfoto_gal_7').asString  = 'Y' then
+     begin
+
+        enviarFotoFTP(FDQuery.FieldByName('origemfoto_gal_7').asString  ,FDQuery.FieldByName('dirdest').asString, 'f_gal_7');
+
+     end;
+
+
+
+     FDQuery.Next;
+
+  end;
+
+
+
+
+
+
+
+end;
+
+
+
+
+procedure TFProdutos.Button7Click(Sender: TObject);
+var
+
+    HTTP: TIdHTTP;
+    vJsonAEnviar: TStringStream;
+    sresponse:string;
+
+    nome,extensao:string;
+
+    jSonObject:  TJSonObject;
+    jSonArray: TJSonArray;
+    id:string;
+
+
+    Nome_arquivo,Auxiliar:String;
+    Nome_arquivo_1,Auxiliar_1:String;
+    Nome_arquivo_2,Auxiliar_2:String;
+    Nome_arquivo_gal_1,Auxiliar_gal_1:String;
+    Nome_arquivo_gal_2,Auxiliar_gal_2:String;
+    Nome_arquivo_gal_3,Auxiliar_gal_3:String;
+    Nome_arquivo_gal_4,Auxiliar_gal_4:String;
+    Nome_arquivo_gal_5,Auxiliar_gal_5:String;
+    Nome_arquivo_gal_6,Auxiliar_gal_6:String;
+    Nome_arquivo_gal_7,Auxiliar_gal_7:String;
+
+
+    Contador:integer;
+
+
+    imagemsemfoto:string;
+
+begin
+
+  FDConn.Connected := false;
+
+
+  FDConn.Params.add('server='+edtbasebdlocal.Text);
+
+  FDConn.Connected := true;
+
+
+  //Categoria
+
+  FDQuery.close;
+  FDQuery.sql.Clear;
+  FDQuery.sql.add('select * from team');
+  FDQuery.Open;
+
+  JSonArray := TJSonArray.Create;
+
+
+  try
+
+     memo1.lines.add('Preparando envio...');
+
+     imagemsemfoto :=  extractfilepath(application.ExeName)+'\images\semfoto.jpg';
+
+
+      while not FDQuery.Eof do
+      begin
+
+        //Imagem ------------------------------------------------------------
+        Nome_Arquivo :=  FDQuery.fieldbyname('origemfoto').AsString;
+
+        Nome_Arquivo := AnsiStrRScan(PCHar(Nome_Arquivo), '\');
+        for contador := 2 To StrLen(PCHar(Nome_Arquivo)) do
+            Auxiliar := Auxiliar + Nome_Arquivo [contador];
+
+        Nome_Arquivo := FDQuery.FieldByName('caminhocurto').asString+Auxiliar;
+        //--------------------------------------------------------------------
+
+
+        Nome_Arquivo := desmontanomearquivo(Nome_Arquivo);
+
+
+        //Imagem 1------------------------------------------------------------
+        Nome_Arquivo_1 :=  FDQuery.fieldbyname('origemfoto_1').AsString;
+
+        Nome_Arquivo_1 := AnsiStrRScan(PCHar(Nome_Arquivo_1), '\');
+        for contador := 2 To StrLen(PCHar(Nome_Arquivo_1)) do
+            Auxiliar_1 := Auxiliar_1 + Nome_Arquivo_1 [contador];
+
+        Nome_Arquivo_1 := FDQuery.FieldByName('caminhocurto').asString+'f_1'+Auxiliar_1;
+        //--------------------------------------------------------------------
+
+        //Imagem 2------------------------------------------------------------
+        Nome_Arquivo_2 :=  FDQuery.fieldbyname('origemfoto_2').AsString;
+
+        Nome_Arquivo_2 := AnsiStrRScan(PCHar(Nome_Arquivo_2), '\');
+        for contador := 2 To StrLen(PCHar(Nome_Arquivo_2)) do
+            Auxiliar_2 := Auxiliar_2 + Nome_Arquivo_2 [contador];
+
+        Nome_Arquivo_2 := FDQuery.FieldByName('caminhocurto').asString+'f_2'+Auxiliar_2;
+        //--------------------------------------------------------------------
+
+        //gal_image1------------------------------------------------------------
+        Nome_Arquivo_gal_1 :=  FDQuery.fieldbyname('origemfoto_gal_1').AsString;
+
+        Nome_Arquivo_gal_1 := AnsiStrRScan(PCHar(Nome_Arquivo_gal_1), '\');
+        for contador := 2 To StrLen(PCHar(Nome_Arquivo_gal_1)) do
+            Auxiliar_gal_1 := Auxiliar_gal_1 + Nome_Arquivo_gal_1 [contador];
+
+        Nome_Arquivo_gal_1 := FDQuery.FieldByName('caminhocurto').asString+'f_gal_1'+Auxiliar_gal_1;
+        //--------------------------------------------------------------------
+
+        //gal_image2------------------------------------------------------------
+        Nome_Arquivo_gal_2 :=  FDQuery.fieldbyname('origemfoto_gal_2').AsString;
+
+        Nome_Arquivo_gal_2 := AnsiStrRScan(PCHar(Nome_Arquivo_gal_2), '\');
+        for contador := 2 To StrLen(PCHar(Nome_Arquivo_gal_2)) do
+            Auxiliar_gal_2 := Auxiliar_gal_2 + Nome_Arquivo_gal_2 [contador];
+
+        Nome_Arquivo_gal_2 := FDQuery.FieldByName('caminhocurto').asString+'f_gal_2'+Auxiliar_gal_2;
+        //--------------------------------------------------------------------
+
+        //gal_image3------------------------------------------------------------
+        Nome_Arquivo_gal_3 :=  FDQuery.fieldbyname('origemfoto_gal_3').AsString;
+
+        Nome_Arquivo_gal_3 := AnsiStrRScan(PCHar(Nome_Arquivo_gal_3), '\');
+        for contador := 2 To StrLen(PCHar(Nome_Arquivo_gal_3)) do
+            Auxiliar_gal_3 := Auxiliar_gal_3 + Nome_Arquivo_gal_3 [contador];
+
+        Nome_Arquivo_gal_3 := FDQuery.FieldByName('caminhocurto').asString+'f_gal_3'+Auxiliar_gal_3;
+        //--------------------------------------------------------------------
+
+        //gal_image4------------------------------------------------------------
+        Nome_Arquivo_gal_4 :=  FDQuery.fieldbyname('origemfoto_gal_4').AsString;
+
+        Nome_Arquivo_gal_4 := AnsiStrRScan(PCHar(Nome_Arquivo_gal_4), '\');
+        for contador := 2 To StrLen(PCHar(Nome_Arquivo_gal_4)) do
+            Auxiliar_gal_4 := Auxiliar_gal_4 + Nome_Arquivo_gal_4 [contador];
+
+        Nome_Arquivo_gal_4 := FDQuery.FieldByName('caminhocurto').asString+'f_gal_4'+Auxiliar_gal_4;
+        //--------------------------------------------------------------------
+
+        //gal_image5------------------------------------------------------------
+        Nome_Arquivo_gal_5 :=  FDQuery.fieldbyname('origemfoto_gal_5').AsString;
+
+        Nome_Arquivo_gal_5 := AnsiStrRScan(PCHar(Nome_Arquivo_gal_5), '\');
+        for contador := 2 To StrLen(PCHar(Nome_Arquivo_gal_5)) do
+            Auxiliar_gal_5 := Auxiliar_gal_5 + Nome_Arquivo_gal_5 [contador];
+
+        Nome_Arquivo_gal_5 := FDQuery.FieldByName('caminhocurto').asString+'f_gal_5'+Auxiliar_gal_5;
+        //--------------------------------------------------------------------
+
+        //gal_image6------------------------------------------------------------
+        Nome_Arquivo_gal_6 :=  FDQuery.fieldbyname('origemfoto_gal_6').AsString;
+
+        Nome_Arquivo_gal_6 := AnsiStrRScan(PCHar(Nome_Arquivo_gal_6), '\');
+        for contador := 2 To StrLen(PCHar(Nome_Arquivo_gal_6)) do
+            Auxiliar_gal_6 := Auxiliar_gal_6 + Nome_Arquivo_gal_6 [contador];
+
+        Nome_Arquivo_gal_6 := FDQuery.FieldByName('caminhocurto').asString+'f_gal_6'+Auxiliar_gal_6;
+        //--------------------------------------------------------------------
+
+        //gal_image6------------------------------------------------------------
+        Nome_Arquivo_gal_7 :=  FDQuery.fieldbyname('origemfoto_gal_7').AsString;
+
+        Nome_Arquivo_gal_7 := AnsiStrRScan(PCHar(Nome_Arquivo_gal_7), '\');
+        for contador := 2 To StrLen(PCHar(Nome_Arquivo_gal_7)) do
+            Auxiliar_gal_7 := Auxiliar_gal_7 + Nome_Arquivo_gal_7 [contador];
+
+        Nome_Arquivo_gal_7 := FDQuery.FieldByName('caminhocurto').asString+'f_gal_7'+Auxiliar_gal_7;
+        //--------------------------------------------------------------------
+
+
+
+
+
+        JSonObject := TJSonObject.Create;
+
+        //3 '"id":3,'+
+        JSonObject.AddPair('id',FDQuery.fieldbyname('id').AsString);
+
+        //1 '"minimo_pessoa":1,'+
+        JSonObject.AddPair('minimo_pessoa',FDQuery.fieldbyname('minimo_pessoa').AsString);
+
+        //1 '"user_id":1,'+
+        JSonObject.AddPair('user_id',FDQuery.fieldbyname('user_id').AsString);
+
+        //0 '"city_id":0,'+
+        JSonObject.AddPair('city_id',FDQuery.fieldbyname('city_id').AsString);
+
+        //2 '"group_id":2,'+
+        JSonObject.AddPair('group_id',FDQuery.fieldbyname('group_id').AsString);
+
+        //1 '"partner_id":1,'+
+        JSonObject.AddPair('"partner_id',FDQuery.fieldbyname('partner_id').AsString);
+
+        //100  '"per_number":100,'+
+        JSonObject.AddPair('per_number',FDQuery.fieldbyname('per_number').AsString);
+
+        //1 '"min_number":1,'+
+        JSonObject.AddPair('min_number',FDQuery.fieldbyname('min_number').AsString);
+
+        //1000  '"max_number":1000,'+
+        JSonObject.AddPair('max_number',FDQuery.fieldbyname('max_number').AsString);
+
+        //0  '"now_number":0,'+
+        JSonObject.AddPair('now_number',FDQuery.fieldbyname('now_number').AsString);
+
+        //0 '"pre_number":0,'+
+        JSonObject.AddPair('pre_number',FDQuery.fieldbyname('pre_number').AsString);
+
+        //0  '"credit":0,'+
+        JSonObject.AddPair('credit',FDQuery.fieldbyname('credit').AsString);
+
+        //0  '"card":0,'+
+        JSonObject.AddPair('"card',FDQuery.fieldbyname('card').AsString);
+
+        //0  '"fare":0,'+
+        JSonObject.AddPair('fare',FDQuery.fieldbyname('fare').AsString);
+
+        //0  '"farefree":0,'+
+        JSonObject.AddPair('farefree',FDQuery.fieldbyname('farefree').AsString);
+
+        //0  '"bonus":0,'+
+        JSonObject.AddPair('bonus',FDQuery.fieldbyname('bonus').AsString);
+
+        //0    '"sort_order":0,'+
+        JSonObject.AddPair('sort_order',FDQuery.fieldbyname('sort_order').AsString);
+
+        //1529418142 '"expire_time":1529418142,'+
+        JSonObject.AddPair('expire_time',FDQuery.fieldbyname('expire_time').AsString);
+
+        //1529290800 '"begin_time":1529290800,'+
+        JSonObject.AddPair('begin_time',FDQuery.fieldbyname('begin_time').AsString);
+
+        //1529377200  '"end_time":1529377200,'+
+        JSonObject.AddPair('end_time',FDQuery.fieldbyname('end_time').AsString);
+
+        //0  '"reach_time":0,'+
+        JSonObject.AddPair('reach_time',FDQuery.fieldbyname('reach_time').AsString);
+
+        //0  '"close_time":0,'+
+        JSonObject.AddPair('close_time',FDQuery.fieldbyname('close_time').AsString);
+
+        //0 '"semhtmldescricao":0,'+
+        JSonObject.AddPair('semhtmldescricao',FDQuery.fieldbyname('semhtmldescricao').AsString);
+
+        //0  '"semhtmlregulamento":0,'+
+        JSonObject.AddPair('semhtmlregulamento',FDQuery.fieldbyname('semhtmlregulamento').AsString);
+
+        //0  '"manterdimensao":0,'+
+        JSonObject.AddPair('manterdimensao',FDQuery.fieldbyname('manterdimensao').AsString);
+
+        //2 '"altura":2,'+
+        JSonObject.AddPair('altura',FDQuery.fieldbyname('altura').AsString);
+
+        //16 '"comprimento":16,'+
+        JSonObject.AddPair('comprimento',FDQuery.fieldbyname('comprimento').AsString);
+
+        //11  '"largura":11,'+
+        JSonObject.AddPair('largura',FDQuery.fieldbyname('largura').AsString);
+
+        //0  '"posicionamento":0,'+
+        JSonObject.AddPair('posicionamento',FDQuery.fieldbyname('posicionamento').AsString);
+
+        //0 '"pontos":0,'+
+        JSonObject.AddPair('pontos',FDQuery.fieldbyname('pontos').AsString);
+
+        //0  '"pontosgerados":0,'+
+        JSonObject.AddPair('pontosgerados',FDQuery.fieldbyname('pontosgerados').AsString);
+
+        //0  '"idpacote":0,'+
+        JSonObject.AddPair('idpacote',FDQuery.fieldbyname('idpacote').AsString);
+
+        //0  '"id_oferta_parceiro":0,'+
+        JSonObject.AddPair('id_oferta_parceiro',FDQuery.fieldbyname('id_oferta_parceiro').AsString);
+
+        //0  '"contadorpedidos":0,'+
+        JSonObject.AddPair('contadorpedidos',FDQuery.fieldbyname('contadorpedidos').AsString);
+
+        //1 '"avaliacaoclientes":1,'+
+        JSonObject.AddPair('avaliacaoclientes',FDQuery.fieldbyname('avaliacaoclientes').AsString);
+
+        //160   '"team_price":160,'+
+        JSonObject.AddPair('team_price',FDQuery.fieldbyname('team_price').AsString);
+
+        //0 '"preco_comissao":0,'+
+        JSonObject.AddPair('preco_comissao',FDQuery.fieldbyname('preco_comissao').AsString);
+
+        //300  '"market_price":300,'+
+        JSonObject.AddPair('market_price',FDQuery.fieldbyname('market_price').AsString);
+
+        //0   '"bonuslimite":0,'+
+        JSonObject.AddPair('bonuslimite',FDQuery.fieldbyname('bonuslimite').AsString);
+
+        //null   '"layout":null,'+
+        JSonObject.AddPair('iderp',FDQuery.fieldbyname('iderp').AsString);
+
+        //Coluna 3M 3/8  '"title":"Coluna 3M 1/2",'+
+        JSonObject.AddPair('title',FDQuery.fieldbyname('title').AsString);
+
+        //""  '"summary":"",'+
+        JSonObject.AddPair('summary',FDQuery.fieldbyname('summary').AsString);
+
+        //Y   '"system":"Y",'+
+        JSonObject.AddPair('system',FDQuery.fieldbyname('system').AsString);
+
+        //null '"product":null,'+
+        JSonObject.AddPair('product',FDQuery.fieldbyname('product').AsString);
+
+        //{110 volts}{220 volts}     '"condbuy":"{110 volts}{220 volts}",'+
+        JSonObject.AddPair('condbuy',FDQuery.fieldbyname('condbuy').AsString);
+
+        //team\/2018\/0618\/15293389255152.jpg  '"image":"team\/2018\/0618\/15293389255152.jpg",'+
+        if FDQuery.fieldbyname('enviarfoto').AsString  = 'Y' then
+           JSonObject.AddPair('image', Nome_Arquivo  )      //FDQuery.fieldbyname('image').AsString);
+        else if FDQuery.fieldbyname('enviarfoto').AsString  = 'E' then
+           JSonObject.AddPair('image', imagemsemfoto );
+
+
+
+
+        //else
+        //   JSonObject.AddPair('image', nil  );
+
+        //team\/2018\/0618\/15293389252770.jpg    '"image1":"team\/2018\/0618\/15293389252770.jpg",'+
+        if FDQuery.fieldbyname('enviarfoto_1').AsString  = 'Y' then
+           JSonObject.AddPair('image1', Nome_Arquivo_1  )     //FDQuery.fieldbyname('image1').AsString);
+        else
+           JSonObject.AddPair('image1', nil  );
+
+        //team\/2018\/0618\/15293389255164.jpg  '"image2":"team\/2018\/0618\/15293389255164.jpg",'+
+        if FDQuery.fieldbyname('enviarfoto_2').AsString  = 'Y' then
+           JSonObject.AddPair('image2',  NOme_Arquivo_2   )       //FDQuery.fieldbyname('image2').AsString);
+        else
+           JSonObject.AddPair('image2',  nil   );
+
+        //null  '"flv":null,'+
+        JSonObject.AddPair('flv',FDQuery.fieldbyname('flv').AsString);
+
+        //null   '"mobile":null,'+
+        JSonObject.AddPair('mobile',FDQuery.fieldbyname('mobile').AsString);
+
+        //null  '"address":null,'+
+        JSonObject.AddPair('address',FDQuery.fieldbyname('address').AsString);
+
+        //"" '"detail":"",'+
+        JSonObject.AddPair('detail',FDQuery.fieldbyname('detail').AsString);
+
+        //null  '"systemreview":null,'+
+        JSonObject.AddPair('systemreview',FDQuery.fieldbyname('systemreview').AsString);
+
+        //null    '"userreview":null,'+
+        JSonObject.AddPair('userreview',FDQuery.fieldbyname('userreview').AsString);
+
+        //""    '"notice":"",'+
+        JSonObject.AddPair('notice',FDQuery.fieldbyname('notice').AsString);
+
+        //null  '"express":null,'+
+         JSonObject.AddPair('express',FDQuery.fieldbyname('express').AsString);
+
+        //coupon   '"delivery":"coupon",'+
+        JSonObject.AddPair('delivery',FDQuery.fieldbyname('delivery').AsString);
+
+        //none  '"state":"none",'+
+        JSonObject.AddPair('state',FDQuery.fieldbyname('state').AsString);
+
+        //Y  '"conduser":"Y",'+
+        JSonObject.AddPair('conduser',FDQuery.fieldbyname('conduser').AsString);
+
+        //N      '"buyonce":"N",'+
+        JSonObject.AddPair('buyonce',FDQuery.fieldbyname('buyonce').AsString);
+
+        //normal   '"team_type":"normal",'+
+        JSonObject.AddPair('team_type',FDQuery.fieldbyname('team_type').AsString);
+
+        //null   '"seo_title":null,'+
+        JSonObject.AddPair('seo_title',FDQuery.fieldbyname('seo_title').AsString);
+
+        //chapa  '"seo_keyword":"chapa",'+
+        JSonObject.AddPair('seo_keyword',FDQuery.fieldbyname('seo_keyword').AsString);
+
+        //null    '"seo_description":null,'+
+        JSonObject.AddPair('seo_description',FDQuery.fieldbyname('seo_description').AsString);
+
+        //team\/2018\/0618\/15293389254429.jpg   '"gal_image1":"team\/2018\/0618\/15293389254429.jpg",'+
+        if FDQuery.fieldbyname('enviarfoto_gal_1').AsString  = 'Y' then
+           JSonObject.AddPair('gal_image1',  Nome_Arquivo_gal_1   )     //FDQuery.fieldbyname('gal_image1').AsString);
+        else
+           JSonObject.AddPair('gal_image1',  nil  );
+
+        //team\/2018\/0618\/15293389259585.jpg   '"gal_image2":"team\/2018\/0618\/15293389259585.jpg",'+
+        if FDQuery.fieldbyname('enviarfoto_gal_2').AsString  = 'Y' then
+           JSonObject.AddPair('gal_image2',  Nome_Arquivo_gal_2)      //FDQuery.fieldbyname('gal_image2').AsString);
+        else
+           JSonObject.AddPair('gal_image2',  nil);
+
+        //null '"gal_image3":null,'+
+        if FDQuery.fieldbyname('enviarfoto_gal_3').AsString  = 'Y' then
+           JSonObject.AddPair('gal_image3', Nome_Arquivo_gal_3)  // FDQuery.fieldbyname('gal_image3').AsString);
+        else
+           JSonObject.AddPair('gal_image3', nil);
+
+        //null '"gal_image4":null,'+
+        if FDQuery.fieldbyname('enviarfoto_gal_4').AsString  = 'Y' then
+           JSonObject.AddPair('gal_image4', Nome_Arquivo_gal_4)        //FDQuery.fieldbyname('gal_image4').AsString);
+        else
+            JSonObject.AddPair('gal_image4', nil);
+
+        //null  '"gal_image5":null,'+
+        if FDQuery.fieldbyname('enviarfoto_gal_5').AsString  = 'Y' then
+           JSonObject.AddPair('gal_image5',  Nome_Arquivo_gal_5)       //FDQuery.fieldbyname('gal_image5').AsString);
+        else
+           JSonObject.AddPair('gal_image5',  nil);
+
+
+        //null  '"gal_image6":null,'+
+        if FDQuery.fieldbyname('enviarfoto_gal_6').AsString  = 'Y' then
+           JSonObject.AddPair('gal_image6',  Nome_Arquivo_gal_6)      //FDQuery.fieldbyname('gal_image6').AsString);
+        else
+           JSonObject.AddPair('gal_image6',  nil);
+
+        //null   '"gal_image7":null,'+
+        if FDQuery.fieldbyname('enviarfoto_gal_7').AsString  = 'Y' then
+           JSonObject.AddPair('gal_image7',  Nome_Arquivo_gal_7 )     //FDQuery.fieldbyname('gal_image7').AsString);
+        else
+           JSonObject.AddPair('gal_image7',  nil );
+
+        //""  '"maisinformacoes":"",'+
+        JSonObject.AddPair('maisinformacoes',FDQuery.fieldbyname('maisinformacoes').AsString);
+
+        //null  '"metodo_pagamento":null,'+
+        JSonObject.AddPair('metodo_pagamento',FDQuery.fieldbyname('metodo_pagamento').AsString);
+
+        //null  '"retornoparticipe":null,'+
+        JSonObject.AddPair('retornoparticipe',FDQuery.fieldbyname('retornoparticipe').AsString);
+
+        //""  '"url_comprar":"",'+
+        JSonObject.AddPair('url_comprar',FDQuery.fieldbyname('url_comprar').AsString);
+
+        //""  '"posicionamentotitulo":null,'+
+        JSonObject.AddPair('posicionamentotitulo',FDQuery.fieldbyname('posicionamentotitulo').AsString);
+
+        //null  '"marcadagua":null,'+
+        JSonObject.AddPair('marcadagua',FDQuery.fieldbyname('marcadagua').AsString);
+
+        //null  '"processo_compra":null,'+
+        JSonObject.AddPair('processo_compra',FDQuery.fieldbyname('processo_compra').AsString);
+
+        //null  '"categoria_agrupi":null,'+
+        JSonObject.AddPair('categoria_agrupi',FDQuery.fieldbyname('categoria_agrupi').AsString);
+
+        //null   '"categoria_valejunto":null,'+
+        JSonObject.AddPair('categoria_valejunto',FDQuery.fieldbyname('categoria_valejunto').AsString);
+
+        //null '"cidade_valejunto":null,'+
+        JSonObject.AddPair('cidade_valejunto',FDQuery.fieldbyname('cidade_valejunto').AsString);
+
+        //null  '"categoria_apontaofertas":null,'+
+        JSonObject.AddPair('categoria_apontaofertas',FDQuery.fieldbyname('categoria_apontaofertas').AsString);
+
+        //null   '"cidade_apontaofertas":null,'+
+        JSonObject.AddPair('cidade_apontaofertas',FDQuery.fieldbyname('cidade_apontaofertas').AsString);
+
+        //null  '"categoria_dsconto":null,'+
+        JSonObject.AddPair('categoria_dsconto',FDQuery.fieldbyname('categoria_dsconto').AsString);
+
+        //1  '"frete":"1",'+
+        JSonObject.AddPair('frete',FDQuery.fieldbyname('frete').AsString);
+
+        //31280240   '"ceporigem":"31280240",'+
+        JSonObject.AddPair('ceporigem',FDQuery.fieldbyname('ceporigem').AsString);
+
+        //02,0  '"peso":"02,0",'+
+        JSonObject.AddPair('peso',FDQuery.fieldbyname('peso').AsString);
+
+        //0,00  '"valorfrete":" 0,00",'+
+        JSonObject.AddPair('valorfrete',FDQuery.fieldbyname('valorfrete').AsString);
+
+        //0  '"fretegratuito":"0",'+
+        JSonObject.AddPair('fretegratuito',FDQuery.fieldbyname('fretegratuito').AsString);
+
+        //null  '"republicacao":null,'+
+        JSonObject.AddPair('republicacao',FDQuery.fieldbyname('republicacao').AsString);
+
+        //null  '"estatica_home":null,'+
+        JSonObject.AddPair('estatica_home',FDQuery.fieldbyname('estatica_home').AsString);
+
+        //null '"estatica_direita":null,'+
+        JSonObject.AddPair('estatica_direita',FDQuery.fieldbyname('estatica_direita').AsString);
+
+        //null   '"estatica_detalhe":null,'+
+        JSonObject.AddPair('estatica_detalhe',FDQuery.fieldbyname('estatica_detalhe').AsString);
+
+        //null  '"estatica_recentes":null,'+
+        JSonObject.AddPair('estatica_recentes',FDQuery.fieldbyname('estatica_recentes').AsString);
+
+        //12312  '"codreferencia":"12312",'+
+        JSonObject.AddPair('codreferencia',FDQuery.fieldbyname('codreferencia').AsString);
+
+        //null   '"mostrarpreco":null,'+
+        JSonObject.AddPair('mostrarpreco',FDQuery.fieldbyname('mostrarpreco').AsString);
+
+        //""   '"condicaoenvio":"",'+
+        JSonObject.AddPair('condicaoenvio',FDQuery.fieldbyname('condicaoenvio').AsString);
+
+        //0   '"uploadarquivo":"0",'+
+         JSonObject.AddPair('uploadarquivo',FDQuery.fieldbyname('uploadarquivo').AsString);
+
+        //{Vermelho}{Azul}{Preto}   '"condbuy2":"{Vermelho}{Azul}{Preto}",'+
+        JSonObject.AddPair('condbuy2',FDQuery.fieldbyname('condbuy2').AsString);
+
+        //"" '"nomeaba1":"",'+
+        JSonObject.AddPair('nomeaba1',FDQuery.fieldbyname('nomeaba1').AsString);
+
+        //""  '"nomeaba2":"",'+
+        JSonObject.AddPair('nomeaba2',FDQuery.fieldbyname('nomeaba2').AsString);
+
+        //"" '"observacao_preco":"",'+
+        JSonObject.AddPair('observacao_preco',FDQuery.fieldbyname('observacao_preco').AsString);
+
+        //Escolha a cor  '"titulo_opcao2":"Escolha a cor",'+
+        JSonObject.AddPair('titulo_opcao2',FDQuery.fieldbyname('titulo_opcao2').AsString);
+
+        //Escolha a voltagem   '"titulo_opcao1":"Escolha a voltagem",'+
+        JSonObject.AddPair('titulo_opcao1',FDQuery.fieldbyname('titulo_opcao1').AsString);
+
+        //""   '"titulo_upload":"",'+
+        JSonObject.AddPair('titulo_upload',FDQuery.fieldbyname('titulo_upload').AsString);
+
+        //Coluna 3M 3/8   '"titleresumido":"Coluna 3M 1/2",'+
+        JSonObject.AddPair('titleresumido',FDQuery.fieldbyname('titleresumido').AsString);
+
+        //""  '"video_team":""'+
+        JSonObject.AddPair('video_team',FDQuery.fieldbyname('video_team').AsString);
+
+        JSonArray.AddElement(jSonObject);
+
+        FDQuery.Next;
+      end;
+
+
+     memo1.lines.add(JSonArray.ToString);
+     memo1.lines.add('Enviando lote produtos...');
+
+
+     try
+
+
+       HTTP:= TIdHTTP.Create;
+       HTTP.Request.UserAgent := 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:12.0) Gecko/20100101 Firefox/12.0';
+       HTTP.Request.ContentType := 'application/json';
+
+       vJsonAEnviar := TStringStream.Create(UTF8Encode(JSonArray.ToString));
+       sresponse :=  HTTP.Post('http://'+edtserver.Text+':9000/produtos/insert/several', vJsonAEnviar);
+
+
+     except on e:exception do
+     begin
+
+        memo1.lines.add('Erro ao enviar dados...'+e.Message);
+
+
+
+     end;
+
+
+
+
+
+     end;
+
+
+
+     memo1.lines.add(sresponse);
+
+
+
+  finally
+
+
+     memo1.lines.add('Finalizando envio de lote de produtos...');
+
+     JSonArray.DisposeOf;
+     vJsonAEnviar.DisposeOf;
+     HTTP.DisposeOf;
+  end;
+
+
+end;
+
+
+function TFProdutos.desmontaNomeArquivo(nomeArquivo: string; pre_coomplemento:string = ''; pos_complemento:string = ''):string;
+var pos:integer;
+    nome,extensao:string;
+begin
+
+  pos := System.Pos('.',nomeArquivo);
+
+  if pos > 0 then
+  begin
+    nome := copy(nomeArquivo,1,pos-1);
+    extensao := copy(nomeArquivo,pos+1,length(nomeArquivo));
+  end;
+
+  result := pre_coomplemento+nome+pos_complemento+'.'+extensao;
+
+end;
+
+
+procedure TFProdutos.clearMemory;
+var
+   MainHandle : THandle;
+begin
+   try
+      MainHandle := OpenProcess(PROCESS_ALL_ACCESS, false, GetCurrentProcessID) ;
+      SetProcessWorkingSetSize(MainHandle, $FFFFFFFF, $FFFFFFFF) ;
+      CloseHandle(MainHandle) ;
+   except
+   end;
+     Application.ProcessMessages;
+end;
+
+
+
+procedure TFProdutos.FDConnBeforeConnect(Sender: TObject);
+begin
+  //FDPhysMySQLDriverLink.VendorLib := System.SysUtils.GetCurrentDir+'\libmysql.dll';
+  FDPhysMySQLDriverLink.VendorLib := extractfilepath(application.ExeName)+'\libmysql.dll'
+
+end;
+
+procedure TFProdutos.FormCreate(Sender: TObject);
+begin
+     edtzone.text := '';
+		 edtczone.Text := '';
+		 edtname.Text := '';
+		 edttipo.Text := '';
+		 edtename.Text:= '';
+		 edtletter.Text := '';
+		 edtlink.Text := '';
+		 edtimagemnavegacao.Text := '';
+		 edtimagemcateg.Text := '';
+		 edtsort_order.Text :=  '0';
+		 edtdisplay.Text := 'Y';
+		 edtbannercategoria.Text := '';
+		 edtlinkexterno.text := '';
+		 edttarget.text :=  '';
+		 edtidpai.Text := '0';
+		 edtbannernavegacao.Text := '';
+		 edtmostrartopo.Text := 'Y';
+		 edtseo_cat_key.Text := '';
+		 edtseo_cat_descricao.Text := '';
+		 edtseo_cat_title.Text := '';
+     edtenviarfoto.Text := 'N';
+     edtorigemfoto.Text := '';
+     edtdirdest.Text := '';
+     edtiderp.Text := '0';
+
+
+end;
+
+end.

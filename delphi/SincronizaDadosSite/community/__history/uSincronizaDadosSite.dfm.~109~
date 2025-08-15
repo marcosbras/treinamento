@@ -1,0 +1,699 @@
+object FSincronizaDadosSite: TFSincronizaDadosSite
+  Left = 0
+  Top = 0
+  Caption = 'Sincroniza Informa'#231#227'o Local com Site'
+  ClientHeight = 538
+  ClientWidth = 802
+  Color = clBtnFace
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -11
+  Font.Name = 'Tahoma'
+  Font.Style = []
+  OldCreateOrder = False
+  OnClose = FormClose
+  OnCreate = FormCreate
+  OnShow = FormShow
+  PixelsPerInch = 96
+  TextHeight = 13
+  object Shape_Conectado: TShape
+    Left = 761
+    Top = 214
+    Width = 41
+    Height = 25
+    Brush.Color = clGray
+    Shape = stCircle
+  end
+  object Label25: TLabel
+    Left = 8
+    Top = 38
+    Width = 59
+    Height = 13
+    Caption = 'Address API'
+  end
+  object Label1: TLabel
+    Left = 8
+    Top = 105
+    Width = 136
+    Height = 13
+    Caption = 'Configura'#231#227'o Base Local'
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -11
+    Font.Name = 'Tahoma'
+    Font.Style = [fsBold]
+    ParentFont = False
+  end
+  object Label2: TLabel
+    Left = 9
+    Top = 136
+    Width = 76
+    Height = 13
+    Caption = 'DataBase Name'
+  end
+  object Label3: TLabel
+    Left = 9
+    Top = 163
+    Width = 49
+    Height = 13
+    Caption = 'UserName'
+  end
+  object Label4: TLabel
+    Left = 9
+    Top = 190
+    Width = 46
+    Height = 13
+    Caption = 'Password'
+  end
+  object Label5: TLabel
+    Left = 9
+    Top = 217
+    Width = 36
+    Height = 13
+    Caption = 'DriveID'
+  end
+  object Label6: TLabel
+    Left = 9
+    Top = 244
+    Width = 20
+    Height = 13
+    Caption = 'Port'
+  end
+  object Label7: TLabel
+    Left = 9
+    Top = 271
+    Width = 32
+    Height = 13
+    Caption = 'Server'
+  end
+  object Label8: TLabel
+    Left = 8
+    Top = 11
+    Width = 178
+    Height = 13
+    Caption = 'Configura'#231#227'o do acesso remoto'
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -11
+    Font.Name = 'Tahoma'
+    Font.Style = [fsBold]
+    ParentFont = False
+  end
+  object Label9: TLabel
+    Left = 8
+    Top = 308
+    Width = 122
+    Height = 13
+    Caption = 'Configura'#231#227'o FTP Site'
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -11
+    Font.Name = 'Tahoma'
+    Font.Style = [fsBold]
+    ParentFont = False
+  end
+  object Label10: TLabel
+    Left = 8
+    Top = 340
+    Width = 22
+    Height = 13
+    Caption = 'Host'
+  end
+  object Label11: TLabel
+    Left = 8
+    Top = 367
+    Width = 81
+    Height = 13
+    Caption = 'Nome do Usu'#225'rio'
+  end
+  object Label12: TLabel
+    Left = 8
+    Top = 394
+    Width = 30
+    Height = 13
+    Caption = 'Senha'
+  end
+  object Label13: TLabel
+    Left = 8
+    Top = 65
+    Width = 52
+    Height = 13
+    Caption = 'Hash Code'
+  end
+  object Label14: TLabel
+    Left = 9
+    Top = 426
+    Width = 140
+    Height = 13
+    Caption = 'Intervalo de Propaga'#231#227'o'
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -11
+    Font.Name = 'Tahoma'
+    Font.Style = [fsBold]
+    ParentFont = False
+  end
+  object Label15: TLabel
+    Left = 9
+    Top = 454
+    Width = 44
+    Height = 13
+    Caption = 'Intervalo'
+  end
+  object Label16: TLabel
+    Left = 193
+    Top = 454
+    Width = 20
+    Height = 13
+    Caption = 'Min.'
+  end
+  object Label17: TLabel
+    Left = 735
+    Top = 498
+    Width = 6
+    Height = 13
+    Caption = '0'
+    Visible = False
+  end
+  object Label18: TLabel
+    Left = 707
+    Top = 498
+    Width = 6
+    Height = 13
+    Caption = '0'
+    Visible = False
+  end
+  object Label19: TLabel
+    Left = 392
+    Top = 242
+    Width = 34
+    Height = 13
+    Caption = 'Seletor'
+  end
+  object Label20: TLabel
+    Left = 392
+    Top = 214
+    Width = 125
+    Height = 13
+    Caption = 'Canal de comunica'#231#227'o'
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -11
+    Font.Name = 'Tahoma'
+    Font.Style = [fsBold]
+    ParentFont = False
+  end
+  object Label21: TLabel
+    Left = 394
+    Top = 290
+    Width = 29
+    Height = 13
+    Caption = 'Token'
+  end
+  object Label22: TLabel
+    Left = 735
+    Top = 297
+    Width = 52
+    Height = 13
+    Caption = 'Secret Key'
+    Visible = False
+  end
+  object Label23: TLabel
+    Left = 392
+    Top = 326
+    Width = 59
+    Height = 13
+    Caption = 'Public Token'
+  end
+  object lbldevicetokenwh2: TLabel
+    Left = 392
+    Top = 353
+    Width = 64
+    Height = 13
+    Caption = 'Device Token'
+  end
+  object Label24: TLabel
+    Left = 735
+    Top = 378
+    Width = 64
+    Height = 13
+    Caption = 'Authorization'
+    Visible = False
+  end
+  object Label26: TLabel
+    Left = 392
+    Top = 267
+    Width = 47
+    Height = 13
+    Caption = 'Instances'
+  end
+  object btnSyncNow: TButton
+    Left = 253
+    Top = 478
+    Width = 185
+    Height = 56
+    Caption = 'Sincronizar Agora'
+    TabOrder = 12
+    OnClick = btnSyncNowClick
+  end
+  object Memo1: TMemo
+    Left = 394
+    Top = 8
+    Width = 400
+    Height = 195
+    Lines.Strings = (
+      'Remoto: 45.35.6.18:9000'
+      'Local: 192.168.1.44')
+    ScrollBars = ssBoth
+    TabOrder = 13
+  end
+  object edtaddressapi: TEdit
+    Left = 112
+    Top = 35
+    Width = 185
+    Height = 21
+    TabOrder = 0
+    Text = 'edtaddressapi'
+  end
+  object Button7: TButton
+    Left = 476
+    Top = 729
+    Width = 101
+    Height = 64
+    Caption = 'Sincronizar Produtos'
+    TabOrder = 27
+    Visible = False
+    OnClick = Button7Click
+  end
+  object Button3: TButton
+    Left = 583
+    Top = 729
+    Width = 94
+    Height = 64
+    Caption = 'Parar Servi'#231'o'
+    TabOrder = 11
+    Visible = False
+    OnClick = Button3Click
+  end
+  object EdtDataBaseName: TEdit
+    Left = 112
+    Top = 133
+    Width = 201
+    Height = 21
+    TabOrder = 2
+    Text = 'EdtDataBaseName'
+  end
+  object EdtUserName: TEdit
+    Left = 112
+    Top = 160
+    Width = 265
+    Height = 21
+    TabOrder = 3
+    Text = 'EdtUserName'
+  end
+  object EdtPassword: TEdit
+    Left = 112
+    Top = 187
+    Width = 153
+    Height = 21
+    PasswordChar = '*'
+    TabOrder = 4
+    Text = 'EdtPassword'
+  end
+  object EdtPort: TEdit
+    Left = 112
+    Top = 241
+    Width = 137
+    Height = 21
+    TabOrder = 6
+    Text = 'EdtPort'
+  end
+  object edtserverlocal: TEdit
+    Left = 112
+    Top = 268
+    Width = 121
+    Height = 21
+    TabOrder = 7
+    Text = 'EdtServer'
+  end
+  object CbxDriveID: TComboBox
+    Left = 112
+    Top = 214
+    Width = 145
+    Height = 21
+    TabOrder = 5
+    Text = 'CbxDriveID'
+    OnKeyDown = CbxDriveIDKeyDown
+    OnKeyPress = CbxDriveIDKeyPress
+    Items.Strings = (
+      'MySQL'
+      'FB')
+  end
+  object edthostftp: TEdit
+    Left = 112
+    Top = 337
+    Width = 265
+    Height = 21
+    TabOrder = 8
+    Text = 'edthostftp'
+  end
+  object edtuserftp: TEdit
+    Left = 112
+    Top = 364
+    Width = 201
+    Height = 21
+    TabOrder = 9
+    Text = 'edtuserftp'
+  end
+  object edtsenhaftp: TEdit
+    Left = 112
+    Top = 391
+    Width = 153
+    Height = 21
+    PasswordChar = '*'
+    TabOrder = 10
+    Text = 'edtsenhaftp'
+  end
+  object edthashcodeapi: TEdit
+    Left = 112
+    Top = 62
+    Width = 249
+    Height = 21
+    PasswordChar = '*'
+    TabOrder = 1
+    Text = 'edthashcodeapi'
+  end
+  object Button1: TButton
+    Left = 444
+    Top = 478
+    Width = 170
+    Height = 56
+    Caption = 'Salvar Log'
+    TabOrder = 14
+    OnClick = Button1Click
+  end
+  object edttime: TEdit
+    Left = 113
+    Top = 451
+    Width = 74
+    Height = 21
+    TabOrder = 15
+    Text = 'edttime'
+    OnKeyPress = edttimeKeyPress
+  end
+  object Button2: TButton
+    Left = 375
+    Top = 729
+    Width = 98
+    Height = 64
+    Caption = 'Sincronizar Agora'
+    TabOrder = 16
+    Visible = False
+    OnClick = Button2Click
+  end
+  object RadioButton1: TRadioButton
+    Left = 256
+    Top = 729
+    Width = 113
+    Height = 17
+    Caption = 'Categoria'
+    Checked = True
+    TabOrder = 17
+    TabStop = True
+    Visible = False
+  end
+  object RadioButton2: TRadioButton
+    Left = 256
+    Top = 763
+    Width = 113
+    Height = 17
+    Caption = 'Sub-Categoria'
+    TabOrder = 18
+    Visible = False
+  end
+  object RadioButton3: TRadioButton
+    Left = 256
+    Top = 746
+    Width = 113
+    Height = 17
+    Caption = 'Produtos'
+    TabOrder = 19
+    Visible = False
+  end
+  object Button4: TButton
+    Left = 683
+    Top = 728
+    Width = 75
+    Height = 65
+    Caption = 'Download'
+    TabOrder = 20
+    Visible = False
+    OnClick = Button4Click
+  end
+  object edtcanal: TComboBox
+    Left = 496
+    Top = 236
+    Width = 217
+    Height = 21
+    ItemIndex = 0
+    TabOrder = 21
+    Text = 'Whatsapp-1'
+    OnChange = edtcanalChange
+    OnKeyDown = edtcanalKeyDown
+    OnKeyPress = edtcanalKeyPress
+    Items.Strings = (
+      'Whatsapp-1'
+      'Whatsapp-2'
+      'Whatsapp-3')
+  end
+  object edttokenwh1: TEdit
+    Left = 496
+    Top = 289
+    Width = 217
+    Height = 21
+    PasswordChar = '*'
+    TabOrder = 23
+    Text = '3BCFCEE5D03991924B3EAE3767BEB806'
+  end
+  object edtsecretkeywh2: TEdit
+    Left = 735
+    Top = 316
+    Width = 217
+    Height = 21
+    TabOrder = 24
+    Text = '8e2ad285-1e15-4d8c-8aea-c47cfc3b9836'
+    Visible = False
+  end
+  object edtpublictokenwh2: TEdit
+    Left = 496
+    Top = 323
+    Width = 217
+    Height = 21
+    PasswordChar = '*'
+    TabOrder = 25
+    Text = '6d800a60-a8b2-4ad7-b3a2-a88608cfa11e'
+  end
+  object edtdevicetokenwh2: TEdit
+    Left = 496
+    Top = 350
+    Width = 217
+    Height = 21
+    PasswordChar = '*'
+    TabOrder = 26
+    Text = '900fc3a0-ce43-40e3-9dc2-8600622cf67d'
+  end
+  object edtinstanceswh1: TEdit
+    Left = 496
+    Top = 262
+    Width = 217
+    Height = 21
+    PasswordChar = '*'
+    TabOrder = 22
+    Text = '3BCFCEE5D03991924B3EAE3767BEB806'
+  end
+  object memoauthorizationwh2: TMemo
+    Left = 735
+    Top = 397
+    Width = 217
+    Height = 42
+    Lines.Strings = (
+      'memoauthorizationwh2')
+    TabOrder = 28
+    Visible = False
+  end
+  object FDConn: TFDConnection
+    Params.Strings = (
+      'Database=base_intermediaria'
+      'User_Name=root'
+      'Server=localhost'
+      'Password=sqlremoto'
+      'DriverID=MySQL')
+    Connected = True
+    LoginPrompt = False
+    BeforeConnect = FDConnBeforeConnect
+    Left = 520
+    Top = 86
+  end
+  object FDQuery: TFDQuery
+    Connection = FDConn
+    SQL.Strings = (
+      'select * from category')
+    Left = 664
+    Top = 134
+  end
+  object AbreFoto: TOpenDialog
+    Left = 592
+    Top = 86
+  end
+  object IdSSLIOHandlerSocketOpenSSL1: TIdSSLIOHandlerSocketOpenSSL
+    MaxLineAction = maException
+    Port = 0
+    DefaultPort = 0
+    SSLOptions.Mode = sslmUnassigned
+    SSLOptions.VerifyMode = []
+    SSLOptions.VerifyDepth = 0
+    Left = 416
+    Top = 94
+  end
+  object IdFTP1: TIdFTP
+    Host = 'ftp.uhserver.com'
+    Passive = True
+    ConnectTimeout = 0
+    Password = 'Bios@449'
+    TransferType = ftBinary
+    Username = 'novalouza2'
+    NATKeepAlive.UseKeepAlive = False
+    NATKeepAlive.IdleTimeMS = 0
+    NATKeepAlive.IntervalMS = 0
+    ProxySettings.ProxyType = fpcmNone
+    ProxySettings.Port = 0
+    ReadTimeout = 300000
+    Left = 672
+    Top = 88
+  end
+  object FDPhysMySQLDriverLink: TFDPhysMySQLDriverLink
+    VendorLib = 
+      'C:\Users\I5\Documents\Embarcadero\Studio\Projects\wagner\Atualiz' +
+      'aVitrine\Win32\Debug\libmysql.dll'
+    Left = 608
+    Top = 158
+  end
+  object Timer1: TTimer
+    Enabled = False
+    Interval = 300000
+    OnTimer = Timer1Timer
+    Left = 720
+    Top = 24
+  end
+  object Timer2: TTimer
+    Enabled = False
+    Interval = 900000
+    OnTimer = Timer2Timer
+    Left = 720
+    Top = 80
+  end
+  object Timer3: TTimer
+    Enabled = False
+    Interval = 600000
+    OnTimer = Timer3Timer
+    Left = 720
+    Top = 128
+  end
+  object Timer4: TTimer
+    Enabled = False
+    OnTimer = Timer4Timer
+    Left = 624
+    Top = 56
+  end
+  object tmSync: TTimer
+    Interval = 300000
+    OnTimer = tmSyncTimer
+    Left = 408
+    Top = 32
+  end
+  object FDQueryAtualiza: TFDQuery
+    Connection = FDConn
+    SQL.Strings = (
+      'select * from category')
+    Left = 536
+    Top = 14
+  end
+  object FDQueryConfig: TFDQuery
+    Connection = FDConn
+    SQL.Strings = (
+      'select * from category')
+    Left = 560
+    Top = 142
+  end
+  object RestSendText: TRESTClient
+    Authenticator = BasicAuth
+    BaseURL = 'https://dados.biosapp.com.br/api/whatsapp/br/sendtext'
+    Params = <>
+    Left = 32
+    Top = 520
+  end
+  object ReqSendText: TRESTRequest
+    AssignedValues = [rvConnectTimeout, rvReadTimeout]
+    Client = RestSendText
+    Method = rmPOST
+    Params = <
+      item
+        Kind = pkHTTPHEADER
+        Name = 'publictoken'
+        Value = '1c32a187-0844-4e64-b207-efa2f2712d12'
+      end
+      item
+        Kind = pkHTTPHEADER
+        Name = 'devicetoken'
+        Value = 'f3466fe4-303a-40ab-a8f1-2a1d07ce5903'
+      end
+      item
+        Kind = pkREQUESTBODY
+        Name = 'bodyE73E18B2537B4AEAB249A1DDF1C82B1C'
+        Value = '{"number":"11970433730",'#13#10'"text":"Teste 8"}'
+        ContentType = ctAPPLICATION_JSON
+      end>
+    Left = 32
+    Top = 584
+  end
+  object BasicAuth: THTTPBasicAuthenticator
+    Username = 'magic'
+    Password = 'Sssasbmsai@!'
+    Left = 112
+    Top = 488
+  end
+  object RestSendFile: TRESTClient
+    Authenticator = BasicAuth
+    BaseURL = 'https://dados.biosapp.com.br/api/whatsapp/br/sendfile'
+    Params = <>
+    Left = 176
+    Top = 528
+  end
+  object ReqSendFile: TRESTRequest
+    AssignedValues = [rvConnectTimeout, rvReadTimeout]
+    Client = RestSendFile
+    Method = rmPOST
+    Params = <
+      item
+        Kind = pkHTTPHEADER
+        Name = 'publictoken'
+        Value = '1c32a187-0844-4e64-b207-efa2f2712d12'
+      end
+      item
+        Kind = pkHTTPHEADER
+        Name = 'devicetoken'
+        Value = 'f3466fe4-303a-40ab-a8f1-2a1d07ce5903'
+      end
+      item
+        Kind = pkREQUESTBODY
+        Name = 'body6BB41C0FB361440CA22970D115776DD0'
+        Value = 
+          '{    '#13#10#9'    "number":        "5511970433730",'#13#10#9#9#9'"path":       ' +
+          '   "http://wagnao.com.br/mensagens/photo1.jpg",'#13#10'      "caption"' +
+          ':"Imagem", '#13#10'      "time_wait":15 '#13#10'}'
+        ContentType = ctAPPLICATION_JSON
+      end>
+    Left = 176
+    Top = 584
+  end
+end

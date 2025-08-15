@@ -1,0 +1,11 @@
+{
+	"name": "community",
+	"description": "",
+	"version": "1.0.0",
+	"homepage": "",
+	"mainsrc": "./",
+	"projects": [],
+	"dependencies": {
+		"github.com/wppconnect-team/wpp4delphi": "^1.3.0"
+	}
+}

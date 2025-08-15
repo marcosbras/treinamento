@@ -1,0 +1,1203 @@
+object FSincronizaDadosSite: TFSincronizaDadosSite
+  Left = 0
+  Top = 0
+  Caption = 'Sincroniza Informa'#231#227'o Local com Site'
+  ClientHeight = 660
+  ClientWidth = 802
+  Color = clBtnFace
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -11
+  Font.Name = 'Tahoma'
+  Font.Style = []
+  OldCreateOrder = False
+  OnClose = FormClose
+  OnCreate = FormCreate
+  OnShow = FormShow
+  PixelsPerInch = 96
+  TextHeight = 13
+  object Shape_Conectado: TShape
+    Left = 761
+    Top = 214
+    Width = 41
+    Height = 25
+    Brush.Color = clGray
+    Shape = stCircle
+  end
+  object Label25: TLabel
+    Left = 8
+    Top = 38
+    Width = 59
+    Height = 13
+    Caption = 'Address API'
+  end
+  object Label1: TLabel
+    Left = 8
+    Top = 105
+    Width = 136
+    Height = 13
+    Caption = 'Configura'#231#227'o Base Local'
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -11
+    Font.Name = 'Tahoma'
+    Font.Style = [fsBold]
+    ParentFont = False
+  end
+  object Label2: TLabel
+    Left = 9
+    Top = 136
+    Width = 76
+    Height = 13
+    Caption = 'DataBase Name'
+  end
+  object Label3: TLabel
+    Left = 9
+    Top = 163
+    Width = 49
+    Height = 13
+    Caption = 'UserName'
+  end
+  object Label4: TLabel
+    Left = 9
+    Top = 190
+    Width = 46
+    Height = 13
+    Caption = 'Password'
+  end
+  object Label5: TLabel
+    Left = 9
+    Top = 217
+    Width = 36
+    Height = 13
+    Caption = 'DriveID'
+  end
+  object Label6: TLabel
+    Left = 9
+    Top = 244
+    Width = 20
+    Height = 13
+    Caption = 'Port'
+  end
+  object Label7: TLabel
+    Left = 9
+    Top = 271
+    Width = 32
+    Height = 13
+    Caption = 'Server'
+  end
+  object Label8: TLabel
+    Left = 8
+    Top = 11
+    Width = 178
+    Height = 13
+    Caption = 'Configura'#231#227'o do acesso remoto'
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -11
+    Font.Name = 'Tahoma'
+    Font.Style = [fsBold]
+    ParentFont = False
+  end
+  object Label9: TLabel
+    Left = 8
+    Top = 308
+    Width = 122
+    Height = 13
+    Caption = 'Configura'#231#227'o FTP Site'
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -11
+    Font.Name = 'Tahoma'
+    Font.Style = [fsBold]
+    ParentFont = False
+  end
+  object Label10: TLabel
+    Left = 8
+    Top = 340
+    Width = 22
+    Height = 13
+    Caption = 'Host'
+  end
+  object Label11: TLabel
+    Left = 8
+    Top = 367
+    Width = 81
+    Height = 13
+    Caption = 'Nome do Usu'#225'rio'
+  end
+  object Label12: TLabel
+    Left = 8
+    Top = 394
+    Width = 30
+    Height = 13
+    Caption = 'Senha'
+  end
+  object Label13: TLabel
+    Left = 8
+    Top = 65
+    Width = 52
+    Height = 13
+    Caption = 'Hash Code'
+  end
+  object Label14: TLabel
+    Left = 9
+    Top = 426
+    Width = 140
+    Height = 13
+    Caption = 'Intervalo de Propaga'#231#227'o'
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -11
+    Font.Name = 'Tahoma'
+    Font.Style = [fsBold]
+    ParentFont = False
+  end
+  object Label15: TLabel
+    Left = 9
+    Top = 454
+    Width = 44
+    Height = 13
+    Caption = 'Intervalo'
+  end
+  object Label16: TLabel
+    Left = 193
+    Top = 454
+    Width = 20
+    Height = 13
+    Caption = 'Min.'
+  end
+  object Label17: TLabel
+    Left = 735
+    Top = 498
+    Width = 6
+    Height = 13
+    Caption = '0'
+    Visible = False
+  end
+  object Label18: TLabel
+    Left = 707
+    Top = 498
+    Width = 6
+    Height = 13
+    Caption = '0'
+    Visible = False
+  end
+  object Label19: TLabel
+    Left = 392
+    Top = 242
+    Width = 34
+    Height = 13
+    Caption = 'Seletor'
+  end
+  object Label20: TLabel
+    Left = 392
+    Top = 214
+    Width = 125
+    Height = 13
+    Caption = 'Canal de comunica'#231#227'o'
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -11
+    Font.Name = 'Tahoma'
+    Font.Style = [fsBold]
+    ParentFont = False
+  end
+  object Label21: TLabel
+    Left = 394
+    Top = 290
+    Width = 29
+    Height = 13
+    Caption = 'Token'
+  end
+  object Label22: TLabel
+    Left = 735
+    Top = 297
+    Width = 52
+    Height = 13
+    Caption = 'Secret Key'
+    Visible = False
+  end
+  object Label23: TLabel
+    Left = 392
+    Top = 326
+    Width = 59
+    Height = 13
+    Caption = 'Public Token'
+  end
+  object lbldevicetokenwh2: TLabel
+    Left = 392
+    Top = 353
+    Width = 64
+    Height = 13
+    Caption = 'Device Token'
+  end
+  object Label24: TLabel
+    Left = 735
+    Top = 378
+    Width = 64
+    Height = 13
+    Caption = 'Authorization'
+    Visible = False
+  end
+  object Label26: TLabel
+    Left = 392
+    Top = 267
+    Width = 47
+    Height = 13
+    Caption = 'Instances'
+  end
+  object Image1: TImage
+    Left = 392
+    Top = 9
+    Width = 194
+    Height = 194
+  end
+  object btnSyncNow: TButton
+    Left = 285
+    Top = 464
+    Width = 185
+    Height = 56
+    Caption = 'Sincronizar Agora'
+    TabOrder = 12
+    OnClick = btnSyncNowClick
+  end
+  object Memo1: TMemo
+    Left = 592
+    Top = 8
+    Width = 202
+    Height = 195
+    Lines.Strings = (
+      'Remoto: 45.35.6.18:9000'
+      'Local: 192.168.1.44')
+    ScrollBars = ssBoth
+    TabOrder = 13
+  end
+  object edtaddressapi: TEdit
+    Left = 112
+    Top = 35
+    Width = 185
+    Height = 21
+    TabOrder = 0
+    Text = 'edtaddressapi'
+  end
+  object Button7: TButton
+    Left = 476
+    Top = 729
+    Width = 101
+    Height = 64
+    Caption = 'Sincronizar Produtos'
+    TabOrder = 27
+    Visible = False
+    OnClick = Button7Click
+  end
+  object Button3: TButton
+    Left = 583
+    Top = 729
+    Width = 94
+    Height = 64
+    Caption = 'Parar Servi'#231'o'
+    TabOrder = 11
+    Visible = False
+    OnClick = Button3Click
+  end
+  object EdtDataBaseName: TEdit
+    Left = 112
+    Top = 133
+    Width = 201
+    Height = 21
+    TabOrder = 2
+    Text = 'EdtDataBaseName'
+  end
+  object EdtUserName: TEdit
+    Left = 112
+    Top = 160
+    Width = 265
+    Height = 21
+    TabOrder = 3
+    Text = 'EdtUserName'
+  end
+  object EdtPassword: TEdit
+    Left = 112
+    Top = 187
+    Width = 153
+    Height = 21
+    PasswordChar = '*'
+    TabOrder = 4
+    Text = 'EdtPassword'
+  end
+  object EdtPort: TEdit
+    Left = 112
+    Top = 241
+    Width = 137
+    Height = 21
+    TabOrder = 6
+    Text = 'EdtPort'
+  end
+  object edtserverlocal: TEdit
+    Left = 112
+    Top = 268
+    Width = 121
+    Height = 21
+    TabOrder = 7
+    Text = 'EdtServer'
+  end
+  object CbxDriveID: TComboBox
+    Left = 112
+    Top = 214
+    Width = 145
+    Height = 21
+    TabOrder = 5
+    Text = 'CbxDriveID'
+    OnKeyDown = CbxDriveIDKeyDown
+    OnKeyPress = CbxDriveIDKeyPress
+    Items.Strings = (
+      'MySQL'
+      'FB')
+  end
+  object edthostftp: TEdit
+    Left = 112
+    Top = 337
+    Width = 265
+    Height = 21
+    TabOrder = 8
+    Text = 'edthostftp'
+  end
+  object edtuserftp: TEdit
+    Left = 112
+    Top = 364
+    Width = 201
+    Height = 21
+    TabOrder = 9
+    Text = 'edtuserftp'
+  end
+  object edtsenhaftp: TEdit
+    Left = 112
+    Top = 391
+    Width = 153
+    Height = 21
+    PasswordChar = '*'
+    TabOrder = 10
+    Text = 'edtsenhaftp'
+  end
+  object edthashcodeapi: TEdit
+    Left = 112
+    Top = 62
+    Width = 249
+    Height = 21
+    PasswordChar = '*'
+    TabOrder = 1
+    Text = 'edthashcodeapi'
+  end
+  object Button1: TButton
+    Left = 476
+    Top = 464
+    Width = 170
+    Height = 56
+    Caption = 'Salvar Log'
+    TabOrder = 14
+    OnClick = Button1Click
+  end
+  object edttime: TEdit
+    Left = 113
+    Top = 451
+    Width = 74
+    Height = 21
+    TabOrder = 15
+    Text = 'edttime'
+    OnKeyPress = edttimeKeyPress
+  end
+  object Button2: TButton
+    Left = 375
+    Top = 729
+    Width = 98
+    Height = 64
+    Caption = 'Sincronizar Agora'
+    TabOrder = 16
+    Visible = False
+    OnClick = Button2Click
+  end
+  object RadioButton1: TRadioButton
+    Left = 256
+    Top = 729
+    Width = 113
+    Height = 17
+    Caption = 'Categoria'
+    Checked = True
+    TabOrder = 17
+    TabStop = True
+    Visible = False
+  end
+  object RadioButton2: TRadioButton
+    Left = 256
+    Top = 763
+    Width = 113
+    Height = 17
+    Caption = 'Sub-Categoria'
+    TabOrder = 18
+    Visible = False
+  end
+  object RadioButton3: TRadioButton
+    Left = 256
+    Top = 746
+    Width = 113
+    Height = 17
+    Caption = 'Produtos'
+    TabOrder = 19
+    Visible = False
+  end
+  object Button4: TButton
+    Left = 683
+    Top = 728
+    Width = 75
+    Height = 65
+    Caption = 'Download'
+    TabOrder = 20
+    Visible = False
+    OnClick = Button4Click
+  end
+  object edtcanal: TComboBox
+    Left = 496
+    Top = 236
+    Width = 217
+    Height = 21
+    ItemIndex = 0
+    TabOrder = 21
+    Text = 'Whatsapp-1'
+    OnChange = edtcanalChange
+    OnKeyDown = edtcanalKeyDown
+    OnKeyPress = edtcanalKeyPress
+    Items.Strings = (
+      'Whatsapp-1'
+      'Whatsapp-2'
+      'Whatsapp-3')
+  end
+  object edttokenwh1: TEdit
+    Left = 496
+    Top = 289
+    Width = 217
+    Height = 21
+    TabOrder = 23
+    Text = '3BCFCEE5D03991924B3EAE3767BEB806'
+  end
+  object edtsecretkeywh2: TEdit
+    Left = 735
+    Top = 316
+    Width = 217
+    Height = 21
+    TabOrder = 24
+    Text = '8e2ad285-1e15-4d8c-8aea-c47cfc3b9836'
+    Visible = False
+  end
+  object edtpublictokenwh2: TEdit
+    Left = 496
+    Top = 323
+    Width = 217
+    Height = 21
+    TabOrder = 25
+    Text = '6d800a60-a8b2-4ad7-b3a2-a88608cfa11e'
+  end
+  object edtdevicetokenwh2: TEdit
+    Left = 496
+    Top = 350
+    Width = 217
+    Height = 21
+    TabOrder = 26
+    Text = '900fc3a0-ce43-40e3-9dc2-8600622cf67d'
+  end
+  object edtinstanceswh1: TEdit
+    Left = 496
+    Top = 262
+    Width = 217
+    Height = 21
+    TabOrder = 22
+    Text = '3BCFCEE5D03991924B3EAE3767BEB806'
+  end
+  object memoauthorizationwh2: TMemo
+    Left = 735
+    Top = 397
+    Width = 217
+    Height = 42
+    Lines.Strings = (
+      'memoauthorizationwh2')
+    TabOrder = 28
+    Visible = False
+  end
+  object Memo2: TMemo
+    Left = 375
+    Top = 377
+    Width = 185
+    Height = 89
+    Lines.Strings = (
+      'data:image'
+      '\/png;base64,iVBORw0KGgoAAAAN'
+      'SUhEUgAAAQgAAAEICAYAAACj9mr'
+      '\/AAAAAXNSR0IArs4c6QAAHfdJRE'
+      'FUeF7t3V1yJMcNBGDqCvI9pJDufw'
+      'ZH+CA+Ax2y38ii'
+      '\/S0Ti2rSqVeh8JNIZKF7Z4a\/'
+      '\/PrbH68vD\/jvn\/\/4+7ss'
+      '\/vb7n5\/OLPGnZ092mvCpNvWnZx'
+      'W\/pN4khmKldkkuelZz0V6e'
+      '\/E3nojmf7H6pQLyHJRkYbYYOuRJI'
+      'cz7507NqpzEUK7XTwUrq0FwqEIoU'
+      '2k03LfGnZ6dJoP5UXKYHRnGpQLy8'
+      'aC'
+      '\/1AsAxGjfrBnGAVAdhmgTqrwJxno'
+      'NpQUymTXv55QQiKUwBVYKrP7XTu'
+      'LeIpthrHQkuugVoLmqnAzON1UbPp'
+      '3PW'
+      '\/qrdCYN3G4QWoUGnG74Rd4MsOo'
+      'Ab+E3XO72BbYjLNAZP6q'
+      '\/OTAXi8K8iSmZtuBJN'
+      '\/VUgXl4qENk7jQoEIqBE0yFPxKUC4'
+      'aTXviViutFz3c6TenEUjmbdILpBMDF'
+      'UwJTMapcMeXK2AnHe1OgdhIK3Qa'
+      'okRqKuybaQ3BxabzIcejbBT'
+      '+tIuKb5aS+1b4qf'
+      '+lMxTbBSDCoQyCoFVAdBSTXtLyEp'
+      'QsVmCaYc5GCocRUr7aX6q0A8fNXX'
+      'oVQFT4ihuWyQNBlKrUMxTXKpQJzf'
+      '\/3z6HUTStKQZGldjbJBKB0EHetrftFj'
+      'dwnQjrmKlvVR'
+      '\/3SC6QRz5nQjiBkmToVShUwySXPR'
+      'C0YHewF5zVlzU35d7B6FNU6JN'
+      '+9MG6cAk'
+      '\/hQDjTGNlZJUsdKbNxloxVRrm7ZLe'
+      'vktHjE2SKoE0maondam\/pTM6k'
+      '\/z07g6HBUIf2eQ9LICcUBvmvTaIC'
+      'V94k8HVWNMY1WB8MFPsFKuVSAq'
+      'EKoFR7sKxPnDRMkA6uCrnTZY'
+      '\/fUdxOGXrPqIcaZZBaICcfyhi2RVVa'
+      'VSO1XIxE5zmbbbyDmJoTfltMAqzklt'
+      'Kn5a24a'
+      '\/jbn8chtEQgI9q4ScttP8dFATAmku'
+      'OghJLoqz5qz4qb'
+      '\/kX08SwdnAtAKB7yWUBImdElIJnh'
+      'BIc6lAZF9Hr0Dgr1Vv3BIJ6ZPB36htI'
+      '4YKk5J+uh'
+      '\/qL6lDa1PhTPwlF4DypRtEN4hkrvjH'
+      'WTfInBSyMdCaX3IZaYxRgdCgaqcA'
+      'JP70rAK1Yac5K35qNx132l9SR3J2u'
+      'o5b'
+      '\/pK4tEFoALWbbtrG7VSBeNaztt740'
+      '1xLHgluzUcStwIx\/I4kEZKkkU+K'
+      '+6Q6KhDajeAXpTyEWU43rRtE9pFd'
+      '61o3iI9w2uCzbkzaS92EukF0g2BO3'
+      'RqEJG5yVoGZjjHtL6njy'
+      '\/1lrWSVVuBrl20kxW8ePx3yabsKxI'
+      'M2iA7W\/GB9lwtlevDVXwWiAsF'
+      '\/mKYCdk'
+      '\/AdKCn7SoQFYgKxMu9wdcNZ3rw1'
+      'V8FogJRgahAfKgXv7y'
+      '+vr6qmjzBTv9Jc'
+      '+OfhRQPzVn9JXYJLkkdGlcfY'
+      '\/Sf6fSG1vyeFDfhgZ6tQChSgV0yW'
+      'EHY49HpQdD8NG4FQhHdsatALOBc'
+      'gXj+H'
+      '+pVAesGsTAwSQgdtqThSX5KoOkY'
+      '6i\/BRbE'
+      '\/5aJxu0FoJ3fsukEs4JwM1nR6OqjT'
+      'QqdxKxDTHc'
+      '\/8jf4rxjQJdLCmX0QpSafz05t3Or'
+      '+EQtPYJ7noWe2b9uNJYqoYaN8qE'
+      'AdEpwdQm6GEnM5PSTWdXxI3OVu'
+      'B8M99VCAqEMms8a'
+      '+g63YZJYOHKxAVCP7wj66HG1vA9'
+      'A2dDALOWgXiA6AS7FVMp2Oc'
+      '\/HWD6AahWnC0U'
+      '+FU0kfJ4OHpwdJLBtN71O98kkAoC'
+      'fQGVKASO31On46hGCT5KcGTviW4'
+      'KAbTMXRQb'
+      '+FySyQTvlQgApYmwFcgAuB'
+      '\/4KjirL38gdDvTCsQB'
+      '\/SeBMp0LkoqvbE0v'
+      '+m4Cen1rNam'
+      '\/tSuApH9PdFuEMo0fFeh67USV9fm'
+      'JG4AAR'
+      '+tQPjHzRlUNEwulAoEgrwxqDpEScP'
+      '1bADL8ajWNh1XhXgDlydhoBcKCYQ'
+      '6e'
+      '\/oQ6aqv9U6TaoNASc6a3\/RQTsfd'
+      'ECGNobXpbE1zvALx'
+      '+5\/UywR4CvDBj5boWbWrQChSbr'
+      'eBaQUi+GWnW'
+      '+AlxNAtxWlqlknOett1g7Be'
+      '\/GWlmN7ieDeIbhDMZiVzBYIhrUDoj'
+      'aUr\/JNIqrUpXbQ29ae3jvrT'
+      '\/CoQimg3CP5OREIqFRdd63Xwk4H'
+      'RXJRqil'
+      '\/iT89qP9RO46qdxk3sNBcV8Vu5XH'
+      'nESIrVQUiGPDmrDa9A'
+      '+DcKk2FTnBNe6UWhdTwplwoEvhx'
+      'VolUgfPD1otDBUjuNm9hpLsqXW7lUI'
+      'CoQRy7rFqXCmdyKybBt5NcN4oCyg'
+      'pIQI1FNJbjGUKLpjZD40xjaI'
+      '\/Wng6qYqp3GVTuNm9hpLor9rVzeb'
+      'RBJIhtioIOlAqH+vmLDp'
+      '\/uhZFaslGvaI'
+      '+25xp220zoSnDVn7VEFItiOFOSNQ'
+      'VVSKYF0+9Ch1OFQf1pHEldjqJ3mor'
+      '1Uf4rpyV8FogLB'
+      '\/xSdEHeazNNDOS3iOpTTQpzgUoH'
+      'AK1+bhu54AJWkT4qrg1CBOHdNua'
+      'Y4VyDwxldAlbg6lHrLaiOVQLfiTuOs'
+      '\/hQ\/7a'
+      '+Kc2KnuWgv1Z9ietwg3v51b3W20a'
+      'AEgOnB0lyS5iYxEgHTnBNMNYZiMD2'
+      'oGjfBOZmtJK6ePeX37k'
+      '\/vJUU86WxC5qSOZBA2SJqQJcE0'
+      'wUUvI7VTDJ5Ur'
+      '+ac2FUgEL0KxPl3DJ80MN0gkMw'
+      '\/YFaBQLAqEBWIv6jyJEFE6kZmFQi'
+      'ErwJRgahA\/GdY6HMQ'
+      '+vyoijs9gJof6sPKn5O7hcFGjzZq01'
+      '4qNxQX9afvk5JHJX3nonannCsQB1'
+      'QU0Fuk0uFQ8m2QXgdGa0vsElw2sE'
+      'r4p7WpiFcgKhDHWVMCKZkrEPNfg1'
+      'fs1a4bBF47Cmg3CCd9BcKxSvjXDQ'
+      'KHXG9AJa4Cj'
+      '+kdP36tuSQxVNQUPyXzdG2KgT4SK'
+      'C7qT'
+      '+tVXm3Y0QahwCeAaozEbhpQzUUH'
+      'SwmkcW8R90lxN7BKYqiYJrOV8L4Cg'
+      'b8eNd0gJVUS90mDqiK5MTCKveas'
+      '\/vQC0IHWuOpP6\/3pPzmnhU3bJU'
+      'Alg6rAK4ESXDSX6UG9FXcDqyTGNM'
+      '56KWjcbhDdII78VgKpcFYgzjIyjXMFI'
+      'pDrbhDnT0Pq5qL4KUk34gZ04ZfGSY'
+      'xvIRD'
+      '\/b7eENk0JrgTSAVS7JK6e3bBT'
+      '\/mkuus0k'
+      '\/Z2OsdFzxXn0g1IK8jQACVkqEIrejp'
+      '0SV7OZHt5kY7o1H8m8VSDwvYQ2N'
+      'yGuilUyRMnAaG2JXVLbxvBuxEgGW'
+      'vNTnCsQFYhknsfPKnE1cCKImst0jAr'
+      'E73+'
+      '+6682Q4mRKKk2PMlZSaB2iovWpv6'
+      'm7RJMteeas'
+      '+aSYHpra9Ta6HMQWkSyhusgaDM'
+      'UACWLkk+x0vxu4aJxFT\/1p'
+      '\/3VuAnO0zGUQzpHCaaKSwVCWXC'
+      'w22hQEkOJpsRVUiX'
+      '+KhBnQiYXj3LoFLkCUYE4IpCQqgLh'
+      'pFJBrEDge4kEUG'
+      '+bWeoQqd3GYOkWkOS8UYd1yH9X'
+      'UnmVbGWKi8bQHqldNwhlFdop8Gqn'
+      'BNLbRImWxEWoor8upjGm69W4Krq'
+      'Ks9ahvFK7o0D87D'
+      '+ck5A5AWqjuRpj43bSGEpmJVVip'
+      '\/2dxlk5qXZah2KVCIlipTz46X84JwE'
+      '5AX4aKPU33VxtZAVi57snCc4ViOH3'
+      'CBWI+WfoRHBU7NVO'
+      '+6vivDG8GzGmL5kE524Qh09SKiHV'
+      'TkmVNFJjVCDmfxtS'
+      '+9YNohvEUTN0eJVoyQ1TgahA'
+      '\/MUf5cGnPwcxTdJpddU1V4HSbSG'
+      'xUyFJct6IMc2NBFPNJeGLclftpnNW'
+      '\/E4YVCAWHjG0QRvDuxFDCZ5sTIq'
+      'p5lKBOG8VFYgKxHHWki1Fh7IC4au'
+      '+bh96ASj2FYgKRAXig2fyZCiTjUQFV'
+      'mPottVHDHyJqoBO26n6J7f7RgwluN'
+      '5iGzjrsG3YKX6ai'
+      '+J3FIjPfpJSmztNyGl\/Cp7a6a2T'
+      '+NOzSY9UhJ5U7\/TAKM7TWE1zXH'
+      't0svv05yAS8ulZVdLEn5JA7bQZiT89'
+      'q7gkOSdnk'
+      '\/4mtSX4aVytLRG1DWGqQAyz5UkD'
+      'o2ROck7O6hBpi5Jh0xiKqdaW5FyB'
+      'OKA8vX4lxEhIoHG1XvWnhJwmn'
+      '+aX1Ku1aS5qN42VYrARtxuEsgDtnn'
+      'Sj6m2X5JycVYFF6I'
+      '+fDtRh0xiKqdaWiNqKQPz62x'
+      '+vnwFHk1PfSSMV5OmclQSKgeanQ'
+      '6mYKn46HEl+CQYJzoqVxlCsEn'
+      '+ac9Jf'
+      '+hzEk4rVXJSkSYMqEPPfa6hAOCMr'
+      'EIiVKqSSD8MezbRpKnQqQoqBxtU6'
+      'NG5ipxho3zQX9ad20\/yb7tGpjm4Q'
+      '2l2006bpoOpwJKTfOKsxdIimcU78IT'
+      'X4G5TqT3NW7CsQCx'
+      '+r1qZVIM6\/AFWBUHmY'
+      '\/wWto0C8\/SSl3lhexuctN8iSDKpW'
+      'pqKhSp\/g8qSzCS4J9orBk2LoXGpt'
+      '+o7u3T9zaiIKXmKXFLsRV2Mkg6CN1'
+      'L4lmE6fTXBJsNc6nhTjVn8rEAfkNwik'
+      'm0sFwr8SPT1EFYiXlwpEBeI4BxvC1'
+      'A1CJehst9GjCkQFogKRzSn'
+      '\/UaAwzLvjjxEILSxJWGPoGpms8JqL'
+      'vlTUXKZr0zqSuFrb9Lag'
+      '\/hIMNh41lUOJXdJf2iAU5ApE9k9PS'
+      'SM3yKw8UDKruCS4aM5JLhpD52PaL'
+      'sGvAnH4lSlt'
+      '+JMGoQKhXXO7DUyVQ4ldBQKHXEF'
+      'WCiX+lHy6Sqs\/rU3j6s2r'
+      '\/rQO9af1ah2Jv'
+      '+nNQP1VICoQ1z7Gq4OlA12B8E'
+      '+YrgjE2697a4MSVUpUOCFkcuMncZ'
+      'N6tR86gEku02eTfkyfTWp7OvYJVu'
+      '++rKWErED4V50T8mk'
+      '\/nk7SaYFNSK+Yat'
+      '+ejn2CVQUCH0+mCa7kUzI\/naTT'
+      '+CWkV0y1R0\/HPsGqAlGB0DkYt0uI'
+      'O302Ka4CgejdAkrJonZY7spvIOptd'
+      'wt7xaobRIJUdjbhPW0QCfmU4PpO'
+      'Q4udtktapLnoEClWiT'
+      '+NkfR3I0bC3afjl'
+      '\/wrhvK5AnH4EZkNUmkMHcBpfxvD'
+      'uxFDcdGB0X7cqi3J75RzBaICobOx8'
+      'qWk6VuxAsHtPRpWICoQzKDp4b11'
+      'y3LBB8Pkhp7Gb9pfNwj8694bt47GU'
+      'EJO'
+      '+9sY3o0YiouKhvbjVm1Jfo8RCFU'
+      '+tdNmKAm'
+      '+4ssprU1fmCZ22g8lsw655qxY3eKB'
+      '8n4DlyuPGAkA06RSsmjc6eFQf0kdt'
+      '\/qhmG4MQoKfnp3GeQOXCgR2V8m'
+      'sAz3tD8vgz27obax16HAofnq76xAl'
+      '+OlZxSCxm8alAoHd1UFQgk'
+      '\/7wzIqEArUB3bTfUuEWMVPY'
+      '\/QdRECODWJoekqM5DZRUikueiuq'
+      'wCa1Kc4aQ\/0pBomd5qwcol'
+      '+UUmeaXAKonlWCJzlrIxPSa37aIx1'
+      'ozVlxTuImuShfkl7eipH0XOutQBy6q2'
+      'RWkJXgSjQdShUXjav1qp3GVfy0bxv'
+      '+NmJUIC5901KJlgyCNleHXP1pbQn'
+      'BE1xUNKZjTPtL8EswSPhy4kY3iG4Q'
+      'ykf'
+      '+qPV3GbZETCsQSKsEZL0VE9XUs9M'
+      'Nf3ptSb0ViPNwTOOiHNJH0uMG8fY3'
+      'KacHBnWEzRLBUdInGHAhC4ZKoCQ'
+      'VJd9GDM0lsdM6NrDXXBI+v'
+      '\/scROJsA5QKhNPiVj'
+      '+m4yYDrbe22in60xhoXLXTOapA4It'
+      'QBVQbtGG3QVId3qRejbFhp3VsYK'
+      '+5JJd+BaICkfCMP5mZBNkY'
+      '\/G4Q5w5VICoQyexWID5A79tuEKr'
+      'WCauSGMmqr7dE0lytLalDsdd6b'
+      '\/lLXhprzgnOygPtueasdkltGuOnf1lL'
+      'n3+SZmixOjCaS1LbRnO13mn81F8F'
+      'IkHq\/IebMo\/vT1cghn9yTm'
+      '+TCsSZyok4q2DrEGku2nONq3YbHK'
+      'pAVCCUj'
+      '\/xJSnZ4MNSh1BjJEGkuFQh8kZc0L'
+      'WmGxtWVW3PRG0vjah1qNx132l8f'
+      'MbSTZ7tE'
+      '\/DQybRDqTAmUDKDmoqquICc5T'
+      '+eiGGg\/En'
+      '+3RPIr9kNxVjvtr9qd4lYgDo8Y0zdb'
+      'BeJl\/PGkAuGYViAOEz09lF'
+      '+RkAkxEpGcxj7J5daGo1tAYqf9Vbt'
+      'uEPh3Mb4LIRNiJBhUIJKx97PaX7Wr'
+      'QFQgjp98VErqFlWBUEQzOx18tTsK'
+      'xOvr6+v\/SvMWMTbiagxdVf8Xlv'
+      '\/t'
+      '\/yeNTG78pDbFL3kZrGenMdBeJoK4'
+      'gV9Sx+gvSiVAJc1N4mqDkiHSBlUg'
+      '\/MVbgqmeVbsN'
+      '\/qlITvO5AhF8xkObpkSrQFQgPuKK'
+      'cq0CcUBwQ8G7QZypq4RMCK5nky1'
+      'URVx5oGK\/gZ\/WdsK5G0Q3iCN'
+      '\/dCg3CK65VCDOG9ioQCTKp41UUq'
+      'laKzE2No0NDBQX7aUSSHHW\/BJ'
+      '\/0zFucUNnYSO'
+      '\/E6bvNgglldqVBNlqrsObEEhjJL3cEM'
+      '4kRoLf9JCr'
+      '+OkMan4VCPzmppJFG5kMlg6v5qxD'
+      'pHGVfBpX\/U1jn'
+      '+CnOWsMra0CgS8kdQC1QWqnjdT'
+      '8dCg1rhIoiZsMxzQuiQhpz9Uu6VFy'
+      'NsmvG0Q3iOiTlMlAJ8OrApbE0MFSu'
+      '2TIk7NJfkeBePuHczSA2mmxCfmmY'
+      '2htG3a3cNGh1A0i6dEGBrptab3TYp'
+      'VgkPCUvu79JPCUuNMNSjBIGpQQY'
+      '3oon5SLDqpikPRXYyh'
+      '+CXc1F623AoFf4FJAp'
+      '+2UVNPCqf6mB'
+      '\/VW3KRvOpTaywrEpR9pSRqUEKg'
+      'bxHnsdRC0byouST9UELU25VWCQV'
+      'JvN4huEDpXRzsdmOSWTYZD4+qga'
+      'r3fRiDeft17GoDp5kZsPhzeaKRikOTy'
+      'FXFJuKYDneCiMb5iHSqc9ElKdabNUE'
+      'DVX2KXDKWerUCcO6Q8SFbkhBsViJ'
+      'eXCkTwPqQCkX09uwKR4afil'
+      '+BcgahAHHmm4qe3rG5Ruq0mcZPB'
+      '0m3m6XVofhWICkQF4gPFUBFKbmi'
+      'NoaI2LcSf'
+      '\/j2IDSVVUPS2U39qlzRXzyZ2Wsd0L'
+      '5Wk2jfFQOMmuGgMrU39Tees'
+      '\/ioQitTBbpq4Oqhqp6Ul'
+      '\/nQQNrC6NWxJbbdyVm5UIBSpCsS'
+      'jHkUSYdKWJzH0bAXigEByY'
+      '+nLFSVBYpfcHHo2sdPakn7oIGgdOj'
+      'BJ3ASX6fzU33TO6q8bhCLVDaIbxA'
+      'dcScTv8QLx9uveOi9666hdElfPajOm'
+      'c9b89FZUf9P1an4bb'
+      '\/U1hm6cOuRql\/RI'
+      '+5bUpmfffRdDC9MhUrskrp5V4Kdz1'
+      'vx0ANXfdL2anw6v4qx2iov6S'
+      '+w0F7WbxrQCgcjrjaANwrDRup7ES'
+      'OqtQOx88lGFXYdcuXvqbzeI4Nucya'
+      'Bqc6djVCBejj'
+      '+7t4FL0stkyJOzFYgKRDQwG7edrv'
+      'o6gOovsdNc1C4Z8uTspz9qrYXpWq'
+      'pEm26agjd942vcpF69FRPslQcaQ3H'
+      'W2hKcN2rTGDpHWq\/GrUBc'
+      '+tN72sgKxPwjgYqQDlEifhqjAnFAKr'
+      'klNgDVGAmBKhAViL'
+      '\/4o1zTi0eFqRtEN4gjV1SclWhPEslu'
+      'EN61CkQFogLxAze0jtb0Tf6YDUKVX'
+      'hNWf6rqCvzGaq65aG0J'
+      '+bQfSc6an9ab5JLUq2dvcXcDZ52P0'
+      'e9iaGFKDC0iIaTGUDvFYJqk6k'
+      '+x1zrU7hZ'
+      '+049Kit90vdM4a34ViIW'
+      '\/16kCpiRISK8E11zUTgmZ'
+      '+NMbX8VU\/Wl'
+      '\/N7BXnNWuAlGB0JmM7JSQGkSHPB'
+      'HTCsThV60VFG2Q'
+      '+ptWYSXktN00wRU\/7cfGLTbdS'
+      '\/U3jZX60\/w2sJ\/mM'
+      '\/1lLSV9YpeAlwxHAugtAiX1Kpmf3kv'
+      'FXvub1LtxNqlD'
+      '+XKqowIRPGIoSXUoVSS14dP'
+      '+dBA0ruKSxE0GS'
+      '+Nu2CV1KF8qEMEXsxRkHY6Nhie5J'
+      'KTXuBUIR3mDLxWICsSRkSp'
+      '+SucKhCLldhWIhU806htttesjxpngF'
+      'QgffLW8JhBv'
+      '\/7q3JpzYKYGmQUniar0qLmqncdXu'
+      'Fgaan9rp1qM4T9vp5aEcv2VHn4PQ'
+      'pqldQtJbZ5PakuZqXLVL8JuOof6Sdx'
+      'XTg6\/'
+      '+KhBBdxOS3jqr5SqB1E7jql2C33QM'
+      '9VeBmP'
+      '\/Ku15a3SAO7NP1deOWSIZI80sGM'
+      'ImR1KY9UiGetlNcdFBv2VUgKhDHOd'
+      'UB1EFIxCARsOnBV3+Ky63B17j0ex'
+      'DqTEmQkG8'
+      '+NGDofyoMKBG4QSvDpBmncJ5FPL'
+      'xS1q0D4T85N868CUYHg3ztU8ungq'
+      '10FogKhHDjaTd+ySlxdafV2T'
+      '+JqDF0ttSEJ9lqv5qL9UKGbjvukHikP'
+      'ukF0g+gG8XL+k3oViJcX'
+      '+sta00qv6qWKm9wc07eJkkrtFPvET'
+      'jFQnLVv0zyYxlT9aR2Jv40enfpbgTg'
+      'gnxB8mgTJ4Ov6v0E'
+      '+xUXrVX86vNM9VzFN6tjobwWiAhG'
+      '911Fx0UGoQChS2V8aV3GpQFQgKh'
+      'DhOwjdUnz0zVKHXEW8jxiG'
+      '+8v0uolhj2Z6oyZ2CYH0rGKgdag'
+      '\/Hd7pnn+bR4y3X'
+      '\/dWoG4BoA1XAmm96k8JrnZar9ahf'
+      'UtuJ8Vq2m4DA+3Hrdqm49I'
+      '\/cz4dFCX99G2nuOiwJQRPziouCc7T'
+      'xNWctUcb'
+      '\/hIMtL9JjNPZCkTwS1ZKvgrENG3P'
+      '\/nSIVOim'
+      '\/SUoaC5JjArEAYFp4PXRQe0SEdKz'
+      'envqYE2TVP1pL7WOaX9ah'
+      '\/Yj8adnu0F0gzhyRbceJdqG3fRAT'
+      '\/tLMNBckhi0QWiAhEDTZ5ObMqlXz'
+      '+q2MH2zaX7TdtP1Jvkp124NYFLbB'
+      'u8\/'
+      '\/YMxCryuS9PDof60QQmBpgcmyUX'
+      'rTeym601yUZ4+HVPFYJr3FQhEPiH'
+      'Q9MAkuWC5kdl0vUkyFYgEPfzjvRtb'
+      'gCqfDof6U'
+      '\/g0rq59SlzFXuvYsKtAbKB8jjHN'
+      '+24Q2MsKBAL1kv0Cs0cxSxXipL'
+      '+WyY7VYwRio9yNpt267ZS4ukFs1D'
+      'Hdj2kyb2ClGDy9H5rfpzeICkSGQAUi'
+      '+xk1RV9xTuw2HitV'
+      '\/BSXCgQipUBN33ZKSCXGRh16eyL0'
+      '0S9ZaQzFObGrQGg3hu2mCXmrkcm'
+      'QJ2eV9Nq26X5Mi'
+      '+4GVorB0wVb8+sjxj\/+'
+      '\/o5X04OVEDc5O12HDocKTgUie8xK'
+      '+sEC8etvf7xqQ3+mXUKWDaC0dgV'
+      'e7ZKtJzmr'
+      '+WnfErHSs4mdYrUh2Bt1aAz6RSkdj'
+      'sROiaYN0lx0EKb9JXE3zmoM7ZsSUv'
+      'ub5KcXynRtikFip0KnMSoQ'
+      '+IhRgdj5DcQKhOOcCF0FAidabyJ0'
+      'd3wzr82Ybvj0baJ1JEOenNX8Epxv5'
+      'ZfwVM'
+      '+e7LpBdIM4\/gZnQqpkiJKzFYjzNZb'
+      '08p1A6HOX3qhJwzWG3gjqT2\/exN'
+      '80LopB0l+NobgocbUfKhC3sNc6FD'
+      '\/tR9LzCgR2IwEZQ\/BNrgS'
+      '\/RUittwKx88+cCXcrEMjmBGQMUYH'
+      '4gb9PoeKifZvePrTnmt'
+      '+tS6ECgZ1MGokhKhAVCKXKv'
+      '+36iIFwKVDo7mhWgXBCKs66Beij0v'
+      'QWoD1P'
+      '+KcxHr1BTAOQNFLJpzlrg5KcNRcdh'
+      'GkM1N'
+      '+0XSIQmovGUB4kg6o537Kjf'
+      '+ZUQLUI9Zc0KGmaxq1AaMfdTrnhH'
+      't9bagzlQcK1pI6NsxWIA8pKjArEPEV'
+      '1eJPIGkN5UIF40AeHEmLoWq'
+      '\/EqEAk3Tif1eFNImsM5UEFogJx5G'
+      'MFIhnTCsQ8evMev9wjhm4Bycu9ZP'
+      'C1RdN1JP40Z7XTmzfJOdkCpuMqLo'
+      'mdcjKpTWeGPgeRJPL05mozphuu'
+      '\/hQ\/9TdtV4GYRnT'
+      '+25yaYTeIA1IVCKWPPyZMP6erSKq'
+      'dVqzip'
+      '\/7UTjmZXNzdIA7vUpS408RIGjlNei'
+      'Wp2ilWGxhMY6W1KVZqV4E4\/EXtW'
+      '83VZmhzVYTU3zQuGlftdIgqEIpoHzH'
+      '4OwdKKiXp9PDqmpbEVYFQDG4JYlJ'
+      'HwgM9q+OrOKs'
+      '\/5UYSVzH4tu8gNsDThmsuSdOSIU'
+      '\/OKgYaI7FTcVactTbtr'
+      '\/qrQODnKvSGUWJog24RSOMqLkp'
+      'cHUrFLyG45jKNVVKb4pzEUFw0RoLf'
+      't\/hnzqRpCp42Q3PRuBUI'
+      '\/xapYqW9nL6MNG4FYvglpQ6l3nba'
+      'yIRAFYj5l3EViDNzE67RBpEMjA5l0tx'
+      'pgdBcErtpTKf9JbeYElIFdiOXhEPT2K'
+      'u\/aVw+'
+      '\/ZJSE1Y7LUyJljQ3yaUCkd1YFQidG'
+      'MdZZ0F53w0ieNypQDhxdRSmMd24'
+      'ZLS2aTsd8mSLr0BUII68nSafDkcFQp'
+      'HydzgVCPxYdQKUDozaOQ3uWCZ1'
+      '6K3dR4yst9M9oncQWcqfP53cHArU'
+      'BnGV9IqU1pb407P6fKv'
+      '+pvsxHVc5mfQ8wUDr1ToqEIfHiWm'
+      'QE7IkG47WkRCyApF9JkP7q71Uuw'
+      'pE8B5hGuQKhCLqw7aBqcZQgVUxV'
+      'X'
+      '+O6nvLCkQFgvmTEFJJr8ncykXj6m'
+      'CpuHSDUGYc7LQZ03aassZNyKIESg'
+      'ZVh2O6Dq0t6YeeVQw2eq65aG3aN'
+      '3239S'
+      '+EK6X4gYnjOwAAAABJRU5ErkJggg'
+      '==')
+    TabOrder = 29
+  end
+  object FDConn: TFDConnection
+    Params.Strings = (
+      'Database=base_intermediaria'
+      'User_Name=root'
+      'Server=localhost'
+      'Password=sqlremoto'
+      'DriverID=MySQL')
+    Connected = True
+    LoginPrompt = False
+    BeforeConnect = FDConnBeforeConnect
+    Left = 520
+    Top = 86
+  end
+  object FDQuery: TFDQuery
+    Connection = FDConn
+    SQL.Strings = (
+      'select * from category')
+    Left = 664
+    Top = 134
+  end
+  object AbreFoto: TOpenDialog
+    Left = 592
+    Top = 86
+  end
+  object IdSSLIOHandlerSocketOpenSSL1: TIdSSLIOHandlerSocketOpenSSL
+    MaxLineAction = maException
+    Port = 0
+    DefaultPort = 0
+    SSLOptions.Mode = sslmUnassigned
+    SSLOptions.VerifyMode = []
+    SSLOptions.VerifyDepth = 0
+    Left = 416
+    Top = 94
+  end
+  object IdFTP1: TIdFTP
+    Host = 'ftp.uhserver.com'
+    Passive = True
+    ConnectTimeout = 0
+    Password = 'Bios@449'
+    TransferType = ftBinary
+    Username = 'novalouza2'
+    NATKeepAlive.UseKeepAlive = False
+    NATKeepAlive.IdleTimeMS = 0
+    NATKeepAlive.IntervalMS = 0
+    ProxySettings.ProxyType = fpcmNone
+    ProxySettings.Port = 0
+    ReadTimeout = 300000
+    Left = 672
+    Top = 88
+  end
+  object FDPhysMySQLDriverLink: TFDPhysMySQLDriverLink
+    VendorLib = 
+      'C:\Users\I5\Documents\Embarcadero\Studio\Projects\wagner\Atualiz' +
+      'aVitrine\Win32\Debug\libmysql.dll'
+    Left = 608
+    Top = 158
+  end
+  object Timer1: TTimer
+    Enabled = False
+    Interval = 300000
+    OnTimer = Timer1Timer
+    Left = 720
+    Top = 24
+  end
+  object Timer2: TTimer
+    Enabled = False
+    Interval = 900000
+    OnTimer = Timer2Timer
+    Left = 720
+    Top = 80
+  end
+  object Timer3: TTimer
+    Enabled = False
+    Interval = 600000
+    OnTimer = Timer3Timer
+    Left = 720
+    Top = 128
+  end
+  object Timer4: TTimer
+    Enabled = False
+    OnTimer = Timer4Timer
+    Left = 624
+    Top = 56
+  end
+  object tmSync: TTimer
+    Interval = 300000
+    OnTimer = tmSyncTimer
+    Left = 408
+    Top = 32
+  end
+  object FDQueryAtualiza: TFDQuery
+    Connection = FDConn
+    SQL.Strings = (
+      'select * from category')
+    Left = 536
+    Top = 14
+  end
+  object FDQueryConfig: TFDQuery
+    Connection = FDConn
+    SQL.Strings = (
+      'select * from category')
+    Left = 560
+    Top = 142
+  end
+  object RESTSendText: TRESTClient
+    Authenticator = AuthServer
+    BaseURL = 'http://localhost:3001/api/whatsapp/br/sendtext'
+    Params = <>
+    Left = 16
+    Top = 616
+  end
+  object RequestSendText: TRESTRequest
+    AssignedValues = [rvConnectTimeout, rvReadTimeout]
+    Client = RESTSendText
+    Method = rmPOST
+    Params = <
+      item
+        Kind = pkREQUESTBODY
+        Name = 'body2E093205D654457995ACED066B658563'
+        Value = 
+          '{     "publictoken":   "6d800a60-a8b2-4ad7-b3a2-a88608cfa11e",'#13#10 +
+          #9#9'  "devicetoken":   "900fc3a0-ce43-40e3-9dc2-8600622cf67d",'#13#10#9' ' +
+          '   "number":        "11963930108",'#13#10#9#9#9'"text":          "Teste w' +
+          'hatsapp '#195#161#195#163#195#167'",'#13#10'      "time_wait":7 '#13#10'}'
+        ContentType = ctAPPLICATION_JSON
+      end>
+    Response = RESTResponse1
+    Left = 128
+    Top = 616
+  end
+  object AuthServer: THTTPBasicAuthenticator
+    Username = 'magic'
+    Password = 'Sssasbmsai@!'
+    Left = 256
+    Top = 552
+  end
+  object RESTSendFile: TRESTClient
+    Authenticator = AuthServer
+    BaseURL = 'http://localhost:3001/api/whatsapp/br/sendfile'
+    Params = <>
+    Left = 24
+    Top = 552
+  end
+  object RequestSendFile: TRESTRequest
+    AssignedValues = [rvConnectTimeout, rvReadTimeout]
+    Client = RESTSendFile
+    Method = rmPOST
+    Params = <
+      item
+        Kind = pkREQUESTBODY
+        Name = 'body2E093205D654457995ACED066B658563'
+        Value = 
+          '{     "publictoken":   "6d800a60-a8b2-4ad7-b3a2-a88608cfa11e",'#13#10 +
+          #9#9'  "devicetoken":   "900fc3a0-ce43-40e3-9dc2-8600622cf67d",'#13#10#9' ' +
+          '   "number":        "11963930108",'#13#10#9#9#9'"text":          "Teste w' +
+          'hatsapp '#195#161#195#163#195#167'",'#13#10'      "time_wait":7 '#13#10'}'
+        ContentType = ctAPPLICATION_JSON
+      end>
+    Response = RESTResponse1
+    Left = 136
+    Top = 552
+  end
+  object RESTClient1: TRESTClient
+    Authenticator = HTTPBasicAuthenticator1
+    BaseURL = 'http://localhost:3001/api/whatsapp/br/sendtext'
+    Params = <>
+    Left = 696
+    Top = 392
+  end
+  object RESTRequest1: TRESTRequest
+    AssignedValues = [rvConnectTimeout, rvReadTimeout]
+    Client = RESTClient1
+    Method = rmPOST
+    Params = <
+      item
+        Kind = pkREQUESTBODY
+        Name = 'body270550ED44C24EE9A0FC03A88D924239'
+        Value = 
+          '{     "publictoken":   "6d800a60-a8b2-4ad7-b3a2-a88608cfa11e",'#13#10 +
+          #9#9'  "devicetoken":   "900fc3a0-ce43-40e3-9dc2-8600622cf67d",'#13#10#9' ' +
+          '   "number":        "551147276852",'#13#10#9#9#9'"text":          "Teste ' +
+          'whatsapp '#195#161#195#163#195#167'",'#13#10'      "time_wait":7 '#13#10'}'
+        ContentType = ctAPPLICATION_JSON
+      end>
+    Response = RESTResponse1
+    Left = 704
+    Top = 400
+  end
+  object RESTResponse1: TRESTResponse
+    Left = 712
+    Top = 408
+  end
+  object HTTPBasicAuthenticator1: THTTPBasicAuthenticator
+    Username = 'magic'
+    Password = 'Sssasbmsai@!'
+    Left = 720
+    Top = 416
+  end
+  object RESTStatus: TRESTClient
+    Authenticator = AuthServerStatus
+    BaseURL = 'http://localhost:5000/api/whatsapp/status'
+    Params = <>
+    Left = 24
+    Top = 488
+  end
+  object RequestStatus: TRESTRequest
+    AssignedValues = [rvConnectTimeout, rvReadTimeout]
+    Client = RESTStatus
+    Params = <>
+    Response = RESTResponse2
+    Left = 136
+    Top = 488
+  end
+  object RESTResponse2: TRESTResponse
+    Left = 376
+    Top = 488
+  end
+  object AuthServerStatus: THTTPBasicAuthenticator
+    Username = 'magic'
+    Password = 'Sssasbmsai@!'
+    Left = 256
+    Top = 488
+  end
+end

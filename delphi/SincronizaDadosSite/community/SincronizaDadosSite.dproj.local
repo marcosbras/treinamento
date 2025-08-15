@@ -1,0 +1,26 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<BorlandProject>
+	<Transactions>
+    <Transaction>2021/11/16 16:55:57.000.198,=C:\Users\I5\Documents\Embarcadero\Studio\Projects\Unit1.pas</Transaction>
+    <Transaction>2021/11/16 17:54:28.000.049,C:\Users\I5\Documents\Embarcadero\Studio\Projects\wagner\Transf_BaseDeDados\community\utransfDados.pas=C:\Users\I5\Documents\Embarcadero\Studio\Projects\Unit1.pas</Transaction>
+    <Transaction>2021/11/16 17:54:28.000.049,C:\Users\I5\Documents\Embarcadero\Studio\Projects\wagner\Transf_BaseDeDados\community\utransfDados.dfm=C:\Users\I5\Documents\Embarcadero\Studio\Projects\Unit1.dfm</Transaction>
+    <Transaction>2021/11/16 17:54:38.000.937,C:\Users\I5\Documents\Embarcadero\Studio\Projects\wagner\Transf_BaseDeDados\community\ptransferencia.dproj=C:\Users\I5\Documents\Embarcadero\Studio\Projects\Project1.dproj</Transaction>
+    <Transaction>2022/01/03 14:38:39.000.901,=C:\Users\I5\Documents\Embarcadero\Studio\Projects\wagner\Transf_BaseDeDados\community\Unit2.pas</Transaction>
+    <Transaction>2022/01/03 14:39:14.000.242,C:\Users\I5\Documents\Embarcadero\Studio\Projects\wagner\Transf_BaseDeDados\community\uCategoria.dfm=C:\Users\I5\Documents\Embarcadero\Studio\Projects\wagner\Transf_BaseDeDados\community\Unit2.dfm</Transaction>
+    <Transaction>2022/01/03 14:39:14.000.242,C:\Users\I5\Documents\Embarcadero\Studio\Projects\wagner\Transf_BaseDeDados\community\uCategoria.pas=C:\Users\I5\Documents\Embarcadero\Studio\Projects\wagner\Transf_BaseDeDados\community\Unit2.pas</Transaction>
+    <Transaction>2022/01/19 15:55:56.000.914,C:\Users\I5\Documents\Embarcadero\Studio\Projects\wagner\Transf_BaseDeDados\community\uCategoria.pas=C:\Users\I5\Documents\Embarcadero\Studio\Projects\wagner\Transf_BaseDeDados\community\uProdutos.pas</Transaction>
+    <Transaction>2022/01/19 15:55:56.000.914,C:\Users\I5\Documents\Embarcadero\Studio\Projects\wagner\Transf_BaseDeDados\community\uCategoria.dfm=C:\Users\I5\Documents\Embarcadero\Studio\Projects\wagner\Transf_BaseDeDados\community\uProdutos.dfm</Transaction>
+    <Transaction>2022/01/19 16:00:12.000.535,=C:\Users\I5\Documents\Embarcadero\Studio\Projects\wagner\Transf_BaseDeDados\community\uCategoria.pas</Transaction>
+    <Transaction>2022/01/27 14:27:40.000.296,C:\Users\I5\Documents\Embarcadero\Studio\Projects\wagner\SincronizaDadosSite\community\ptransferencia.dproj=C:\Users\I5\Documents\Embarcadero\Studio\Projects\wagner\SincronizaDadosSite\community\SincronizaDadosSite.dproj</Transaction>
+    <Transaction>2022/01/27 14:29:03.000.677,C:\Users\I5\Documents\Embarcadero\Studio\Projects\wagner\SincronizaDadosSite\community\uCategoria.pas=C:\Users\I5\Documents\Embarcadero\Studio\Projects\wagner\SincronizaDadosSite\community\uSincronizaDados.pas</Transaction>
+    <Transaction>2022/01/27 14:29:03.000.677,C:\Users\I5\Documents\Embarcadero\Studio\Projects\wagner\SincronizaDadosSite\community\uCategoria.dfm=C:\Users\I5\Documents\Embarcadero\Studio\Projects\wagner\SincronizaDadosSite\community\uSincronizaDados.dfm</Transaction>
+    <Transaction>2022/01/27 14:37:26.000.835,C:\Users\I5\Documents\Embarcadero\Studio\Projects\wagner\SincronizaDadosSite\community\uSincronizaDados.dfm=C:\Users\I5\Documents\Embarcadero\Studio\Projects\wagner\SincronizaDadosSite\community\uSincronizaDadosCategoria.dfm</Transaction>
+    <Transaction>2022/01/27 14:37:26.000.835,C:\Users\I5\Documents\Embarcadero\Studio\Projects\wagner\SincronizaDadosSite\community\uSincronizaDados.pas=C:\Users\I5\Documents\Embarcadero\Studio\Projects\wagner\SincronizaDadosSite\community\uSincronizaDadosCategoria.pas</Transaction>
+    <Transaction>2022/01/27 14:45:49.000.281,C:\Users\I5\Documents\Embarcadero\Studio\Projects\wagner\SincronizaDadosSite\community\uProdutos.pas=C:\Users\I5\Documents\Embarcadero\Studio\Projects\wagner\SincronizaDadosSite\community\uSincronizaDadosProduto.pas</Transaction>
+    <Transaction>2022/01/27 14:45:49.000.281,C:\Users\I5\Documents\Embarcadero\Studio\Projects\wagner\SincronizaDadosSite\community\uProdutos.dfm=C:\Users\I5\Documents\Embarcadero\Studio\Projects\wagner\SincronizaDadosSite\community\uSincronizaDadosProduto.dfm</Transaction>
+    <Transaction>2022/01/27 14:54:00.000.217,C:\Users\I5\Documents\Embarcadero\Studio\Projects\wagner\SincronizaDadosSite\community\uSincronizaDadosProduto.pas=C:\Users\I5\Documents\Embarcadero\Studio\Projects\wagner\SincronizaDadosSite\community\uSincronizaDadosSite.pas</Transaction>
+    <Transaction>2022/01/27 14:54:00.000.217,C:\Users\I5\Documents\Embarcadero\Studio\Projects\wagner\SincronizaDadosSite\community\uSincronizaDadosProduto.dfm=C:\Users\I5\Documents\Embarcadero\Studio\Projects\wagner\SincronizaDadosSite\community\uSincronizaDadosSite.dfm</Transaction>
+    <Transaction>2022/01/27 14:57:51.000.606,=C:\Users\I5\Documents\Embarcadero\Studio\Projects\wagner\SincronizaDadosSite\community\uSincronizaDadosProduto.pas</Transaction>
+    <Transaction>2023/06/16 11:19:53.000.042,=C:\Users\I5\Documents\Embarcadero\Studio\Projects\wagner\SincronizaDadosSite\community\uMD5.pas</Transaction>
+  </Transactions>
+</BorlandProject>

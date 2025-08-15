@@ -1,0 +1,4198 @@
+unit uSincronizaDadosSite;
+{
+
+TODO:
+Gravar na base de dados sql toda a configuração também puxar
+colocar botão salvar configuração.
+
+Carregar mensagens e itens de outros arquivos a partir de um arquivo json
+
+}
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, Vcl.ExtCtrls,
+  FireDAC.Stan.Intf, FireDAC.Stan.Option,  FireDAC.Stan.Consts,  FireDAC.Stan.Error, FireDAC.UI.Intf,
+  FireDAC.Phys.Intf, FireDAC.Stan.Def, FireDAC.Stan.Pool, FireDAC.Stan.Async,
+  FireDAC.Phys, FireDAC.Phys.MySQL, FireDAC.Phys.MySQLDef, FireDAC.VCLUI.Wait,
+  FireDAC.DatS, FireDAC.DApt.Intf, FireDAC.DApt, FireDAC.Comp.Client, Data.DB,
+  FireDAC.Stan.Param, FireDAC.Comp.DataSet, Vcl.Imaging.jpeg, IdBaseComponent,
+  IdComponent, IdIOHandler, IdIOHandlerSocket, IdIOHandlerStack, IdSSL,
+  IdSSLOpenSSL, IdTCPConnection, IdTCPClient, IdExplicitTLSClientServerBase,
+  IdFTP, IdHTTP, System.JSON, System.Threading, IdFTPCommon, IdURI, uMD5, IdCoderMIME,
+  REST.Types, REST.Client, REST.Authenticator.Basic, Data.Bind.Components,
+  Data.Bind.ObjectScope, System.NetEncoding;
+
+type Data = record
+
+  //API
+  AddressAPI : String[255];
+  HashCodeAPI:String[40];
+
+  canal:Integer;
+  tokenwh1:String[255];
+  instanceswh1:String[255];
+  secretkeywh2:String[255];
+  publictokenwh2:String[255];
+  devicetokenwh2:String[255];
+  authorizationwh2:String[255];
+
+  //Base Local
+  ServerLocal : String[30];
+  DataBaseName :String[50];
+  UserName : String[50];
+  PassWord : String[50];
+  DriveID : String[50];
+  Port : String[10];
+
+
+  //FTP
+  HostFTP:String[255];
+  UserFTP:String[50];
+  SenhaFTP:String[50];
+
+
+  //Geral
+  Temporizacao:String[3];
+
+
+
+end;
+
+
+
+
+type
+  TFSincronizaDadosSite = class(TForm)
+    FDConn: TFDConnection;
+    FDQuery: TFDQuery;
+    AbreFoto: TOpenDialog;
+    btnSyncNow: TButton;
+    Shape_Conectado: TShape;
+    Memo1: TMemo;
+    IdSSLIOHandlerSocketOpenSSL1: TIdSSLIOHandlerSocketOpenSSL;
+    IdFTP1: TIdFTP;
+    edtaddressapi: TEdit;
+    Label25: TLabel;
+    Button7: TButton;
+    FDPhysMySQLDriverLink: TFDPhysMySQLDriverLink;
+    Button3: TButton;
+    Timer1: TTimer;
+    Label1: TLabel;
+    Label2: TLabel;
+    Label3: TLabel;
+    Label4: TLabel;
+    Label5: TLabel;
+    Label6: TLabel;
+    Label7: TLabel;
+    EdtDataBaseName: TEdit;
+    EdtUserName: TEdit;
+    EdtPassword: TEdit;
+    EdtPort: TEdit;
+    edtserverlocal: TEdit;
+    CbxDriveID: TComboBox;
+    Label8: TLabel;
+    Label9: TLabel;
+    edthostftp: TEdit;
+    edtuserftp: TEdit;
+    edtsenhaftp: TEdit;
+    Label10: TLabel;
+    Label11: TLabel;
+    Label12: TLabel;
+    edthashcodeapi: TEdit;
+    Label13: TLabel;
+    Button1: TButton;
+    Label14: TLabel;
+    edttime: TEdit;
+    Label15: TLabel;
+    Label16: TLabel;
+    Button2: TButton;
+    Timer2: TTimer;
+    Timer3: TTimer;
+    RadioButton1: TRadioButton;
+    RadioButton2: TRadioButton;
+    RadioButton3: TRadioButton;
+    Label17: TLabel;
+    Timer4: TTimer;
+    Label18: TLabel;
+    tmSync: TTimer;
+    Button4: TButton;
+    FDQueryAtualiza: TFDQuery;
+    edtcanal: TComboBox;
+    Label19: TLabel;
+    Label20: TLabel;
+    edttokenwh1: TEdit;
+    Label21: TLabel;
+    Label22: TLabel;
+    edtsecretkeywh2: TEdit;
+    Label23: TLabel;
+    edtpublictokenwh2: TEdit;
+    lbldevicetokenwh2: TLabel;
+    edtdevicetokenwh2: TEdit;
+    Label24: TLabel;
+    Label26: TLabel;
+    edtinstanceswh1: TEdit;
+    memoauthorizationwh2: TMemo;
+    FDQueryConfig: TFDQuery;
+    RestSendText: TRESTClient;
+    ReqSendText: TRESTRequest;
+    BasicAuth: THTTPBasicAuthenticator;
+    RestSendFile: TRESTClient;
+    ReqSendFile: TRESTRequest;
+    procedure btnSyncNowClick(Sender: TObject);
+    procedure Button7Click(Sender: TObject);
+    procedure FDConnBeforeConnect(Sender: TObject);
+    procedure FormCreate(Sender: TObject);
+    procedure Timer1Timer(Sender: TObject);
+    procedure Button3Click(Sender: TObject);
+    procedure FormClose(Sender: TObject; var Action: TCloseAction);
+    procedure Button1Click(Sender: TObject);
+    procedure Button2Click(Sender: TObject);
+    procedure Timer2Timer(Sender: TObject);
+    procedure Timer3Timer(Sender: TObject);
+    procedure Timer4Timer(Sender: TObject);
+    procedure tmSyncTimer(Sender: TObject);
+    procedure edttimeKeyPress(Sender: TObject; var Key: Char);
+    procedure FormShow(Sender: TObject);
+    procedure Button4Click(Sender: TObject);
+    procedure edtcanalChange(Sender: TObject);
+    procedure edtcanalKeyDown(Sender: TObject; var Key: Word;
+      Shift: TShiftState);
+    procedure edtcanalKeyPress(Sender: TObject; var Key: Char);
+    procedure CbxDriveIDKeyPress(Sender: TObject; var Key: Char);
+    procedure CbxDriveIDKeyDown(Sender: TObject; var Key: Word;
+      Shift: TShiftState);
+
+
+
+  private
+
+    arqini:string;
+    log:string;
+    etapa:string;
+
+    errorSyncCategoria,
+    errorSyncMarca, erroorSyncMens,
+    errorSyncProduto:boolean;
+
+    t, tCategoria, tMarca, tProduto : TThread;
+
+    processando:string;
+
+    procedure clearMemory;
+    procedure enviarFotoFTP(origemFoto,diretorioDestino:string; pre_complemento:string = ''; pos_complemento:string = '');
+    function desmontaNomeArquivo(nomeArquivo: string; pre_coomplemento:string = ''; pos_complemento:string = ''):string;
+
+    procedure SincronizaProdutos;
+    procedure SincronizaCategoria;
+    procedure SincronizaMarca;
+    procedure ThreadEnd(Sender: TObject);
+    procedure salvarlog;
+    procedure syncCategoria;
+    procedure syncMarca;
+    procedure syncProduto;
+    procedure syncAll;
+    procedure RealizarDownload(const AUrl, destino: string);
+    procedure CriarTabelas;
+    procedure EnviarMensagens;
+    procedure descamposwh;
+    function BasicAuthEncode(const Username, Password: string): string;
+    function BitmapFromBase64(const base64: string): TBitmap;
+
+
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+var
+  dDados:Data;
+  FSincronizaDadosSite: TFSincronizaDadosSite;
+
+
+implementation
+
+{$R *.dfm}
+
+
+function TFSincronizaDadosSite.BitmapFromBase64(const base64: string): TBitmap;
+var
+  Input: TStringStream;
+  Output: TBytesStream;
+  Encoding: TBase64Encoding;
+begin
+  Input := TStringStream.Create(base64, TEncoding.ASCII);
+  try
+    Output := TBytesStream.Create;
+    try
+      Encoding := TBase64Encoding.Create(0);
+      Encoding.Decode(Input, Output);
+
+      Output.Position := 0;
+      Result := TBitmap.Create;
+      try
+        Result.LoadFromStream(Output);
+      except
+        Result.Free;
+        raise;
+      end;
+    finally
+      Encoding.DisposeOf;
+      Output.Free;
+    end;
+  finally
+    Input.Free;
+  end;
+end;
+
+
+
+function TFSincronizaDadosSite.BasicAuthEncode(const Username, Password: string): string;
+begin
+  Result := TIdEncoderMIME.EncodeString(Username + ':' + Password);
+  Result := 'Basic ' + Result;
+end;
+
+
+procedure TFSincronizaDadosSite.CriarTabelas;
+begin
+     try
+
+        etapa := 'Criação de tabelas...';
+        FDConn.Connected := false;
+        FDConn.Params.Database := edtDataBaseName.Text;
+        FDConn.Params.UserName := edtUserName.Text;
+        FDConn.Params.Password := edtPassWord.Text;
+        FDConn.Params.DriverID := cbxDriveID.Text;
+        FDConn.Params.Add('port='+edtPort.Text);
+        FDConn.Params.Add('server='+edtServerLocal.Text);
+        FDConn.Connected := true;
+
+        //TODO: Pegar todos os registros cujo a dataagendamento  <= dataatual e enviado = N
+
+        //Criar todas as tabelas da base_intermediaria
+
+
+        FDConn.ExecSQL('CREATE TABLE IF NOT EXISTS centralapp_config('+
+                       'id int(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,'+
+                       'portaAPI int(11) DEFAULT NULL,'+
+                       'titulo_principal varchar(50) DEFAULT NULL,'+
+                       'titulo_rodape varchar(50) DEFAULT NULL,'+
+                       'path_ico varchar(100) DEFAULT NULL,'+
+                       'path_img_principal varchar(100) DEFAULT NULL,'+
+                       'idadmin bigint(20) DEFAULT NULL,'+
+                       'hashnumber varchar(40) DEFAULT NULL,'+
+                       'ordem_de_producao bigint(20) DEFAULT 0,'+
+                       'ultima_data date DEFAULT NULL,'+
+                       'obrigatorio_comanda_individual char(1) DEFAULT ''S'','+
+                       'versao varchar(8) DEFAULT NULL,'+
+                       'NomeSistema varchar(60) DEFAULT NULL )' );
+
+
+       try
+          FDConn.ExecSQL('Alter table centralapp_config add addressapi varchar(255)');
+        except
+          memo1.lines.add('Verificação Adressapi OK')
+        end;
+
+       try
+          FDConn.ExecSQL('Alter table centralapp_config add  hashcodeapi  text');
+        except
+          memo1.lines.add('Verifcação hashcodeapi OK')
+        end;
+
+       try
+          FDConn.ExecSQL('Alter table centralapp_config add  hostftp  varchar(255)');
+        except
+          memo1.lines.add('Verifcação hostftp OK')
+        end;
+
+
+       try
+          FDConn.ExecSQL('Alter table centralapp_config add  userftp  varchar(255)');
+        except
+          memo1.lines.add('Verificação userftp OK')
+        end;
+
+       try
+          FDConn.ExecSQL('Alter table centralapp_config add senhaftp  varchar(255)');
+        except
+          memo1.lines.add('Verificação senhaftp OK')
+        end;
+
+       try
+          FDConn.ExecSQL('Alter table centralapp_config add  intervalo varchar(255)');
+        except
+          memo1.lines.add('Verificação intervalo OK')
+        end;
+
+
+       try
+          FDConn.ExecSQL('Alter table centralapp_config add  canal_indexitem int(6)');
+        except
+          memo1.lines.add('Verificação canal_indexitem OK')
+        end;
+
+       try
+          FDConn.ExecSQL('Alter table centralapp_config add  instanceswh1 varchar(255)');
+        except
+          memo1.lines.add('Verificação instanceswh1  OK')
+        end;
+
+
+       try
+          FDConn.ExecSQL('Alter table centralapp_config add  tokenwh1 varchar(255)');
+        except
+          memo1.lines.add('Verificação  tokenwh1 OK')
+        end;
+
+
+       try
+          FDConn.ExecSQL('Alter table centralapp_config add  tokenwh1 varchar(255)');
+        except
+          memo1.lines.add('Verificação  tokenwh1 OK')
+        end;
+
+
+       try
+          FDConn.ExecSQL('Alter table centralapp_config add  secretkeywh2 varchar(255)');
+        except
+          memo1.lines.add('Verificação secretkeywh2  OK')
+        end;
+
+
+       try
+          FDConn.ExecSQL('Alter table centralapp_config add  publictokenwh2  varchar(255)');
+        except
+          memo1.lines.add('Verificação  publictokenwh2  OK')
+        end;
+
+
+       try
+          FDConn.ExecSQL('Alter table centralapp_config add  devicetokenwh2  varchar(255)');
+        except
+          memo1.lines.add('Verificação  devicetokenwh2   OK')
+        end;
+
+       try
+          FDConn.ExecSQL('Alter table centralapp_config add  authorizationwh2  text');
+        except
+          memo1.lines.add('Verificação  authorizationwh2  OK')
+        end;
+
+
+        FDConn.ExecSQL('CREATE TABLE IF NOT EXISTS servico_mensagens ('+
+                       'id INT(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,'+
+                       'dthrregistro timestamp default current_timestamp,'+
+                       'dthragendamento timestamp,'+
+                       'dthrenvio timestamp,'+
+                       'enviado VARCHAR(1) default ''N'','+
+                       'destinatario_phone VARCHAR(13),'+ //5544999999999
+                       'mensagem text,'+
+                       'url_filename text,'+
+                       'ordem int(11) default 0,'+
+                       'originfile varchar(255),'+
+                       'tipoenvio varchar(1) default ''T'','+  // T:Somente Texto | L:Link | B:Base64 > Se for base64 tem que implentar rotina que transforma arquivo pdf neste sistema de arquivo
+                       'dirdest varchar(255) default ''/public_html/media/mensagens/anexos/'','+
+                       'caminhocurto varchar(255) default ''mensagens/anexos/'','+
+                       'title varchar(60),'+
+                       'linkurl varchar(255) default ''http://novalouzada.com.br/media/mensagens/anexos/photo1.jpg'','+
+                       'linkdescription varchar(255),'+
+                       'caption varchar(255),'+
+                       'intervalo int(6) default 7'+
+                       ');');
+
+
+        try
+          FDConn.ExecSQL('Alter table servico_mensagens add codpais varchar(6) default 55');
+        except
+          memo1.lines.add('Verificação dthrprotocolo OK')
+        end;
+
+
+
+        FDConn.ExecSQL('CREATE TABLE IF NOT EXISTS servico_protocolo_mensagens ('+
+                       'id INT(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,'+
+                       'id_servico_mensagens int(11)'+
+                       ');');
+
+
+        try
+          FDConn.ExecSQL('Alter table servico_protocolo_mensagens add zaapId varchar(255)');
+        except
+          memo1.lines.add('Verificação zaapId OK')
+        end;
+
+        try
+          FDConn.ExecSQL('Alter table servico_protocolo_mensagens add messageId varchar(255)');
+        except
+          memo1.lines.add('Verificação messageId OK')
+        end;
+
+        try
+          FDConn.ExecSQL('Alter table servico_protocolo_mensagens add feedbackId varchar(255)');
+        except
+          memo1.lines.add('Verificação feedbackId OK')
+        end;
+
+
+        try
+          FDConn.ExecSQL('Alter table servico_protocolo_mensagens add dthrprotocolo timestamp default current_timestamp');
+        except
+          memo1.lines.add('Verificação dthrprotocolo OK')
+        end;
+
+
+        FDConn.Connected := false;
+
+     except on e:Exception do begin
+
+
+        memo1.lines.add('Erro ao criar tabela...'+e.Message);
+        log := log + 'Falha ao criar tabela'+#13+#10;
+        FDConn.Connected := false;
+
+
+     end;
+
+  end;
+
+end;
+
+
+procedure TFSincronizaDadosSite.RealizarDownload(const AUrl, destino: string);
+var
+  vArquivo: TFileStream;
+  http:tidhttp;
+begin
+   //´c:\arquivo.txt´
+
+  vArquivo := TFileStream.Create(destino,fmCreate or fmShareExclusive);
+  Try
+     Try
+       http := tidhttp.Create;
+
+       http.Get('http://novalouzada.com.br/include/logo/logo.png',vArquivo);
+     Except on e:exception do
+       showmessage('Não foi possivel baixar o arquivo ! '+e.Message);
+     End;
+  Finally
+     FreeAndNil(vArquivo);
+     FreeAndNil(http);
+  End;
+end;
+
+
+
+
+procedure TFSincronizaDadosSite.edtcanalChange(Sender: TObject);
+var sresponse, base64:string;
+     responsecode:integer;
+     mainJson:TJSonObject;
+     JsonValue:TJSonValue;
+     connectado:boolean;
+     bmp:TBitMap;
+begin
+  descamposwh;
+
+  if edtcanal.ItemIndex = 0 then
+  begin
+    edttokenwh1.Enabled := true;
+    edtinstanceswh1.Enabled := true;
+  end;
+
+  if edtcanal.ItemIndex = 1 then
+  begin
+    edtsecretkeywh2.Enabled := true;
+    edtpublictokenwh2.Enabled := true;
+    edtdevicetokenwh2.Enabled := true;
+    memoauthorizationwh2.Enabled := true;
+  end;
+
+
+  if edtcanal.ItemIndex = 2 then
+  begin
+
+
+  end;
+
+end;
+
+procedure TFSincronizaDadosSite.edtcanalKeyDown(Sender: TObject; var Key: Word;
+  Shift: TShiftState);
+begin
+key := 0;
+end;
+
+procedure TFSincronizaDadosSite.edtcanalKeyPress(Sender: TObject;
+  var Key: Char);
+begin
+key := #0;
+end;
+
+procedure TFSincronizaDadosSite.edttimeKeyPress(Sender: TObject; var Key: Char);
+begin
+// #8 is Backspace
+  if not (Key in [#8, '0'..'9']) then begin
+    //ShowMessage('Invalid key');
+    // Discard the key
+    Key := #0;
+  end;
+end;
+
+procedure TFSincronizaDadosSite.enviarFotoFTP(origemFoto,diretorioDestino:string; pre_complemento:string = ''; pos_complemento:string = '');
+var
+      LHandler:TIdSSLIOHandlerSocketOpenSSL;
+      IIdSSLMode:Integer;
+
+      m : TStream;
+      f : TStream;
+      t : Cardinal;
+      Nome_Arquivo,
+      Auxiliar :String;
+
+      contador : Integer;
+
+begin
+
+
+   try
+
+
+        try
+          idFTP1.Disconnect;
+          idFTP1.Host := edthostftp.Text;
+          idFTP1.Username := edtuserftp.Text;
+          idFTP1.Password := edtsenhaftp.Text;
+          idFTP1.Connect;
+        finally
+
+        //if idFTP1.Connected = True Then
+           Shape_Conectado.Brush.Color := clLime;
+
+        memo1.lines.add('# Data: ' +  datetimetostr( now()   ) );
+        memo1.lines.add('Conectado ao endereço: ' + idFTP1.Host);
+        memo1.lines.add('Servidor remoto: ' + idFTP1.SystemDesc);
+        memo1.lines.add('');
+
+        log := log + 'Enviando foto FTP...'+#13+#10;
+        log := log + 'Conectado ao endereço: '+idFTP1.Host+#13+#10;
+        log := log + 'Servidor remoto: ' + idFTP1.SystemDesc+#13+#10;
+        log := log + #13+#10;
+
+        Auxiliar := '';
+        f := nil;
+        m := nil;
+
+        memo1.lines.add( 'Diretório original: ' + origemFoto);
+        log := log + 'Diretório original: ' + origemFoto+#13+#10;
+
+        Nome_Arquivo :=  origemFoto;
+
+
+        memo1.lines.add('Operação: troca de diretório local');
+        memo1.lines.add('Diretório do arquivo: ' + GetCurrentDir);
+
+        log := log + 'Operação: troca de diretório local'+#13+#10;
+        log := log + 'Diretório do arquivo: ' + GetCurrentDir+#13+#10;
+
+
+
+        Nome_Arquivo := AnsiStrRScan(PCHar(Nome_Arquivo), '\');
+        for contador := 2 To StrLen(PCHar(Nome_Arquivo)) do
+            Auxiliar := Auxiliar + Nome_Arquivo [contador];
+
+        Auxiliar :=   desmontanomearquivo(Auxiliar,pre_complemento,pos_complemento);
+
+        Nome_Arquivo := diretorioDestino+Auxiliar;
+
+
+        try
+          memo1.lines.add('Operação: Upload');
+          memo1.lines.add('Arquivo local: ' + origemFoto);
+          memo1.lines.add('Gravado como: ' + Nome_Arquivo);
+
+          log := log + 'Operação: Upload'+#13+#10;
+          log := log + 'Arquivo local: ' + origemFoto + #13+#10;
+          log := log + 'Gravado como: ' + Nome_Arquivo+#13+#10;
+
+          f := TFileStream.Create(origemFoto,fmOpenRead);
+          m := TMemoryStream.Create;
+          m.CopyFrom(f,f.Size);
+          m.Seek(0,0) ;
+          t := GetTickCount;
+
+
+          idFTP1.Put(m,Nome_Arquivo);
+
+          memo1.lines.add( Format('tempo %d milesegundos',[GetTickCount - t]));
+          memo1.lines.add(Format('Tamanho %d bytes',[m.Size]));
+
+          log := log + Format('tempo %d milesegundos',[GetTickCount - t])+#13+#10;
+          log := log + Format('Tamanho %d bytes',[m.Size])+#13+#10;
+
+
+        finally
+          m.Free;
+          f.Free;
+        end;
+
+
+        SetCurrentDir (diretorioDestino);
+        memo1.lines.add( 'Operação: troca de diretorio local');
+        memo1.lines.add('Diretório após a operação: ' + GetCurrentDir);
+
+
+        log := log + 'Operação: troca de diretorio local'+#13+#10;
+        log := log + 'Diretório após a operação: ' + GetCurrentDir+ #13+#10;
+        //log := log + ''+#13+#10;
+
+        try
+        idFTP1.Disconnect;
+        finally
+        if idFTP1.Connected = False then
+        Shape_Conectado.Brush.Color := clGray;
+
+        log := log + 'FTP Desconectado...'+#13+#10;
+
+        end;
+
+
+        end;
+
+
+
+
+   except on e:Exception do begin
+
+      memo1.lines.add('Houve um erro ao enviar imagem via FTP');
+      log := log + 'Houve um erro ao enviar foto via FTP...'+#13+#10
+
+   end;
+
+   end;
+
+
+
+
+end;
+
+
+procedure TFSincronizaDadosSite.Button1Click(Sender: TObject);
+begin
+  salvarlog;
+end;
+
+procedure TFSincronizaDadosSite.Button2Click(Sender: TObject);
+begin
+
+
+  SyncAll;
+
+
+  if RadioButton1.Checked then
+  begin
+    //Timer1Timer(sender);
+    //syncCategoria;
+  end;
+
+
+  if RadioButton2.Checked then
+  begin
+    //Timer2Timer(sender);
+    //syncMarca;
+  end;
+
+
+  if RadioButton3.Checked then
+  begin
+    //Timer3Timer(sender);
+    //syncProduto;
+  end;
+
+
+
+  //Timer2Timer(sender);
+  //Timer3Timer(sender);
+end;
+
+procedure TFSincronizaDadosSite.Button3Click(Sender: TObject);
+begin
+Timer1.Enabled := false;
+Timer2.Enabled := false;
+Timer3.Enabled := false;
+end;
+
+procedure TFSincronizaDadosSite.Button4Click(Sender: TObject);
+var
+      LHandler:TIdSSLIOHandlerSocketOpenSSL;
+      IIdSSLMode:Integer;
+
+      m : TStream;
+      f : TStream;
+      t : Cardinal;
+      Nome_Arquivo,
+      Auxiliar :String;
+
+      contador : Integer;
+
+begin
+
+
+   try
+
+
+        try
+          idFTP1.Disconnect;
+          idFTP1.Host := 'ftp.uhserver.com';
+          idFTP1.Username := 'biosautoma';
+          idFTP1.Password := '1!P@SSword';
+          idFTP1.TransferType := ftASCii;
+          idFTP1.Connect;
+        finally
+
+        //if idFTP1.Connected = True Then
+           Shape_Conectado.Brush.Color := clLime;
+
+        memo1.lines.add('# Data: ' +  datetimetostr( now()   ) );
+        memo1.lines.add('Conectado ao endereço: ' + idFTP1.Host);
+        memo1.lines.add('Servidor remoto: ' + idFTP1.SystemDesc);
+        memo1.lines.add('');
+
+        log := log + 'Baixando  txt FTP...'+#13+#10;
+        log := log + 'Conectado ao endereço: '+idFTP1.Host+#13+#10;
+        log := log + 'Servidor remoto: ' + idFTP1.SystemDesc+#13+#10;
+        log := log + #13+#10;
+
+        Auxiliar := '';
+        f := nil;
+        m := nil;
+
+        try
+          memo1.lines.add('Operação: Dowsload');
+
+          //f := TFileStream.Create(origemFoto,fmOpenRead);
+          //m := TMemoryStream.Create;
+          //m.CopyFrom(f,f.Size);
+          //m.Seek(0,0) ;
+          //t := GetTickCount;
+
+
+          //idFTP1.Put(m,Nome_Arquivo);
+          IdFTP1.Get('/wagnao.com.br/web/construtor/VersaoFTP.ini', 'Downloads\' + 'VersaoFTP.ini', True, True);
+
+
+          memo1.lines.add( 'Download finalizado com sucesso');
+
+
+        finally
+          m.Free;
+          f.Free;
+        end;
+
+
+
+
+
+        try
+        idFTP1.Disconnect;
+        finally
+        if idFTP1.Connected = False then
+        Shape_Conectado.Brush.Color := clGray;
+
+        log := log + 'FTP Desconectado...'+#13+#10;
+
+        end;
+
+
+        end;
+
+
+
+
+   except on e:Exception do begin
+
+      memo1.lines.add('Houve um erro ao enviar imagem via FTP');
+      log := log + 'Houve um erro ao enviar foto via FTP...'+#13+#10
+
+   end;
+
+   end;
+
+
+
+
+end;
+
+
+
+
+
+procedure TFSincronizaDadosSite.btnSyncNowClick(Sender: TObject);
+  var
+    Nome_Arquivo, nome, extensao, Auxiliar:string;
+    contador:integer;
+
+  f: file of data;
+
+  i:integer;
+
+begin
+
+  i :=  strtoint(edttime.text);
+
+
+  //iportaAPI := 0;
+  //stitulo_principal := '';
+  //stitulo_rodape:='';
+  //spath_ico:='';
+  //spath_img_principal:='';
+  //sidadmin := 0;
+  //shashnumber := '';
+  //sordem_de_producao := '';
+  //sultima_data := '';
+  //sobrigatorio_comanda_individual := '';
+  //sversao :='';
+  //sNomeSistema:='';
+  //saddressapi:='';
+  //shashcodeapi:='';
+  //shostftp:='';
+  //suserftp:='';
+  //senhaftp:='';
+  //sintervalo :='';
+  //icanal_indexitem := 0;
+  //sinstanceswh1:='';
+  //stokenwh1:='';
+  //ssecretkeywh2 := '';
+  //spublictokenwh2:='';
+  //sdevicetokenwh2:='';
+  //sauthorizationwh2:='';
+
+
+  if i < 5  then
+  begin
+    showmessage('Intervalo válido maior que 5 minutos');
+    exit;
+  end;
+
+  //CriarTabelas;
+
+  syncAll;
+
+  //Timer1.Enabled := true;
+  //Timer2.Enabled := true;
+  //Timer3.Enabled := true;
+
+  dDados.AddressAPI := edtaddressapi.Text;
+  dDados.HashCodeAPI :=  edthashcodeapi.Text;
+
+  dDados.canal := edtcanal.ItemIndex;
+
+  dDados.tokenwh1 :=   edttokenwh1.Text;
+  dDados.instanceswh1 :=   edtinstanceswh1.Text;
+  dDados.secretkeywh2 := edtsecretkeywh2.Text;
+  dDados.publictokenwh2 := edtpublictokenwh2.Text;
+  dDados.devicetokenwh2 := edtdevicetokenwh2.Text;
+  dDados.authorizationwh2 := memoauthorizationwh2.Text;
+
+  dDados.DataBaseName := edtDatabasename.Text;
+  dDados.UserName := edtUserName.Text;
+  dDados.PassWord := edtPassword.Text;
+  dDados.DriveID := cbxDriveID.Text;
+  dDados.Port := edtPort.Text;
+  dDados.ServerLocal := edtServerLocal.Text;
+
+  dDados.HostFTP  := edthostftp.Text;
+  dDados.UserFTP  :=  edtuserftp.Text;
+  dDados.SenhaFTP := edtsenhaftp.Text;
+
+  dDados.Temporizacao :=  edttime.text;
+
+  //Recuperando dados
+  fdqueryConfig.close;
+  fdqueryConfig.sql.Clear;
+  fdqueryConfig.sql.add('select * from centralapp_config');
+  fdqueryConfig.Open;
+
+  if fdqueryConfig.IsEmpty then
+  begin
+    FDQueryAtualiza.close;
+    FDQueryAtualiza.sql.Clear;
+    FDQueryAtualiza.sql.add('insert into centralapp_config('+
+                                        ' portaAPI,'+
+                                        ' titulo_principal,'+
+                                        ' titulo_rodape,'+
+                                        ' path_ico,'+
+                                        ' path_img_principal,'+
+                                        ' idadmin, '+
+                                        ' hashnumber, '+
+                                        ' ordem_de_producao, '+
+                                        ' ultima_data, '+
+                                        ' obrigatorio_comanda_individual, '+
+                                        ' versao, '+
+                                        ' NomeSistema, '+
+                                        ' addressapi, '+
+                                        ' hashcodeapi, '+
+                                        ' hostftp, '+
+                                        ' userftp,'+
+                                        ' senhaftp,'+
+                                        ' intervalo,'+
+                                        ' canal_indexitem,'+
+                                        ' instanceswh1,'+
+                                        ' tokenwh1,'+
+                                        ' secretkeywh2,'+
+                                        ' publictokenwh2,'+
+                                        ' devicetokenwh2,'+
+                                        ' authorizationwh2'+
+
+                                        '  )'+
+
+                                        'values ('+
+
+                                        ' :portaAPI,'+
+                                        ' :titulo_principal,'+
+                                        ' :titulo_rodape,'+
+                                        ' :path_ico,'+
+                                        ' :path_img_principal,'+
+                                        ' :idadmin, '+
+                                        ' :hashnumber, '+
+                                        ' :ordem_de_producao, '+
+                                        ' :ultima_data, '+
+                                        ' :obrigatorio_comanda_individual, '+
+                                        ' :versao, '+
+                                        ' :NomeSistema, '+
+                                        ' :addressapi, '+
+                                        ' :hashcodeapi, '+
+                                        ' :hostftp, '+
+                                        ' :userftp,'+
+                                        ' :senhaftp,'+
+                                        ' :intervalo,'+
+                                        ' :canal_indexitem,'+
+                                        ' :instanceswh1,'+
+                                        ' :tokenwh1,'+
+                                        ' :secretkeywh2,'+
+                                        ' :publictokenwh2,'+
+                                        ' :devicetokenwh2,'+
+                                        ' :authorizationwh2'+
+
+
+                                                          ')');
+
+  end
+  else
+  begin
+
+
+
+
+    FDQueryAtualiza.close;
+    FDQueryAtualiza.sql.Clear;
+    FDQueryAtualiza.sql.add('update centralapp_config set'+
+                                        ' portaAPI = :portaAPI,'+
+                                        ' titulo_principal = :titulo_principal,'+
+                                        ' titulo_rodape = :titulo_rodape,'+
+                                        ' path_ico = :path_ico,'+
+                                        ' path_img_principal = :path_img_principal,'+
+                                        ' idadmin = :idadmin, '+
+                                        ' hashnumber = :hashnumber, '+
+                                        ' ordem_de_producao = :ordem_de_producao, '+
+                                        ' ultima_data = :ultima_data, '+
+                                        ' obrigatorio_comanda_individual = :obrigatorio_comanda_individual, '+
+                                        ' versao = :versao, '+
+                                        ' NomeSistema = :NomeSistema, '+
+                                        ' addressapi = :addressapi, '+
+                                        ' hashcodeapi = :hashcodeapi, '+
+                                        ' hostftp = :hostftp, '+
+                                        ' userftp = :userftp,'+
+                                        ' senhaftp = :senhaftp,'+
+                                        ' intervalo = :intervalo,'+
+                                        ' canal_indexitem = :canal_indexitem,'+
+                                        ' instanceswh1 = :instanceswh1,'+
+                                        ' tokenwh1 = :tokenwh1,'+
+                                        ' secretkeywh2 = :secretkeywh2,'+
+                                        ' publictokenwh2 = :publictokenwh2,'+
+                                        ' devicetokenwh2 = :devicetokenwh2,'+
+                                        ' authorizationwh2 = :authorizationwh2 '+
+                                        ' where id = :id '
+
+                                                          );
+
+
+
+       FDQueryAtualiza.parambyname('id').AsInteger := 1;
+
+
+
+  end;
+
+
+  FDQueryAtualiza.parambyname('portaAPI').AsInteger := 9005;
+  FDQueryAtualiza.parambyname('titulo_principal').asstring := 'Prospecção';
+  FDQueryAtualiza.parambyname('titulo_rodape').asstring := 'Bios Automação';
+  FDQueryAtualiza.parambyname('path_ico').asstring := '';
+  FDQueryAtualiza.parambyname('path_img_principal').asstring := '';
+  FDQueryAtualiza.parambyname('idadmin').asInteger := 0;
+  FDQueryAtualiza.parambyname('hashnumber').asstring := '';
+  FDQueryAtualiza.parambyname('ordem_de_producao').asinteger := 0;
+  FDQueryAtualiza.parambyname('ultima_data').asstring := '2023-06-16';
+  FDQueryAtualiza.parambyname('obrigatorio_comanda_individual').asstring := 'N';
+  FDQueryAtualiza.parambyname('versao').asstring := '0.0.0.1';
+  FDQueryAtualiza.parambyname('NomeSistema').asstring := 'Sincronizador';
+  FDQueryAtualiza.parambyname('addressapi').asstring := crypt('C',edtaddressapi.text);
+  FDQueryAtualiza.parambyname('hashcodeapi').asstring := crypt('C',edthashcodeapi.text);
+  FDQueryAtualiza.parambyname('hostftp').asstring := crypt('C',edthostftp.Text);
+  FDQueryAtualiza.parambyname('userftp').asstring := crypt('C',edtuserftp.text);
+  FDQueryAtualiza.parambyname('senhaftp').asstring := crypt('C',edtsenhaftp.Text);
+  FDQueryAtualiza.parambyname('intervalo').asinteger := strtoint(edttime.Text);
+  FDQueryAtualiza.parambyname('canal_indexitem').asinteger := edtcanal.ItemIndex;
+  FDQueryAtualiza.parambyname('instanceswh1').asstring := crypt('C',edtinstanceswh1.Text);
+  FDQueryAtualiza.parambyname('tokenwh1').asstring := crypt('C',edttokenwh1.Text);
+  FDQueryAtualiza.parambyname('secretkeywh2').asstring := crypt('C', edtsecretkeywh2.text);
+  FDQueryAtualiza.parambyname('publictokenwh2').asstring := crypt('C',edtpublictokenwh2.Text);
+  FDQueryAtualiza.parambyname('devicetokenwh2').asstring := crypt('C',edtdevicetokenwh2.Text);
+  FDQueryAtualiza.parambyname('authorizationwh2').asstring := crypt('C',memoauthorizationwh2.Text);
+  FDQueryAtualiza.ExecSQL;
+
+
+
+  try
+
+    Assignfile(f,arqini);
+    rewrite(f);
+    write(f,dDados);
+  finally
+    closefile(f);
+    //showmessage('Arquivo atualizado com sucesso!');
+  end;
+
+  tmSync.Enabled := false;
+  tmSync.Interval :=  strtoint( edttime.text ) * 60 * 1000;
+  tmSync.Enabled := true;
+
+
+  //syncCategoria;
+  //syncMarca;
+  //syncProduto;
+
+
+
+
+
+end;
+
+
+
+
+procedure TFSincronizaDadosSite.Button7Click(Sender: TObject);
+var
+
+    HTTP: TIdHTTP;
+    vJsonAEnviar: TStringStream;
+    sresponse:string;
+
+    nome,extensao:string;
+
+    jSonObject:  TJSonObject;
+    jSonArray: TJSonArray;
+    id:string;
+
+
+    Nome_arquivo,Auxiliar:String;
+    Nome_arquivo_1,Auxiliar_1:String;
+    Nome_arquivo_2,Auxiliar_2:String;
+    Nome_arquivo_gal_1,Auxiliar_gal_1:String;
+    Nome_arquivo_gal_2,Auxiliar_gal_2:String;
+    Nome_arquivo_gal_3,Auxiliar_gal_3:String;
+    Nome_arquivo_gal_4,Auxiliar_gal_4:String;
+    Nome_arquivo_gal_5,Auxiliar_gal_5:String;
+    Nome_arquivo_gal_6,Auxiliar_gal_6:String;
+    Nome_arquivo_gal_7,Auxiliar_gal_7:String;
+
+    Contador:integer;
+
+    imagemsemfoto:string;
+
+begin
+
+  FDConn.Connected := false;
+
+
+  FDConn.Params.add('server='+EdtServerLocal.Text);
+
+  FDConn.Connected := true;
+
+
+  //Categoria
+
+  FDQuery.close;
+  FDQuery.sql.Clear;
+  FDQuery.sql.add('select * from team where op <> ''S'' ');
+  FDQuery.Open;
+
+  if FDQuery.IsEmpty then
+  begin
+    memo1.lines.add('Não há item para ser enviado...');
+    FDConn.Connected := false;
+    exit;
+  end;
+
+
+  JSonArray := TJSonArray.Create;
+
+
+  try
+
+     memo1.lines.add('Preparando envio...');
+     log := log + 'Lote de produto...'+#13+#10;
+
+     //imagemsemfoto := extractfilepath(application.ExeName)+'\images\semfoto.jpg';
+
+     imagemsemfoto := 'team/construtor/semfoto.jpg';
+
+      while not FDQuery.Eof do
+      begin
+
+        //Imagem ------------------------------------------------------------
+        Nome_Arquivo :=  FDQuery.fieldbyname('origemfoto').AsString;
+
+        Nome_Arquivo := AnsiStrRScan(PCHar(Nome_Arquivo), '\');
+        for contador := 2 To StrLen(PCHar(Nome_Arquivo)) do
+            Auxiliar := Auxiliar + Nome_Arquivo [contador];
+
+        Nome_Arquivo := FDQuery.FieldByName('caminhocurto').asString+Auxiliar;
+        //--------------------------------------------------------------------
+
+
+        Nome_Arquivo := desmontanomearquivo(Nome_Arquivo);
+
+
+        //Imagem 1------------------------------------------------------------
+        Nome_Arquivo_1 :=  FDQuery.fieldbyname('origemfoto_1').AsString;
+
+        Nome_Arquivo_1 := AnsiStrRScan(PCHar(Nome_Arquivo_1), '\');
+        for contador := 2 To StrLen(PCHar(Nome_Arquivo_1)) do
+            Auxiliar_1 := Auxiliar_1 + Nome_Arquivo_1 [contador];
+
+        Nome_Arquivo_1 := FDQuery.FieldByName('caminhocurto').asString+'f_1'+Auxiliar_1;
+        //--------------------------------------------------------------------
+
+        //Imagem 2------------------------------------------------------------
+        Nome_Arquivo_2 :=  FDQuery.fieldbyname('origemfoto_2').AsString;
+
+        Nome_Arquivo_2 := AnsiStrRScan(PCHar(Nome_Arquivo_2), '\');
+        for contador := 2 To StrLen(PCHar(Nome_Arquivo_2)) do
+            Auxiliar_2 := Auxiliar_2 + Nome_Arquivo_2 [contador];
+
+        Nome_Arquivo_2 := FDQuery.FieldByName('caminhocurto').asString+'f_2'+Auxiliar_2;
+        //--------------------------------------------------------------------
+
+        //gal_image1------------------------------------------------------------
+        Nome_Arquivo_gal_1 :=  FDQuery.fieldbyname('origemfoto_gal_1').AsString;
+
+        Nome_Arquivo_gal_1 := AnsiStrRScan(PCHar(Nome_Arquivo_gal_1), '\');
+        for contador := 2 To StrLen(PCHar(Nome_Arquivo_gal_1)) do
+            Auxiliar_gal_1 := Auxiliar_gal_1 + Nome_Arquivo_gal_1 [contador];
+
+        Nome_Arquivo_gal_1 := FDQuery.FieldByName('caminhocurto').asString+'f_gal_1'+Auxiliar_gal_1;
+        //--------------------------------------------------------------------
+
+        //gal_image2------------------------------------------------------------
+        Nome_Arquivo_gal_2 :=  FDQuery.fieldbyname('origemfoto_gal_2').AsString;
+
+        Nome_Arquivo_gal_2 := AnsiStrRScan(PCHar(Nome_Arquivo_gal_2), '\');
+        for contador := 2 To StrLen(PCHar(Nome_Arquivo_gal_2)) do
+            Auxiliar_gal_2 := Auxiliar_gal_2 + Nome_Arquivo_gal_2 [contador];
+
+        Nome_Arquivo_gal_2 := FDQuery.FieldByName('caminhocurto').asString+'f_gal_2'+Auxiliar_gal_2;
+        //--------------------------------------------------------------------
+
+        //gal_image3------------------------------------------------------------
+        Nome_Arquivo_gal_3 :=  FDQuery.fieldbyname('origemfoto_gal_3').AsString;
+
+        Nome_Arquivo_gal_3 := AnsiStrRScan(PCHar(Nome_Arquivo_gal_3), '\');
+        for contador := 2 To StrLen(PCHar(Nome_Arquivo_gal_3)) do
+            Auxiliar_gal_3 := Auxiliar_gal_3 + Nome_Arquivo_gal_3 [contador];
+
+        Nome_Arquivo_gal_3 := FDQuery.FieldByName('caminhocurto').asString+'f_gal_3'+Auxiliar_gal_3;
+        //--------------------------------------------------------------------
+
+        //gal_image4------------------------------------------------------------
+        Nome_Arquivo_gal_4 :=  FDQuery.fieldbyname('origemfoto_gal_4').AsString;
+
+        Nome_Arquivo_gal_4 := AnsiStrRScan(PCHar(Nome_Arquivo_gal_4), '\');
+        for contador := 2 To StrLen(PCHar(Nome_Arquivo_gal_4)) do
+            Auxiliar_gal_4 := Auxiliar_gal_4 + Nome_Arquivo_gal_4 [contador];
+
+        Nome_Arquivo_gal_4 := FDQuery.FieldByName('caminhocurto').asString+'f_gal_4'+Auxiliar_gal_4;
+        //--------------------------------------------------------------------
+
+        //gal_image5------------------------------------------------------------
+        Nome_Arquivo_gal_5 :=  FDQuery.fieldbyname('origemfoto_gal_5').AsString;
+
+        Nome_Arquivo_gal_5 := AnsiStrRScan(PCHar(Nome_Arquivo_gal_5), '\');
+        for contador := 2 To StrLen(PCHar(Nome_Arquivo_gal_5)) do
+            Auxiliar_gal_5 := Auxiliar_gal_5 + Nome_Arquivo_gal_5 [contador];
+
+        Nome_Arquivo_gal_5 := FDQuery.FieldByName('caminhocurto').asString+'f_gal_5'+Auxiliar_gal_5;
+        //--------------------------------------------------------------------
+
+        //gal_image6------------------------------------------------------------
+        Nome_Arquivo_gal_6 :=  FDQuery.fieldbyname('origemfoto_gal_6').AsString;
+
+        Nome_Arquivo_gal_6 := AnsiStrRScan(PCHar(Nome_Arquivo_gal_6), '\');
+        for contador := 2 To StrLen(PCHar(Nome_Arquivo_gal_6)) do
+            Auxiliar_gal_6 := Auxiliar_gal_6 + Nome_Arquivo_gal_6 [contador];
+
+        Nome_Arquivo_gal_6 := FDQuery.FieldByName('caminhocurto').asString+'f_gal_6'+Auxiliar_gal_6;
+        //--------------------------------------------------------------------
+
+        //gal_image6------------------------------------------------------------
+        Nome_Arquivo_gal_7 :=  FDQuery.fieldbyname('origemfoto_gal_7').AsString;
+
+        Nome_Arquivo_gal_7 := AnsiStrRScan(PCHar(Nome_Arquivo_gal_7), '\');
+        for contador := 2 To StrLen(PCHar(Nome_Arquivo_gal_7)) do
+            Auxiliar_gal_7 := Auxiliar_gal_7 + Nome_Arquivo_gal_7 [contador];
+
+        Nome_Arquivo_gal_7 := FDQuery.FieldByName('caminhocurto').asString+'f_gal_7'+Auxiliar_gal_7;
+        //--------------------------------------------------------------------
+
+
+
+
+
+        JSonObject := TJSonObject.Create;
+
+        //3 '"id":3,'+
+        JSonObject.AddPair('id',FDQuery.fieldbyname('id').AsString);
+
+        //1 '"minimo_pessoa":1,'+
+        JSonObject.AddPair('minimo_pessoa',FDQuery.fieldbyname('minimo_pessoa').AsString);
+
+        //1 '"user_id":1,'+
+        JSonObject.AddPair('user_id',FDQuery.fieldbyname('user_id').AsString);
+
+        //0 '"city_id":0,'+
+        JSonObject.AddPair('city_id',FDQuery.fieldbyname('city_id').AsString);
+
+        //2 '"group_id":2,'+
+        JSonObject.AddPair('group_id',FDQuery.fieldbyname('group_id').AsString);
+
+        //1 '"partner_id":1,'+
+        JSonObject.AddPair('"partner_id',FDQuery.fieldbyname('partner_id').AsString);
+
+        //100  '"per_number":100,'+
+        JSonObject.AddPair('per_number',FDQuery.fieldbyname('per_number').AsString);
+
+        //1 '"min_number":1,'+
+        JSonObject.AddPair('min_number',FDQuery.fieldbyname('min_number').AsString);
+
+        //1000  '"max_number":1000,'+
+        JSonObject.AddPair('max_number',FDQuery.fieldbyname('max_number').AsString);
+
+        //0  '"now_number":0,'+
+        JSonObject.AddPair('now_number',FDQuery.fieldbyname('now_number').AsString);
+
+        //0 '"pre_number":0,'+
+        JSonObject.AddPair('pre_number',FDQuery.fieldbyname('pre_number').AsString);
+
+        //0  '"credit":0,'+
+        JSonObject.AddPair('credit',FDQuery.fieldbyname('credit').AsString);
+
+        //0  '"card":0,'+
+        JSonObject.AddPair('"card',FDQuery.fieldbyname('card').AsString);
+
+        //0  '"fare":0,'+
+        JSonObject.AddPair('fare',FDQuery.fieldbyname('fare').AsString);
+
+        //0  '"farefree":0,'+
+        JSonObject.AddPair('farefree',FDQuery.fieldbyname('farefree').AsString);
+
+        //0  '"bonus":0,'+
+        JSonObject.AddPair('bonus',FDQuery.fieldbyname('bonus').AsString);
+
+        //0    '"sort_order":0,'+
+        JSonObject.AddPair('sort_order',FDQuery.fieldbyname('sort_order').AsString);
+
+        //1529418142 '"expire_time":1529418142,'+
+        JSonObject.AddPair('expire_time',FDQuery.fieldbyname('expire_time').AsString);
+
+        //1529290800 '"begin_time":1529290800,'+
+        JSonObject.AddPair('begin_time',FDQuery.fieldbyname('begin_time').AsString);
+
+        //1529377200  '"end_time":1529377200,'+
+        JSonObject.AddPair('end_time',FDQuery.fieldbyname('end_time').AsString);
+
+        //0  '"reach_time":0,'+
+        JSonObject.AddPair('reach_time',FDQuery.fieldbyname('reach_time').AsString);
+
+        //0  '"close_time":0,'+
+        JSonObject.AddPair('close_time',FDQuery.fieldbyname('close_time').AsString);
+
+        //0 '"semhtmldescricao":0,'+
+        JSonObject.AddPair('semhtmldescricao',FDQuery.fieldbyname('semhtmldescricao').AsString);
+
+        //0  '"semhtmlregulamento":0,'+
+        JSonObject.AddPair('semhtmlregulamento',FDQuery.fieldbyname('semhtmlregulamento').AsString);
+
+        //0  '"manterdimensao":0,'+
+        JSonObject.AddPair('manterdimensao',FDQuery.fieldbyname('manterdimensao').AsString);
+
+        //2 '"altura":2,'+
+        JSonObject.AddPair('altura',FDQuery.fieldbyname('altura').AsString);
+
+        //16 '"comprimento":16,'+
+        JSonObject.AddPair('comprimento',FDQuery.fieldbyname('comprimento').AsString);
+
+        //11  '"largura":11,'+
+        JSonObject.AddPair('largura',FDQuery.fieldbyname('largura').AsString);
+
+        //0  '"posicionamento":0,'+
+        JSonObject.AddPair('posicionamento',FDQuery.fieldbyname('posicionamento').AsString);
+
+        //0 '"pontos":0,'+
+        JSonObject.AddPair('pontos',FDQuery.fieldbyname('pontos').AsString);
+
+        //0  '"pontosgerados":0,'+
+        JSonObject.AddPair('pontosgerados',FDQuery.fieldbyname('pontosgerados').AsString);
+
+        //0  '"idpacote":0,'+
+        JSonObject.AddPair('idpacote',FDQuery.fieldbyname('idpacote').AsString);
+
+        //0  '"id_oferta_parceiro":0,'+
+        JSonObject.AddPair('id_oferta_parceiro',FDQuery.fieldbyname('id_oferta_parceiro').AsString);
+
+        //0  '"contadorpedidos":0,'+
+        JSonObject.AddPair('contadorpedidos',FDQuery.fieldbyname('contadorpedidos').AsString);
+
+        //1 '"avaliacaoclientes":1,'+
+        JSonObject.AddPair('avaliacaoclientes',FDQuery.fieldbyname('avaliacaoclientes').AsString);
+
+        //160   '"team_price":160,'+
+        JSonObject.AddPair('team_price',FDQuery.fieldbyname('team_price').AsString);
+
+        //0 '"preco_comissao":0,'+
+        JSonObject.AddPair('preco_comissao',FDQuery.fieldbyname('preco_comissao').AsString);
+
+        //300  '"market_price":300,'+
+        JSonObject.AddPair('market_price',FDQuery.fieldbyname('market_price').AsString);
+
+        //0   '"bonuslimite":0,'+
+        JSonObject.AddPair('bonuslimite',FDQuery.fieldbyname('bonuslimite').AsString);
+
+        //null   '"layout":null,'+
+        JSonObject.AddPair('iderp',FDQuery.fieldbyname('iderp').AsString);
+
+        //Coluna 3M 3/8  '"title":"Coluna 3M 1/2",'+
+        JSonObject.AddPair('title',FDQuery.fieldbyname('title').AsString);
+
+        //""  '"summary":"",'+
+        JSonObject.AddPair('summary',FDQuery.fieldbyname('summary').AsString);
+
+        //Y   '"system":"Y",'+
+        JSonObject.AddPair('system',FDQuery.fieldbyname('system').AsString);
+
+        //null '"product":null,'+
+        JSonObject.AddPair('product',FDQuery.fieldbyname('product').AsString);
+
+        //{110 volts}{220 volts}     '"condbuy":"{110 volts}{220 volts}",'+
+        JSonObject.AddPair('condbuy',FDQuery.fieldbyname('condbuy').AsString);
+
+        //team\/2018\/0618\/15293389255152.jpg  '"image":"team\/2018\/0618\/15293389255152.jpg",'+
+        if FDQuery.fieldbyname('enviarfoto').AsString  = 'Y' then
+           JSonObject.AddPair('image', Nome_Arquivo  )      //FDQuery.fieldbyname('image').AsString);
+        else if FDQuery.fieldbyname('enviarfoto').AsString  = 'E' then
+           JSonObject.AddPair('image', imagemsemfoto );
+
+        //else
+        //   JSonObject.AddPair('image', nil  );
+
+        //team\/2018\/0618\/15293389252770.jpg    '"image1":"team\/2018\/0618\/15293389252770.jpg",'+
+        if FDQuery.fieldbyname('enviarfoto_1').AsString  = 'Y' then
+           JSonObject.AddPair('image1', Nome_Arquivo_1  )     //FDQuery.fieldbyname('image1').AsString);
+        else
+           JSonObject.AddPair('image1', nil  );
+
+        //team\/2018\/0618\/15293389255164.jpg  '"image2":"team\/2018\/0618\/15293389255164.jpg",'+
+        if FDQuery.fieldbyname('enviarfoto_2').AsString  = 'Y' then
+           JSonObject.AddPair('image2',  NOme_Arquivo_2   )       //FDQuery.fieldbyname('image2').AsString);
+        else
+           JSonObject.AddPair('image2',  nil   );
+
+        //null  '"flv":null,'+
+        JSonObject.AddPair('flv',FDQuery.fieldbyname('flv').AsString);
+
+        //null   '"mobile":null,'+
+        JSonObject.AddPair('mobile',FDQuery.fieldbyname('mobile').AsString);
+
+        //null  '"address":null,'+
+        JSonObject.AddPair('address',FDQuery.fieldbyname('address').AsString);
+
+        //"" '"detail":"",'+
+        JSonObject.AddPair('detail',FDQuery.fieldbyname('detail').AsString);
+
+        //null  '"systemreview":null,'+
+        JSonObject.AddPair('systemreview',FDQuery.fieldbyname('systemreview').AsString);
+
+        //null    '"userreview":null,'+
+        JSonObject.AddPair('userreview',FDQuery.fieldbyname('userreview').AsString);
+
+        //""    '"notice":"",'+
+        JSonObject.AddPair('notice',FDQuery.fieldbyname('notice').AsString);
+
+        //null  '"express":null,'+
+         JSonObject.AddPair('express',FDQuery.fieldbyname('express').AsString);
+
+        //coupon   '"delivery":"coupon",'+
+        JSonObject.AddPair('delivery',FDQuery.fieldbyname('delivery').AsString);
+
+        //none  '"state":"none",'+
+        JSonObject.AddPair('state',FDQuery.fieldbyname('state').AsString);
+
+        //Y  '"conduser":"Y",'+
+        JSonObject.AddPair('conduser',FDQuery.fieldbyname('conduser').AsString);
+
+        //N      '"buyonce":"N",'+
+        JSonObject.AddPair('buyonce',FDQuery.fieldbyname('buyonce').AsString);
+
+        //normal   '"team_type":"normal",'+
+        JSonObject.AddPair('team_type',FDQuery.fieldbyname('team_type').AsString);
+
+        //null   '"seo_title":null,'+
+        JSonObject.AddPair('seo_title',FDQuery.fieldbyname('seo_title').AsString);
+
+        //chapa  '"seo_keyword":"chapa",'+
+        JSonObject.AddPair('seo_keyword',FDQuery.fieldbyname('seo_keyword').AsString);
+
+        //null    '"seo_description":null,'+
+        JSonObject.AddPair('seo_description',FDQuery.fieldbyname('seo_description').AsString);
+
+        //team\/2018\/0618\/15293389254429.jpg   '"gal_image1":"team\/2018\/0618\/15293389254429.jpg",'+
+        if FDQuery.fieldbyname('enviarfoto_gal_1').AsString  = 'Y' then
+           JSonObject.AddPair('gal_image1',  Nome_Arquivo_gal_1   )     //FDQuery.fieldbyname('gal_image1').AsString);
+        else
+           JSonObject.AddPair('gal_image1',  nil  );
+
+        //team\/2018\/0618\/15293389259585.jpg   '"gal_image2":"team\/2018\/0618\/15293389259585.jpg",'+
+        if FDQuery.fieldbyname('enviarfoto_gal_2').AsString  = 'Y' then
+           JSonObject.AddPair('gal_image2',  Nome_Arquivo_gal_2)      //FDQuery.fieldbyname('gal_image2').AsString);
+        else
+           JSonObject.AddPair('gal_image2',  nil);
+
+        //null '"gal_image3":null,'+
+        if FDQuery.fieldbyname('enviarfoto_gal_3').AsString  = 'Y' then
+           JSonObject.AddPair('gal_image3', Nome_Arquivo_gal_3)  // FDQuery.fieldbyname('gal_image3').AsString);
+        else
+           JSonObject.AddPair('gal_image3', nil);
+
+        //null '"gal_image4":null,'+
+        if FDQuery.fieldbyname('enviarfoto_gal_4').AsString  = 'Y' then
+           JSonObject.AddPair('gal_image4', Nome_Arquivo_gal_4)        //FDQuery.fieldbyname('gal_image4').AsString);
+        else
+            JSonObject.AddPair('gal_image4', nil);
+
+        //null  '"gal_image5":null,'+
+        if FDQuery.fieldbyname('enviarfoto_gal_5').AsString  = 'Y' then
+           JSonObject.AddPair('gal_image5',  Nome_Arquivo_gal_5)       //FDQuery.fieldbyname('gal_image5').AsString);
+        else
+           JSonObject.AddPair('gal_image5',  nil);
+
+
+        //null  '"gal_image6":null,'+
+        if FDQuery.fieldbyname('enviarfoto_gal_6').AsString  = 'Y' then
+           JSonObject.AddPair('gal_image6',  Nome_Arquivo_gal_6)      //FDQuery.fieldbyname('gal_image6').AsString);
+        else
+           JSonObject.AddPair('gal_image6',  nil);
+
+        //null   '"gal_image7":null,'+
+        if FDQuery.fieldbyname('enviarfoto_gal_7').AsString  = 'Y' then
+           JSonObject.AddPair('gal_image7',  Nome_Arquivo_gal_7 )     //FDQuery.fieldbyname('gal_image7').AsString);
+        else
+           JSonObject.AddPair('gal_image7',  nil );
+
+        //""  '"maisinformacoes":"",'+
+        JSonObject.AddPair('maisinformacoes',FDQuery.fieldbyname('maisinformacoes').AsString);
+
+        //null  '"metodo_pagamento":null,'+
+        JSonObject.AddPair('metodo_pagamento',FDQuery.fieldbyname('metodo_pagamento').AsString);
+
+        //null  '"retornoparticipe":null,'+
+        JSonObject.AddPair('retornoparticipe',FDQuery.fieldbyname('retornoparticipe').AsString);
+
+        //""  '"url_comprar":"",'+
+        JSonObject.AddPair('url_comprar',FDQuery.fieldbyname('url_comprar').AsString);
+
+        //""  '"posicionamentotitulo":null,'+
+        JSonObject.AddPair('posicionamentotitulo',FDQuery.fieldbyname('posicionamentotitulo').AsString);
+
+        //null  '"marcadagua":null,'+
+        JSonObject.AddPair('marcadagua',FDQuery.fieldbyname('marcadagua').AsString);
+
+        //null  '"processo_compra":null,'+
+        JSonObject.AddPair('processo_compra',FDQuery.fieldbyname('processo_compra').AsString);
+
+        //null  '"categoria_agrupi":null,'+
+        JSonObject.AddPair('categoria_agrupi',FDQuery.fieldbyname('categoria_agrupi').AsString);
+
+        //null   '"categoria_valejunto":null,'+
+        JSonObject.AddPair('categoria_valejunto',FDQuery.fieldbyname('categoria_valejunto').AsString);
+
+        //null '"cidade_valejunto":null,'+
+        JSonObject.AddPair('cidade_valejunto',FDQuery.fieldbyname('cidade_valejunto').AsString);
+
+        //null  '"categoria_apontaofertas":null,'+
+        JSonObject.AddPair('categoria_apontaofertas',FDQuery.fieldbyname('categoria_apontaofertas').AsString);
+
+        //null   '"cidade_apontaofertas":null,'+
+        JSonObject.AddPair('cidade_apontaofertas',FDQuery.fieldbyname('cidade_apontaofertas').AsString);
+
+        //null  '"categoria_dsconto":null,'+
+        JSonObject.AddPair('categoria_dsconto',FDQuery.fieldbyname('categoria_dsconto').AsString);
+
+        //1  '"frete":"1",'+
+        JSonObject.AddPair('frete',FDQuery.fieldbyname('frete').AsString);
+
+        //31280240   '"ceporigem":"31280240",'+
+        JSonObject.AddPair('ceporigem',FDQuery.fieldbyname('ceporigem').AsString);
+
+        //02,0  '"peso":"02,0",'+
+        JSonObject.AddPair('peso',FDQuery.fieldbyname('peso').AsString);
+
+        //0,00  '"valorfrete":" 0,00",'+
+        JSonObject.AddPair('valorfrete',FDQuery.fieldbyname('valorfrete').AsString);
+
+        //0  '"fretegratuito":"0",'+
+        JSonObject.AddPair('fretegratuito',FDQuery.fieldbyname('fretegratuito').AsString);
+
+        //null  '"republicacao":null,'+
+        JSonObject.AddPair('republicacao',FDQuery.fieldbyname('republicacao').AsString);
+
+        //null  '"estatica_home":null,'+
+        JSonObject.AddPair('estatica_home',FDQuery.fieldbyname('estatica_home').AsString);
+
+        //null '"estatica_direita":null,'+
+        JSonObject.AddPair('estatica_direita',FDQuery.fieldbyname('estatica_direita').AsString);
+
+        //null   '"estatica_detalhe":null,'+
+        JSonObject.AddPair('estatica_detalhe',FDQuery.fieldbyname('estatica_detalhe').AsString);
+
+        //null  '"estatica_recentes":null,'+
+        JSonObject.AddPair('estatica_recentes',FDQuery.fieldbyname('estatica_recentes').AsString);
+
+        //12312  '"codreferencia":"12312",'+
+        JSonObject.AddPair('codreferencia',FDQuery.fieldbyname('codreferencia').AsString);
+
+        //null   '"mostrarpreco":null,'+
+        JSonObject.AddPair('mostrarpreco',FDQuery.fieldbyname('mostrarpreco').AsString);
+
+        //""   '"condicaoenvio":"",'+
+        JSonObject.AddPair('condicaoenvio',FDQuery.fieldbyname('condicaoenvio').AsString);
+
+        //0   '"uploadarquivo":"0",'+
+         JSonObject.AddPair('uploadarquivo',FDQuery.fieldbyname('uploadarquivo').AsString);
+
+        //{Vermelho}{Azul}{Preto}   '"condbuy2":"{Vermelho}{Azul}{Preto}",'+
+        JSonObject.AddPair('condbuy2',FDQuery.fieldbyname('condbuy2').AsString);
+
+        //"" '"nomeaba1":"",'+
+        JSonObject.AddPair('nomeaba1',FDQuery.fieldbyname('nomeaba1').AsString);
+
+        //""  '"nomeaba2":"",'+
+        JSonObject.AddPair('nomeaba2',FDQuery.fieldbyname('nomeaba2').AsString);
+
+        //"" '"observacao_preco":"",'+
+        JSonObject.AddPair('observacao_preco',FDQuery.fieldbyname('observacao_preco').AsString);
+
+        //Escolha a cor  '"titulo_opcao2":"Escolha a cor",'+
+        JSonObject.AddPair('titulo_opcao2',FDQuery.fieldbyname('titulo_opcao2').AsString);
+
+        //Escolha a voltagem   '"titulo_opcao1":"Escolha a voltagem",'+
+        JSonObject.AddPair('titulo_opcao1',FDQuery.fieldbyname('titulo_opcao1').AsString);
+
+        //""   '"titulo_upload":"",'+
+        JSonObject.AddPair('titulo_upload',FDQuery.fieldbyname('titulo_upload').AsString);
+
+        //Coluna 3M 3/8   '"titleresumido":"Coluna 3M 1/2",'+
+        JSonObject.AddPair('titleresumido',FDQuery.fieldbyname('titleresumido').AsString);
+
+        //""  '"video_team":""'+
+        JSonObject.AddPair('video_team',FDQuery.fieldbyname('video_team').AsString);
+
+
+        //op I = Inclusao ou Alteracao E =  Exclusao
+        JSonObject.AddPair('op',FDQuery.fieldbyname('op').AsString);
+
+
+        JSonArray.AddElement(jSonObject);
+
+        FDQuery.Next;
+      end;
+
+
+     memo1.lines.add(JSonArray.ToString);
+     memo1.lines.add('Enviando lote produtos...');
+
+
+     try
+
+
+       HTTP:= TIdHTTP.Create;
+       HTTP.Request.UserAgent := 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:12.0) Gecko/20100101 Firefox/12.0';
+       HTTP.Request.ContentType := 'application/json';
+
+       vJsonAEnviar := TStringStream.Create(UTF8Encode(JSonArray.ToString));
+       sresponse :=  HTTP.Post(edtaddressapi.Text+'/produtos/insert/several/token/'+edthashcodeapi.text, vJsonAEnviar);
+
+
+     except on e:exception do
+     begin
+
+        memo1.lines.add('Erro ao enviar dados...'+e.Message);
+        log := log + 'Falha ao enviar dados'+#13+#10;
+
+
+     end;
+
+
+
+
+
+     end;
+
+
+
+     memo1.lines.add(sresponse);
+     log := log + sresponse + #13+#10;
+
+
+
+  finally
+
+      try
+
+        FDQuery.close;
+        FDQuery.sql.Clear;
+        FDQuery.sql.add('update team set  op = ''S''   where op <> ''S'' ');
+        FDQuery.ExecSQL;
+
+      except
+        memo1.lines.add('Erro ao atualizar categoria produto...');
+      end;
+
+     memo1.lines.add('Finalizando envio de lote de produtos...');
+     log := log + 'Fim envio produto...'+#13+#10;
+
+     JSonArray.DisposeOf;
+     vJsonAEnviar.DisposeOf;
+     HTTP.DisposeOf;
+  end;
+
+
+end;
+
+
+procedure TFSincronizaDadosSite.CbxDriveIDKeyDown(Sender: TObject;
+  var Key: Word; Shift: TShiftState);
+begin
+key := 0;
+end;
+
+procedure TFSincronizaDadosSite.CbxDriveIDKeyPress(Sender: TObject;
+  var Key: Char);
+begin
+key := #0;
+end;
+
+procedure TFSincronizaDadosSite.descamposwh;
+begin
+  edttokenwh1.Enabled := false;
+  edtinstanceswh1.enabled := false;
+
+  edtsecretkeywh2.Enabled := false;
+  edtpublictokenwh2.Enabled := false;
+  edtdevicetokenwh2.Enabled := false;
+  memoauthorizationwh2.Enabled := false;
+end;
+
+function TFSincronizaDadosSite.desmontaNomeArquivo(nomeArquivo: string; pre_coomplemento:string = ''; pos_complemento:string = ''):string;
+var pos:integer;
+    nome,extensao:string;
+begin
+
+  pos := System.Pos('.',nomeArquivo);
+
+  if pos > 0 then
+  begin
+    nome := copy(nomeArquivo,1,pos-1);
+    extensao := copy(nomeArquivo,pos+1,length(nomeArquivo));
+  end;
+
+  result := pre_coomplemento+nome+pos_complemento+'.'+extensao;
+
+end;
+
+
+procedure TFSincronizaDadosSite.clearMemory;
+var
+   MainHandle : THandle;
+begin
+   try
+      MainHandle := OpenProcess(PROCESS_ALL_ACCESS, false, GetCurrentProcessID) ;
+      SetProcessWorkingSetSize(MainHandle, $FFFFFFFF, $FFFFFFFF) ;
+      CloseHandle(MainHandle) ;
+   except
+   end;
+     Application.ProcessMessages;
+end;
+
+
+
+procedure TFSincronizaDadosSite.FDConnBeforeConnect(Sender: TObject);
+begin
+  //FDPhysMySQLDriverLink.VendorLib := System.SysUtils.GetCurrentDir+'\libmysql.dll';
+  FDPhysMySQLDriverLink.VendorLib := extractfilepath(application.ExeName)+'\libmysql.dll'
+
+end;
+
+
+procedure  TFSincronizaDadosSite.salvarlog;
+var
+  vardir:string;
+
+  dd, mm, yyyy:word;
+
+
+begin
+
+  decodedate(now,yyyy,mm,dd);
+
+  vardir := extractfilepath(Application.ExeName);
+
+  memo1.lines.SaveToFile(vardir+'log'+inttostr(dd)+inttostr(mm)+ inttostr(yyyy) +'.log');
+
+  showmessage('Arquivo: '+vardir+'log'+inttostr(dd)+inttostr(mm)+ inttostr(yyyy) +'.log foi salvo com sucesso');
+
+end;
+
+
+
+
+procedure TFSincronizaDadosSite.FormClose(Sender: TObject;
+  var Action: TCloseAction);
+begin
+
+  salvarlog;
+
+
+end;
+
+procedure TFSincronizaDadosSite.FormCreate(Sender: TObject);
+var
+  f:file of data;
+
+
+begin
+
+  processando := 'N';
+
+  edtaddressapi.Clear;
+  edthashcodeapi.Clear;
+
+
+  edtcanal.ItemIndex := 0;
+  edttokenwh1.Text := '3BCFCEE5D03991924B3EAE3767BEB806';
+  edtsecretkeywh2.Text := '8e2ad285-1e15-4d8c-8aea-c47cfc3b9836';
+  edtpublictokenwh2.Text := '6d800a60-a8b2-4ad7-b3a2-a88608cfa11e';
+  edtdevicetokenwh2.Text := '900fc3a0-ce43-40e3-9dc2-8600622cf67d';
+  memoauthorizationwh2.Text := 'Bearer 6jEyXG0xOKwwCblNw9_OUYdO82isvygUmEcuCWKm2b4';
+  edtinstanceswh1.Text := '';
+
+
+
+  edtDataBaseName.Clear;
+  edtUserName.Clear;
+  edtPassword.Clear;
+  cbxDriveID.Clear;
+  edtPort.Clear;
+  edtServerLocal.Clear;
+
+  edthostftp.Clear;
+  edtuserftp.Clear;
+  edtsenhaftp.Clear;
+
+
+  //edttime.text := '0';
+
+  arqini := extractfilepath(Application.ExeName)+'config.ini';
+  if not fileexists(arqini) then
+  begin
+
+    dDados.AddressAPI := 'localhost';
+    dDados.HashCodeAPI := '';
+
+    dDados.DataBaseName := 'dbcentralapp';
+    dDados.UserName := 'centralapp';
+    dDados.PassWord := 'c@bios';
+    dDados.DriveID := 'MySQL';
+    dDados.Port := '3306';
+    dDados.ServerLocal := 'localhost';
+    dDados.Temporizacao := '5';
+
+
+    dDados.HostFTP := '';
+    dDados.UserFTP := '';
+    dDados.SenhaFTP := '';
+
+    try
+      AssignFile(f,arqini);
+      rewrite(f);
+      write(f,dDados);
+
+    finally
+      closefile(f);
+    end;
+
+
+ end;
+
+
+ try
+   AssignFile(f,arqini);
+   reset(f);
+   read(f,dDados);
+
+   //edtaddressapi.Text := dDados.AddressAPI;
+   //edthashcodeapi.Text := dDados.HashCodeAPI;
+   //edtcanal.ItemIndex := dDados.canal;
+   //edttokenwh1.Text := dDados.tokenwh1;
+   //edtinstanceswh1.Text := dDados.instanceswh1;
+   //edtsecretkeywh2.Text := dDados.secretkeywh2;
+   //edtpublictokenwh2.Text := dDados.publictokenwh2;
+   //edtdevicetokenwh2.Text := dDados.devicetokenwh2;
+   //memoauthorizationwh2.Text := dDados.authorizationwh2;
+
+   edtDataBaseName.Text :=  dDados.DataBaseName;
+   edtUserName.Text := dDados.UserName;
+   edtPassword.Text :=  dDados.PassWord;
+   cbxDriveID.Text := dDados.DriveID;
+   edtPort.Text := dDados.Port;
+   edtServerLocal.Text :=  dDados.ServerLocal;
+   edttime.Text :=   dDados.Temporizacao;
+
+
+   //edthostftp.Text := dDados.HostFTP;
+   //edtuserftp.Text := dDados.UserFTP;
+   //edtsenhaftp.Text := dDados.SenhaFTP;
+
+ finally
+   closefile(f);
+ end;
+
+ //'dataregistro date,'+
+ //'horaregistro time,'+
+ //'dataagendamento date,'+
+ //'horaagendamento time,'+
+ //'dataenvio date,'+
+ //'horaenvio time,'+
+
+
+end;
+
+
+
+procedure TFSincronizaDadosSite.FormShow(Sender: TObject);
+begin
+  //CriarTabelas;
+
+  try
+
+
+        //etapa := 'Conectando banco...';
+        //FDConn.Connected := false;
+        //FDConn.Params.Database := edtDataBaseName.Text;
+        //FDConn.Params.UserName := edtUserName.Text;
+        //FDConn.Params.Password := edtPassWord.Text;
+        //FDConn.Params.DriverID := cbxDriveID.Text;
+        //FDConn.Params.Add('port='+edtPort.Text);
+        //FDConn.Params.Add('server='+edtServerLocal.Text);
+        //FDConn.Connected := true;
+
+
+
+
+
+  except on e:Exception do begin
+
+      memo1.lines.add('Erro ao conectar banco...');
+
+  end;
+
+  end;
+
+
+
+  //Recuperando dados
+  fdqueryConfig.close;
+  fdqueryConfig.sql.Clear;
+  fdqueryConfig.sql.add('select * from centralapp_config');
+  fdqueryConfig.Open;
+
+  if not fdqueryConfig.IsEmpty then
+  begin
+
+    edtaddressapi.text :=     crypt('D',FDQueryConfig.FieldByName('addressapi').asstring);
+    edthashcodeapi.text :=    crypt('D',FDQueryConfig.FieldByName('hashcodeapi').asstring);
+    edthostftp.Text :=        crypt('D',FDQueryConfig.FieldByName('hostftp').asstring);
+    edtuserftp.text :=        crypt('D',FDQueryConfig.FieldByName('userftp').asstring);
+    edtsenhaftp.Text :=       crypt('D',FDQueryConfig.FieldByName('senhaftp').asstring);
+    edttime.Text :=            inttostr(FDQueryConfig.FieldByName('intervalo').asinteger);
+    edtcanal.ItemIndex :=               FDQueryConfig.FieldByName('canal_indexitem').asinteger;
+    edtinstanceswh1.Text :=   crypt('D',FDQueryConfig.FieldByName('instanceswh1').asstring);
+    edttokenwh1.Text :=       crypt('D',FDQueryConfig.FieldByName('tokenwh1').asstring);
+    edtsecretkeywh2.text :=   crypt('D',FDQueryConfig.FieldByName('secretkeywh2').asstring);
+    edtpublictokenwh2.Text := crypt('D',FDQueryConfig.FieldByName('publictokenwh2').asstring);
+    edtdevicetokenwh2.Text := crypt('D',FDQueryConfig.FieldByName('devicetokenwh2').asstring);
+
+    memoauthorizationwh2.lines.Clear;
+    memoauthorizationwh2.lines.add(  crypt('D',FDQueryConfig.FieldByName('authorizationwh2').asstring)   );
+
+  end;
+
+  descamposwh;
+  edtcanal.OnChange(sender);
+
+  tmSync.Enabled := false;
+  tmSync.Interval :=  strtoint( edttime.text ) * 60 * 1000;
+  tmSync.Enabled := true;
+end;
+
+procedure TFSincronizaDadosSite.SincronizaMarca;
+var
+
+    HTTP: TIdHTTP;
+    vJsonAEnviar: TStringStream;
+    sresponse:string;
+
+    jSonObject:  TJSonObject;
+    jSonArray: TJSonArray;
+    id:string;
+
+    Nome_Arquivo, Auxiliar:string;
+
+    contador:integer;
+
+    imagemsemfoto:String;
+
+begin
+
+  errorSyncMarca := false;
+
+  if processando = 'S' then
+      exit;
+
+  processando := 'S';
+
+  //etapa := 'Abrindo banco de dados...';
+  //FDConn.Connected := false;
+  //FDConn.Params.Database := edtDataBaseName.Text;
+  //FDConn.Params.UserName := edtUserName.Text;
+  //FDConn.Params.Password := edtPassWord.Text;
+  //FDConn.Params.DriverID := cbxDriveID.Text;
+  //FDConn.Params.Add('port='+edtPort.Text);
+  //FDConn.Params.Add('server='+edtServerLocal.Text);
+  //FDConn.Connected := true;
+
+
+  try
+
+
+    FDConn.Connected := false;
+    FDConn.LoginPrompt := false;
+    FDConn.Params.Database := edtDataBaseName.Text;
+    FDConn.Params.UserName := edtUserName.Text;
+    FDConn.Params.Password := edtPassWord.Text;
+    FDConn.Params.DriverID := cbxDriveID.Text;
+    FDConn.Params.Add('port='+edtPort.Text);
+    FDConn.Params.Add('server='+edtServerLocal.Text);
+    FDConn.Connected := true;
+
+
+  except
+    on E: EFDException do
+      if E.FDCode = er_FD_ClntDbLoginAborted then
+        ; // user pressed Cancel button in Login dialog
+    on E: EFDDBEngineException do
+      case E.Kind of
+        ekUserPwdInvalid: ; // user name or password are incorrect
+        ekUserPwdExpired: ; // user password is expired
+        ekServerGone: ;     // DBMS is not accessible due to some reason
+      else                // other issues
+
+        memo1.lines.add('Ocorreu um erro ao conectar com banco de dados, feche o sistema e abra novamente');
+      end;
+
+
+  end;
+
+
+  if not FDConn.Connected then
+  begin
+    memo1.lines.add('Conexão com a base de dados falhou, se o erro persistir contate o suporte');
+    exit;
+  end;
+
+
+  etapa := 'Abrindo tabela categoria atributos';
+  FDQuery.close;
+  FDQuery.sql.Clear;
+  FDQuery.sql.add('select * from category_atributos where op <> ''S''');
+  FDQuery.Open;
+
+
+  if FDQuery.IsEmpty then
+  begin
+    memo1.lines.add('Não há item em categoria produto para ser enviado...');
+    FDConn.Connected := false;
+    processando := 'N';
+    exit;
+  end;
+
+
+
+  //imagemsemfoto :=  extractfilepath(application.ExeName)+'\images\semfoto.jpg';
+
+
+  imagemsemfoto := 'categoria/construtor/semfoto.jpg';
+
+
+  JSonArray := TJSonArray.Create;
+
+   memo1.lines.add('Preparando envio categoria atributos...');
+   log := log + 'Categoria atributos...'+#13+#10;
+
+  while not FDQuery.Eof do
+  begin
+
+     if FDQuery.FieldByName('enviarfoto').asString  = 'Y' then
+     begin
+
+       enviarFotoFTP(FDQuery.fieldbyname('origemfoto').AsString ,FDQuery.FieldByName('dirdest').asString);
+
+     end;
+
+
+      Auxiliar := '';
+
+      Nome_Arquivo :=  FDQuery.fieldbyname('origemfoto').AsString;
+
+      Nome_Arquivo := AnsiStrRScan(PCHar(Nome_Arquivo), '\');
+      for contador := 2 To StrLen(PCHar(Nome_Arquivo)) do
+          Auxiliar := Auxiliar + Nome_Arquivo [contador];
+
+      Nome_Arquivo := FDQuery.FieldByName('caminhocurto').asString+Auxiliar;
+
+
+      JSonObject := TJSonObject.Create;
+      JSonObject.AddPair('id',FDQuery.fieldbyname('id').AsString);
+      JSonObject.AddPair('id_atributopai',FDQuery.fieldbyname('id_atributopai').AsString);
+      JSonObject.AddPair('category_id',FDQuery.fieldbyname('category_id').AsString);
+      JSonObject.AddPair('nome_atributo',FDQuery.fieldbyname('nome_atributo').AsString);
+      JSonObject.AddPair('status',FDQuery.fieldbyname('status').AsString);
+      JSonObject.AddPair('ordem',FDQuery.fieldbyname('ordem').AsString);
+
+      if FDQuery.fieldbyname('enviarfoto').AsString  = 'Y' then
+         JSonObject.AddPair('imagemcateg', Nome_Arquivo)                                  //FDQuery.fieldbyname('imagemcateg').AsString);
+      else if FDQuery.fieldbyname('enviarfoto').AsString  = 'E' then
+         JSonObject.AddPair('imagemcateg', imagemsemfoto )
+      else
+         JSonObject.AddPair('imagemcateg', '' );
+
+      //else
+      //   JSonObject.AddPair('imagemcateg', nil);
+
+      //op I = Inclusao ou Alteracao E =  Exclusao
+      JSonObject.AddPair('op',FDQuery.fieldbyname('op').AsString);
+
+      JSonArray.AddElement(jSonObject);
+
+      FDQuery.Next;
+
+  end;
+
+
+  try
+     memo1.lines.add(JSonArray.ToString);
+     memo1.lines.add('Enviando lote categorias atributos...');
+     log := log + JSonArray.ToString+#13+#10;
+
+
+     try
+
+
+       HTTP:= TIdHTTP.Create;
+       HTTP.Request.UserAgent := 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:12.0) Gecko/20100101 Firefox/12.0';
+       HTTP.Request.ContentType := 'application/json';
+
+       vJsonAEnviar := TStringStream.Create(UTF8Encode(JSonArray.ToString));
+       sresponse :=  HTTP.Post(edtaddressapi.Text+'/category_atributos/insert/several/token/'+edthashcodeapi.text, vJsonAEnviar);
+
+
+     except on e:exception do
+       begin
+          errorSyncMarca := true;
+          memo1.lines.add('Erro ao enviar marca(s)...'+e.Message);
+          log := log +  'Erro ao enviar marcas(s)...'+e.Message+#13+#10;
+
+
+       end;
+
+
+
+     end;
+
+
+     memo1.lines.add(sresponse);
+     log := log + sresponse+#13+#10;
+
+  finally
+
+
+      try
+
+        if not errorSyncMarca then
+        begin
+
+          FDQuery.close;
+          FDQuery.sql.Clear;
+          FDQuery.sql.add('update category_atributos set  op = ''S''   where op <> ''S'' ');
+          FDQuery.ExecSQL;
+
+
+        end;
+
+
+
+      except
+        memo1.lines.add('Erro ao atualizar categoria produto...');
+      end;
+
+      memo1.lines.add('Finalizando envio de lote de categoria produto...');
+      log := log + 'Envio Categoria Finalizado...'+#13+#10;
+
+  end;
+
+  processando := 'N';
+
+  FDConn.Connected := false;
+
+  JSonArray.DisposeOf;
+  vJsonAEnviar.DisposeOf;
+  HTTP.DisposeOf;
+
+
+
+end;
+
+
+procedure TFSincronizaDadosSite.SincronizaCategoria;
+var
+
+    HTTP: TIdHTTP;
+    vJsonAEnviar: TStringStream;
+    sresponse:string;
+
+    jSonObject:  TJSonObject;
+    jSonArray: TJSonArray;
+    id:string;
+
+    Nome_Arquivo, Auxiliar:string;
+
+    contador:integer;
+
+    imagemsemfoto:String;
+
+begin
+  errorSyncCategoria := false;
+
+  if processando = 'S' then
+      exit;
+
+  processando := 'S';
+
+
+  etapa := 'Abrindo banco de dados...';
+
+
+  try
+
+
+    FDConn.Connected := false;
+    FDConn.LoginPrompt := false;
+    FDConn.Params.Database := edtDataBaseName.Text;
+    FDConn.Params.UserName := edtUserName.Text;
+    FDConn.Params.Password := edtPassWord.Text;
+    FDConn.Params.DriverID := cbxDriveID.Text;
+    FDConn.Params.Add('port='+edtPort.Text);
+    FDConn.Params.Add('server='+edtServerLocal.Text);
+    FDConn.Connected := true;
+
+
+  except
+    on E: EFDException do
+      if E.FDCode = er_FD_ClntDbLoginAborted then
+        ; // user pressed Cancel button in Login dialog
+    on E: EFDDBEngineException do
+      case E.Kind of
+        ekUserPwdInvalid: ; // user name or password are incorrect
+        ekUserPwdExpired: ; // user password is expired
+        ekServerGone: ;     // DBMS is not accessible due to some reason
+      else                // other issues
+
+        memo1.lines.add('Ocorreu um erro ao conectar com banco de dados, feche o sistema e abra novamente');
+      end;
+
+
+  end;
+
+
+  if not FDConn.Connected then
+  begin
+    memo1.lines.add('Conexão com a base de dados falhou, se o erro persistir contate o suporte');
+    exit;
+  end;
+
+
+  etapa := 'Abrindo tabela categoria';
+  FDQuery.close;
+  FDQuery.sql.Clear;
+  FDQuery.sql.add('select * from category where op <> ''S''');
+  FDQuery.Open;
+
+  if FDQuery.IsEmpty then
+  begin
+    memo1.lines.add('Não há item em categoria para ser enviado...');
+    processando := 'N';
+    FDConn.Connected := false;
+    exit;
+  end;
+
+
+  //imagemsemfoto :=  extractfilepath(application.ExeName)+'\images\semfoto.jpg';
+
+
+  imagemsemfoto := 'categoria/construtor/semfoto.jpg';
+
+
+  JSonArray := TJSonArray.Create;
+
+   memo1.lines.add('Preparando envio categoria...');
+   log := log + 'Categoria...'+#13+#10;
+
+  while not FDQuery.Eof do
+  begin
+
+     if FDQuery.FieldByName('enviarfoto').asString  = 'Y' then
+     begin
+
+       enviarFotoFTP(FDQuery.fieldbyname('origemfoto').AsString ,FDQuery.FieldByName('dirdest').asString);
+
+     end;
+
+
+      Auxiliar := '';
+
+      Nome_Arquivo :=  FDQuery.fieldbyname('origemfoto').AsString;
+
+      Nome_Arquivo := AnsiStrRScan(PCHar(Nome_Arquivo), '\');
+      for contador := 2 To StrLen(PCHar(Nome_Arquivo)) do
+          Auxiliar := Auxiliar + Nome_Arquivo [contador];
+
+      Nome_Arquivo := FDQuery.FieldByName('caminhocurto').asString+Auxiliar;
+
+
+      JSonObject := TJSonObject.Create;
+      JSonObject.AddPair('id',FDQuery.fieldbyname('id').AsString);
+
+      JSonObject.AddPair('zone',FDQuery.fieldbyname('zone').AsString);
+
+      JSonObject.AddPair('czone',FDQuery.fieldbyname('czone').AsString);
+      JSonObject.AddPair('name',FDQuery.fieldbyname('name').AsString);
+      JSonObject.AddPair('tipo',FDQuery.fieldbyname('tipo').AsString);
+      JSonObject.AddPair('ename',FDQuery.fieldbyname('ename').AsString);
+      JSonObject.AddPair('letter',FDQuery.fieldbyname('letter').AsString);
+      JSonObject.AddPair('link',FDQuery.fieldbyname('link').AsString);
+      JSonObject.AddPair('imagemnavegacao',FDQuery.fieldbyname('imagemnavegacao').AsString);
+
+      if FDQuery.fieldbyname('enviarfoto').AsString  = 'Y' then
+         JSonObject.AddPair('imagemcateg', Nome_Arquivo)                                  //FDQuery.fieldbyname('imagemcateg').AsString);
+      else if FDQuery.fieldbyname('enviarfoto').AsString  = 'E' then
+         JSonObject.AddPair('imagemcateg', imagemsemfoto )
+      else
+         JSonObject.AddPair('imagemcateg', '' );
+
+
+      //else
+      //   JSonObject.AddPair('imagemcateg', nil);
+
+      JSonObject.AddPair('sort_order',FDQuery.fieldbyname('sort_order').AsString);
+      JSonObject.AddPair('display',FDQuery.fieldbyname('display').AsString);
+      JSonObject.AddPair('bannercategoria',FDQuery.fieldbyname('bannercategoria').AsString);
+      JSonObject.AddPair('linkexterno',FDQuery.fieldbyname('linkexterno').AsString);
+      JSonObject.AddPair('target',FDQuery.fieldbyname('target').AsString);
+      JSonObject.AddPair('idpai',FDQuery.fieldbyname('idpai').AsString);
+      JSonObject.AddPair('bannernavegacao',FDQuery.fieldbyname('bannernavegacao').AsString);
+      JSonObject.AddPair('mostrartopo',FDQuery.fieldbyname('mostrartopo').AsString);
+      JSonObject.AddPair('seo_cat_key',FDQuery.fieldbyname('seo_cat_key').AsString);
+      JSonObject.AddPair('seo_cat_descricao',FDQuery.fieldbyname('seo_cat_descricao').AsString);
+      JSonObject.AddPair('seo_cat_title',FDQuery.fieldbyname('seo_cat_title').AsString);
+      JSonObject.AddPair('iderp',FDQuery.fieldbyname('iderp').AsString);
+      JSonObject.AddPair('op',FDQuery.fieldbyname('op').AsString);
+
+      JSonArray.AddElement(jSonObject);
+
+      FDQuery.Next;
+
+  end;
+
+
+  try
+     memo1.lines.add(JSonArray.ToString);
+     memo1.lines.add('Enviando lote categorias...');
+     log := log + JSonArray.ToString+#13+#10;
+
+
+     try
+
+
+       HTTP:= TIdHTTP.Create;
+       HTTP.Request.UserAgent := 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:12.0) Gecko/20100101 Firefox/12.0';
+       HTTP.Request.ContentType := 'application/json';
+
+       vJsonAEnviar := TStringStream.Create(UTF8Encode(JSonArray.ToString));
+       sresponse :=  HTTP.Post(edtaddressapi.Text+'/category/insert/several/token/'+edthashcodeapi.text, vJsonAEnviar);
+
+
+     except on e:exception do
+       begin
+          errorSyncCategoria := true;
+          memo1.lines.add('Erro ao enviar dados categoria(s)...'+e.Message);
+          log := log +  'Erro ao enviar dados categoria(s)...'+e.Message+#13+#10;
+
+
+       end;
+
+
+
+     end;
+
+
+     memo1.lines.add(sresponse);
+     log := log + sresponse+#13+#10;
+
+  finally
+
+
+      try
+
+        if not errorSyncCategoria then
+        begin
+
+          FDQuery.close;
+          FDQuery.sql.Clear;
+          FDQuery.sql.add('update category set  op = ''S''   where op <> ''S'' ');
+          FDQuery.ExecSQL;
+
+        end;
+
+
+      except
+        memo1.lines.add('Erro ao atualizar categoria...');
+      end;
+
+
+     memo1.lines.add('Finalizando envio de lote de categoria...');
+     log := log + 'Envio Categoria Finalizado...'+#13+#10;
+
+
+  end;
+
+  processando := 'N';
+
+  FDConn.Connected := false;
+
+  JSonArray.DisposeOf;
+  vJsonAEnviar.DisposeOf;
+  HTTP.DisposeOf;
+
+
+
+end;
+
+
+
+procedure TFSincronizaDadosSite.SincronizaProdutos;
+var
+
+    HTTP: TIdHTTP;
+    vJsonAEnviar: TStringStream;
+    sresponse:string;
+
+    nome,extensao:string;
+
+    jSonObject:  TJSonObject;
+    jSonArray: TJSonArray;
+    id:string;
+
+
+    Nome_arquivo,Auxiliar:String;
+    Nome_arquivo_1,Auxiliar_1:String;
+    Nome_arquivo_2,Auxiliar_2:String;
+    Nome_arquivo_gal_1,Auxiliar_gal_1:String;
+    Nome_arquivo_gal_2,Auxiliar_gal_2:String;
+    Nome_arquivo_gal_3,Auxiliar_gal_3:String;
+    Nome_arquivo_gal_4,Auxiliar_gal_4:String;
+    Nome_arquivo_gal_5,Auxiliar_gal_5:String;
+    Nome_arquivo_gal_6,Auxiliar_gal_6:String;
+    Nome_arquivo_gal_7,Auxiliar_gal_7:String;
+
+    Contador:integer;
+
+    imagemsemfoto:string;
+
+
+
+
+begin
+
+      errorSyncProduto := false;
+
+      if processando = 'S' then
+          exit;
+
+      processando := 'S';
+
+
+      //etapa := 'Abrindo banco de dados...';
+      //FDConn.Connected := false;
+      //FDConn.Params.Database := edtDataBaseName.Text;
+      //FDConn.Params.UserName := edtUserName.Text;
+      //FDConn.Params.Password := edtPassWord.Text;
+      //FDConn.Params.DriverID := cbxDriveID.Text;
+      //FDConn.Params.Add('port='+edtPort.Text);
+      //FDConn.Params.Add('server='+edtServerLocal.Text);
+      //FDConn.Connected := true;
+
+
+
+
+    try
+
+
+        FDConn.Connected := false;
+        FDConn.LoginPrompt := false;
+        FDConn.Params.Database := edtDataBaseName.Text;
+        FDConn.Params.UserName := edtUserName.Text;
+        FDConn.Params.Password := edtPassWord.Text;
+        FDConn.Params.DriverID := cbxDriveID.Text;
+        FDConn.Params.Add('port='+edtPort.Text);
+        FDConn.Params.Add('server='+edtServerLocal.Text);
+        FDConn.Connected := true;
+
+
+      except
+        on E: EFDException do
+          if E.FDCode = er_FD_ClntDbLoginAborted then
+            ; // user pressed Cancel button in Login dialog
+        on E: EFDDBEngineException do
+          case E.Kind of
+            ekUserPwdInvalid: ; // user name or password are incorrect
+            ekUserPwdExpired: ; // user password is expired
+            ekServerGone: ;     // DBMS is not accessible due to some reason
+          else                // other issues
+
+            memo1.lines.add('Ocorreu um erro ao conectar com banco de dados, feche o sistema e abra novamente');
+          end;
+
+
+      end;
+
+
+      if not FDConn.Connected then
+      begin
+        memo1.lines.add('Conexão com a base de dados falhou, se o erro persistir contate o suporte');
+        exit;
+      end;
+
+
+
+
+
+
+
+      etapa := 'Sincronizando produtos...';
+      FDQuery.close;
+      FDQuery.sql.Clear;
+      FDQuery.sql.add('select * from team where op <> ''S''');
+      FDQuery.Open;
+
+      if FDQuery.IsEmpty then
+      begin
+        memo1.lines.add('Não há item em produtos para ser enviado...');
+        processando := 'N';
+        FDConn.Connected := false;
+        exit;
+      end;
+
+      JSonArray := TJSonArray.Create;
+
+      memo1.lines.add('Preparando envio...');
+
+      log := log + 'Envio Produto...'+#13+#10;
+
+      //imagemsemfoto :=  extractfilepath(application.ExeName)+'\images\semfoto.jpg';
+
+      imagemsemfoto := 'team/construtor/semfoto.jpg';
+
+      while not FDQuery.Eof do
+      begin
+
+
+         //IdOpenSSLSetLibPath(extractfilepath(paramstr(0)));
+         if FDQuery.FieldByName('enviarfoto').asString  = 'Y' then
+         begin
+
+           enviarFotoFTP(FDQuery.fieldbyname('origemfoto').AsString ,FDQuery.FieldByName('dirdest').asString);
+
+         end;
+
+         if FDQuery.FieldByName('enviarfoto').asString  = 'Y' then
+         begin
+
+           enviarFotoFTP(FDQuery.fieldbyname('origemfoto').AsString ,FDQuery.FieldByName('dirdest').asString,'','_fit');
+
+         end;
+
+
+         if FDQuery.FieldByName('enviarfoto_1').asString  = 'Y' then
+         begin
+
+            enviarFotoFTP(FDQuery.FieldByName('origemfoto_1').asString  ,FDQuery.FieldByName('dirdest').asString);
+
+         end;
+
+
+         if FDQuery.FieldByName('enviarfoto_2').asString  = 'Y' then
+         begin
+
+            enviarFotoFTP(FDQuery.FieldByName('origemfoto_2').asString  ,FDQuery.FieldByName('dirdest').asString);
+
+         end;
+
+
+         if FDQuery.FieldByName('enviarfoto_gal_1').asString  = 'Y' then
+         begin
+
+            enviarFotoFTP(FDQuery.FieldByName('origemfoto_gal_1').asString  ,FDQuery.FieldByName('dirdest').asString);
+
+         end;
+
+
+         if FDQuery.FieldByName('enviarfoto_gal_2').asString  = 'Y' then
+         begin
+
+            enviarFotoFTP(FDQuery.FieldByName('origemfoto_gal_2').asString  ,FDQuery.FieldByName('dirdest').asString);
+
+         end;
+
+
+         if FDQuery.FieldByName('enviarfoto_gal_3').asString  = 'Y' then
+         begin
+
+            enviarFotoFTP(FDQuery.FieldByName('origemfoto_gal_3').asString  ,FDQuery.FieldByName('dirdest').asString);
+
+         end;
+
+
+         if FDQuery.FieldByName('enviarfoto_gal_4').asString  = 'Y' then
+         begin
+
+            enviarFotoFTP(FDQuery.FieldByName('origemfoto_gal_4').asString  ,FDQuery.FieldByName('dirdest').asString);
+
+         end;
+
+
+         if FDQuery.FieldByName('enviarfoto_gal_5').asString  = 'Y' then
+         begin
+
+            enviarFotoFTP(FDQuery.FieldByName('origemfoto_gal_5').asString  ,FDQuery.FieldByName('dirdest').asString);
+
+         end;
+
+
+         if FDQuery.FieldByName('enviarfoto_gal_6').asString  = 'Y' then
+         begin
+
+            enviarFotoFTP(FDQuery.FieldByName('origemfoto_gal_6').asString  ,FDQuery.FieldByName('dirdest').asString);
+
+         end;
+
+
+         if FDQuery.FieldByName('enviarfoto_gal_7').asString  = 'Y' then
+         begin
+
+            enviarFotoFTP(FDQuery.FieldByName('origemfoto_gal_7').asString  ,FDQuery.FieldByName('dirdest').asString);
+
+         end;
+
+
+
+
+
+
+        //Imagem ------------------------------------------------------------
+        Nome_Arquivo :=  FDQuery.fieldbyname('origemfoto').AsString;
+
+        Nome_Arquivo := AnsiStrRScan(PCHar(Nome_Arquivo), '\');
+        for contador := 2 To StrLen(PCHar(Nome_Arquivo)) do
+            Auxiliar := Auxiliar + Nome_Arquivo [contador];
+
+        Nome_Arquivo := FDQuery.FieldByName('caminhocurto').asString+Auxiliar;
+        //--------------------------------------------------------------------
+
+
+        Nome_Arquivo := desmontanomearquivo(Nome_Arquivo);
+
+
+        //Imagem 1------------------------------------------------------------
+        Nome_Arquivo_1 :=  FDQuery.fieldbyname('origemfoto_1').AsString;
+
+        Nome_Arquivo_1 := AnsiStrRScan(PCHar(Nome_Arquivo_1), '\');
+        for contador := 2 To StrLen(PCHar(Nome_Arquivo_1)) do
+            Auxiliar_1 := Auxiliar_1 + Nome_Arquivo_1 [contador];
+
+        Nome_Arquivo_1 := FDQuery.FieldByName('caminhocurto').asString+Auxiliar_1;
+        //--------------------------------------------------------------------
+
+        //Imagem 2------------------------------------------------------------
+        Nome_Arquivo_2 :=  FDQuery.fieldbyname('origemfoto_2').AsString;
+
+        Nome_Arquivo_2 := AnsiStrRScan(PCHar(Nome_Arquivo_2), '\');
+        for contador := 2 To StrLen(PCHar(Nome_Arquivo_2)) do
+            Auxiliar_2 := Auxiliar_2 + Nome_Arquivo_2 [contador];
+
+        Nome_Arquivo_2 := FDQuery.FieldByName('caminhocurto').asString+Auxiliar_2;
+        //--------------------------------------------------------------------
+
+        //gal_image1------------------------------------------------------------
+        Nome_Arquivo_gal_1 :=  FDQuery.fieldbyname('origemfoto_gal_1').AsString;
+
+        Nome_Arquivo_gal_1 := AnsiStrRScan(PCHar(Nome_Arquivo_gal_1), '\');
+        for contador := 2 To StrLen(PCHar(Nome_Arquivo_gal_1)) do
+            Auxiliar_gal_1 := Auxiliar_gal_1 + Nome_Arquivo_gal_1 [contador];
+
+        Nome_Arquivo_gal_1 := FDQuery.FieldByName('caminhocurto').asString+Auxiliar_gal_1;
+        //--------------------------------------------------------------------
+
+        //gal_image2------------------------------------------------------------
+        Nome_Arquivo_gal_2 :=  FDQuery.fieldbyname('origemfoto_gal_2').AsString;
+
+        Nome_Arquivo_gal_2 := AnsiStrRScan(PCHar(Nome_Arquivo_gal_2), '\');
+        for contador := 2 To StrLen(PCHar(Nome_Arquivo_gal_2)) do
+            Auxiliar_gal_2 := Auxiliar_gal_2 + Nome_Arquivo_gal_2 [contador];
+
+        Nome_Arquivo_gal_2 := FDQuery.FieldByName('caminhocurto').asString+Auxiliar_gal_2;
+        //--------------------------------------------------------------------
+
+        //gal_image3------------------------------------------------------------
+        Nome_Arquivo_gal_3 :=  FDQuery.fieldbyname('origemfoto_gal_3').AsString;
+
+        Nome_Arquivo_gal_3 := AnsiStrRScan(PCHar(Nome_Arquivo_gal_3), '\');
+        for contador := 2 To StrLen(PCHar(Nome_Arquivo_gal_3)) do
+            Auxiliar_gal_3 := Auxiliar_gal_3 + Nome_Arquivo_gal_3 [contador];
+
+        Nome_Arquivo_gal_3 := FDQuery.FieldByName('caminhocurto').asString+Auxiliar_gal_3;
+        //--------------------------------------------------------------------
+
+        //gal_image4------------------------------------------------------------
+        Nome_Arquivo_gal_4 :=  FDQuery.fieldbyname('origemfoto_gal_4').AsString;
+
+        Nome_Arquivo_gal_4 := AnsiStrRScan(PCHar(Nome_Arquivo_gal_4), '\');
+        for contador := 2 To StrLen(PCHar(Nome_Arquivo_gal_4)) do
+            Auxiliar_gal_4 := Auxiliar_gal_4 + Nome_Arquivo_gal_4 [contador];
+
+        Nome_Arquivo_gal_4 := FDQuery.FieldByName('caminhocurto').asString+Auxiliar_gal_4;
+        //--------------------------------------------------------------------
+
+        //gal_image5------------------------------------------------------------
+        Nome_Arquivo_gal_5 :=  FDQuery.fieldbyname('origemfoto_gal_5').AsString;
+
+        Nome_Arquivo_gal_5 := AnsiStrRScan(PCHar(Nome_Arquivo_gal_5), '\');
+        for contador := 2 To StrLen(PCHar(Nome_Arquivo_gal_5)) do
+            Auxiliar_gal_5 := Auxiliar_gal_5 + Nome_Arquivo_gal_5 [contador];
+
+        Nome_Arquivo_gal_5 := FDQuery.FieldByName('caminhocurto').asString+Auxiliar_gal_5;
+        //--------------------------------------------------------------------
+
+        //gal_image6------------------------------------------------------------
+        Nome_Arquivo_gal_6 :=  FDQuery.fieldbyname('origemfoto_gal_6').AsString;
+
+        Nome_Arquivo_gal_6 := AnsiStrRScan(PCHar(Nome_Arquivo_gal_6), '\');
+        for contador := 2 To StrLen(PCHar(Nome_Arquivo_gal_6)) do
+            Auxiliar_gal_6 := Auxiliar_gal_6 + Nome_Arquivo_gal_6 [contador];
+
+        Nome_Arquivo_gal_6 := FDQuery.FieldByName('caminhocurto').asString+Auxiliar_gal_6;
+        //--------------------------------------------------------------------
+
+        //gal_image6------------------------------------------------------------
+        Nome_Arquivo_gal_7 :=  FDQuery.fieldbyname('origemfoto_gal_7').AsString;
+
+        Nome_Arquivo_gal_7 := AnsiStrRScan(PCHar(Nome_Arquivo_gal_7), '\');
+        for contador := 2 To StrLen(PCHar(Nome_Arquivo_gal_7)) do
+            Auxiliar_gal_7 := Auxiliar_gal_7 + Nome_Arquivo_gal_7 [contador];
+
+        Nome_Arquivo_gal_7 := FDQuery.FieldByName('caminhocurto').asString+Auxiliar_gal_7;
+        //--------------------------------------------------------------------
+
+
+
+
+
+        JSonObject := TJSonObject.Create;
+
+        //3 '"id":3,'+
+        JSonObject.AddPair('id',FDQuery.fieldbyname('id').AsString);
+
+        //1 '"minimo_pessoa":1,'+
+        JSonObject.AddPair('minimo_pessoa',FDQuery.fieldbyname('minimo_pessoa').AsString);
+
+        //1 '"user_id":1,'+
+        JSonObject.AddPair('user_id',FDQuery.fieldbyname('user_id').AsString);
+
+        //0 '"city_id":0,'+
+        JSonObject.AddPair('city_id',FDQuery.fieldbyname('city_id').AsString);
+
+        //2 '"group_id":2,'+
+        JSonObject.AddPair('group_id',FDQuery.fieldbyname('group_id').AsString);
+
+        //1 '"partner_id":1,'+
+        JSonObject.AddPair('"partner_id',FDQuery.fieldbyname('partner_id').AsString);
+
+        //100  '"per_number":100,'+
+        JSonObject.AddPair('per_number',FDQuery.fieldbyname('per_number').AsString);
+
+        //1 '"min_number":1,'+
+        JSonObject.AddPair('min_number',FDQuery.fieldbyname('min_number').AsString);
+
+        //1000  '"max_number":1000,'+
+        JSonObject.AddPair('max_number',FDQuery.fieldbyname('max_number').AsString);
+
+        //0  '"now_number":0,'+
+        JSonObject.AddPair('now_number',FDQuery.fieldbyname('now_number').AsString);
+
+        //0 '"pre_number":0,'+
+        JSonObject.AddPair('pre_number',FDQuery.fieldbyname('pre_number').AsString);
+
+        //0  '"credit":0,'+
+        JSonObject.AddPair('credit',FDQuery.fieldbyname('credit').AsString);
+
+        //0  '"card":0,'+
+        JSonObject.AddPair('"card',FDQuery.fieldbyname('card').AsString);
+
+        //0  '"fare":0,'+
+        JSonObject.AddPair('fare',FDQuery.fieldbyname('fare').AsString);
+
+        //0  '"farefree":0,'+
+        JSonObject.AddPair('farefree',FDQuery.fieldbyname('farefree').AsString);
+
+        //0  '"bonus":0,'+
+        JSonObject.AddPair('bonus',FDQuery.fieldbyname('bonus').AsString);
+
+        //0    '"sort_order":0,'+
+        JSonObject.AddPair('sort_order',FDQuery.fieldbyname('sort_order').AsString);
+
+        //1529418142 '"expire_time":1529418142,'+
+        JSonObject.AddPair('expire_time',FDQuery.fieldbyname('expire_time').AsString);
+
+        //1529290800 '"begin_time":1529290800,'+
+        JSonObject.AddPair('begin_time',FDQuery.fieldbyname('begin_time').AsString);
+
+        //1529377200  '"end_time":1529377200,'+
+        JSonObject.AddPair('end_time',FDQuery.fieldbyname('end_time').AsString);
+
+        //0  '"reach_time":0,'+
+        JSonObject.AddPair('reach_time',FDQuery.fieldbyname('reach_time').AsString);
+
+        //0  '"close_time":0,'+
+        JSonObject.AddPair('close_time',FDQuery.fieldbyname('close_time').AsString);
+
+        //0 '"semhtmldescricao":0,'+
+        JSonObject.AddPair('semhtmldescricao',FDQuery.fieldbyname('semhtmldescricao').AsString);
+
+        //0  '"semhtmlregulamento":0,'+
+        JSonObject.AddPair('semhtmlregulamento',FDQuery.fieldbyname('semhtmlregulamento').AsString);
+
+        //0  '"manterdimensao":0,'+
+        JSonObject.AddPair('manterdimensao',FDQuery.fieldbyname('manterdimensao').AsString);
+
+        //2 '"altura":2,'+
+        JSonObject.AddPair('altura',FDQuery.fieldbyname('altura').AsString);
+
+        //16 '"comprimento":16,'+
+        JSonObject.AddPair('comprimento',FDQuery.fieldbyname('comprimento').AsString);
+
+        //11  '"largura":11,'+
+        JSonObject.AddPair('largura',FDQuery.fieldbyname('largura').AsString);
+
+        //0  '"posicionamento":0,'+
+        JSonObject.AddPair('posicionamento',FDQuery.fieldbyname('posicionamento').AsString);
+
+        //0 '"pontos":0,'+
+        JSonObject.AddPair('pontos',FDQuery.fieldbyname('pontos').AsString);
+
+        //0  '"pontosgerados":0,'+
+        JSonObject.AddPair('pontosgerados',FDQuery.fieldbyname('pontosgerados').AsString);
+
+        //0  '"idpacote":0,'+
+        JSonObject.AddPair('idpacote',FDQuery.fieldbyname('idpacote').AsString);
+
+        //0  '"id_oferta_parceiro":0,'+
+        JSonObject.AddPair('id_oferta_parceiro',FDQuery.fieldbyname('id_oferta_parceiro').AsString);
+
+        //0  '"contadorpedidos":0,'+
+        JSonObject.AddPair('contadorpedidos',FDQuery.fieldbyname('contadorpedidos').AsString);
+
+        //1 '"avaliacaoclientes":1,'+
+        JSonObject.AddPair('avaliacaoclientes',FDQuery.fieldbyname('avaliacaoclientes').AsString);
+
+        //160   '"team_price":160,'+
+        JSonObject.AddPair('team_price',FDQuery.fieldbyname('team_price').AsString);
+
+        //0 '"preco_comissao":0,'+
+        JSonObject.AddPair('preco_comissao',FDQuery.fieldbyname('preco_comissao').AsString);
+
+        //300  '"market_price":300,'+
+        JSonObject.AddPair('market_price',FDQuery.fieldbyname('market_price').AsString);
+
+        //0   '"bonuslimite":0,'+
+        JSonObject.AddPair('bonuslimite',FDQuery.fieldbyname('bonuslimite').AsString);
+
+        //null   '"layout":null,'+
+        JSonObject.AddPair('iderp',FDQuery.fieldbyname('iderp').AsString);
+
+        //Coluna 3M 3/8  '"title":"Coluna 3M 1/2",'+
+        JSonObject.AddPair('title',FDQuery.fieldbyname('title').AsString);
+
+        //""  '"summary":"",'+
+        JSonObject.AddPair('summary',FDQuery.fieldbyname('summary').AsString);
+
+        //Y   '"system":"Y",'+
+        JSonObject.AddPair('system',FDQuery.fieldbyname('system').AsString);
+
+        //null '"product":null,'+
+        JSonObject.AddPair('product',FDQuery.fieldbyname('product').AsString);
+
+        //{110 volts}{220 volts}     '"condbuy":"{110 volts}{220 volts}",'+
+        JSonObject.AddPair('condbuy',FDQuery.fieldbyname('condbuy').AsString);
+
+        //team\/2018\/0618\/15293389255152.jpg  '"image":"team\/2018\/0618\/15293389255152.jpg",'+
+        if FDQuery.fieldbyname('enviarfoto').AsString  = 'Y' then
+           JSonObject.AddPair('image', Nome_Arquivo  )      //FDQuery.fieldbyname('image').AsString);
+        else if FDQuery.fieldbyname('enviarfoto').AsString  = 'E' then
+           JSonObject.AddPair('image', imagemsemfoto )
+        else
+           JSonObject.AddPair('image', '' );
+
+
+        //else
+        //   JSonObject.AddPair('image', nil  );
+
+        //team\/2018\/0618\/15293389252770.jpg    '"image1":"team\/2018\/0618\/15293389252770.jpg",'+
+        if FDQuery.fieldbyname('enviarfoto_1').AsString  = 'Y' then
+           JSonObject.AddPair('image1', Nome_Arquivo_1  )     //FDQuery.fieldbyname('image1').AsString);
+        else
+           JSonObject.AddPair('image1', nil  );
+
+        //team\/2018\/0618\/15293389255164.jpg  '"image2":"team\/2018\/0618\/15293389255164.jpg",'+
+        if FDQuery.fieldbyname('enviarfoto_2').AsString  = 'Y' then
+           JSonObject.AddPair('image2',  NOme_Arquivo_2   )       //FDQuery.fieldbyname('image2').AsString);
+        else
+           JSonObject.AddPair('image2',  nil   );
+
+        //null  '"flv":null,'+
+        JSonObject.AddPair('flv',FDQuery.fieldbyname('flv').AsString);
+
+        //null   '"mobile":null,'+
+        JSonObject.AddPair('mobile',FDQuery.fieldbyname('mobile').AsString);
+
+        //null  '"address":null,'+
+        JSonObject.AddPair('address',FDQuery.fieldbyname('address').AsString);
+
+        //"" '"detail":"",'+
+        JSonObject.AddPair('detail',FDQuery.fieldbyname('detail').AsString);
+
+        //null  '"systemreview":null,'+
+        JSonObject.AddPair('systemreview',FDQuery.fieldbyname('systemreview').AsString);
+
+        //null    '"userreview":null,'+
+        JSonObject.AddPair('userreview',FDQuery.fieldbyname('userreview').AsString);
+
+        //""    '"notice":"",'+
+        JSonObject.AddPair('notice',FDQuery.fieldbyname('notice').AsString);
+
+        //null  '"express":null,'+
+         JSonObject.AddPair('express',FDQuery.fieldbyname('express').AsString);
+
+        //coupon   '"delivery":"coupon",'+
+        JSonObject.AddPair('delivery',FDQuery.fieldbyname('delivery').AsString);
+
+        //none  '"state":"none",'+
+        JSonObject.AddPair('state',FDQuery.fieldbyname('state').AsString);
+
+        //Y  '"conduser":"Y",'+
+        JSonObject.AddPair('conduser',FDQuery.fieldbyname('conduser').AsString);
+
+        //N      '"buyonce":"N",'+
+        JSonObject.AddPair('buyonce',FDQuery.fieldbyname('buyonce').AsString);
+
+        //normal   '"team_type":"normal",'+
+        JSonObject.AddPair('team_type',FDQuery.fieldbyname('team_type').AsString);
+
+        //null   '"seo_title":null,'+
+        JSonObject.AddPair('seo_title',FDQuery.fieldbyname('seo_title').AsString);
+
+        //chapa  '"seo_keyword":"chapa",'+
+        JSonObject.AddPair('seo_keyword',FDQuery.fieldbyname('seo_keyword').AsString);
+
+        //null    '"seo_description":null,'+
+        JSonObject.AddPair('seo_description',FDQuery.fieldbyname('seo_description').AsString);
+
+        //team\/2018\/0618\/15293389254429.jpg   '"gal_image1":"team\/2018\/0618\/15293389254429.jpg",'+
+        if FDQuery.fieldbyname('enviarfoto_gal_1').AsString  = 'Y' then
+           JSonObject.AddPair('gal_image1',  Nome_Arquivo_gal_1   )     //FDQuery.fieldbyname('gal_image1').AsString);
+        else
+           JSonObject.AddPair('gal_image1',  nil  );
+
+        //team\/2018\/0618\/15293389259585.jpg   '"gal_image2":"team\/2018\/0618\/15293389259585.jpg",'+
+        if FDQuery.fieldbyname('enviarfoto_gal_2').AsString  = 'Y' then
+           JSonObject.AddPair('gal_image2',  Nome_Arquivo_gal_2)      //FDQuery.fieldbyname('gal_image2').AsString);
+        else
+           JSonObject.AddPair('gal_image2',  nil);
+
+        //null '"gal_image3":null,'+
+        if FDQuery.fieldbyname('enviarfoto_gal_3').AsString  = 'Y' then
+           JSonObject.AddPair('gal_image3', Nome_Arquivo_gal_3)  // FDQuery.fieldbyname('gal_image3').AsString);
+        else
+           JSonObject.AddPair('gal_image3', nil);
+
+        //null '"gal_image4":null,'+
+        if FDQuery.fieldbyname('enviarfoto_gal_4').AsString  = 'Y' then
+           JSonObject.AddPair('gal_image4', Nome_Arquivo_gal_4)        //FDQuery.fieldbyname('gal_image4').AsString);
+        else
+            JSonObject.AddPair('gal_image4', nil);
+
+        //null  '"gal_image5":null,'+
+        if FDQuery.fieldbyname('enviarfoto_gal_5').AsString  = 'Y' then
+           JSonObject.AddPair('gal_image5',  Nome_Arquivo_gal_5)       //FDQuery.fieldbyname('gal_image5').AsString);
+        else
+           JSonObject.AddPair('gal_image5',  nil);
+
+
+        //null  '"gal_image6":null,'+
+        if FDQuery.fieldbyname('enviarfoto_gal_6').AsString  = 'Y' then
+           JSonObject.AddPair('gal_image6',  Nome_Arquivo_gal_6)      //FDQuery.fieldbyname('gal_image6').AsString);
+        else
+           JSonObject.AddPair('gal_image6',  nil);
+
+        //null   '"gal_image7":null,'+
+        if FDQuery.fieldbyname('enviarfoto_gal_7').AsString  = 'Y' then
+           JSonObject.AddPair('gal_image7',  Nome_Arquivo_gal_7 )     //FDQuery.fieldbyname('gal_image7').AsString);
+        else
+           JSonObject.AddPair('gal_image7',  nil );
+
+        //""  '"maisinformacoes":"",'+
+        JSonObject.AddPair('maisinformacoes',FDQuery.fieldbyname('maisinformacoes').AsString);
+
+        //null  '"metodo_pagamento":null,'+
+        JSonObject.AddPair('metodo_pagamento',FDQuery.fieldbyname('metodo_pagamento').AsString);
+
+        //null  '"retornoparticipe":null,'+
+        JSonObject.AddPair('retornoparticipe',FDQuery.fieldbyname('retornoparticipe').AsString);
+
+        //""  '"url_comprar":"",'+
+        JSonObject.AddPair('url_comprar',FDQuery.fieldbyname('url_comprar').AsString);
+
+        //""  '"posicionamentotitulo":null,'+
+        JSonObject.AddPair('posicionamentotitulo',FDQuery.fieldbyname('posicionamentotitulo').AsString);
+
+        //null  '"marcadagua":null,'+
+        JSonObject.AddPair('marcadagua',FDQuery.fieldbyname('marcadagua').AsString);
+
+        //null  '"processo_compra":null,'+
+        JSonObject.AddPair('processo_compra',FDQuery.fieldbyname('processo_compra').AsString);
+
+        //null  '"categoria_agrupi":null,'+
+        JSonObject.AddPair('categoria_agrupi',FDQuery.fieldbyname('categoria_agrupi').AsString);
+
+        //null   '"categoria_valejunto":null,'+
+        JSonObject.AddPair('categoria_valejunto',FDQuery.fieldbyname('categoria_valejunto').AsString);
+
+        //null '"cidade_valejunto":null,'+
+        JSonObject.AddPair('cidade_valejunto',FDQuery.fieldbyname('cidade_valejunto').AsString);
+
+        //null  '"categoria_apontaofertas":null,'+
+        JSonObject.AddPair('categoria_apontaofertas',FDQuery.fieldbyname('categoria_apontaofertas').AsString);
+
+        //null   '"cidade_apontaofertas":null,'+
+        JSonObject.AddPair('cidade_apontaofertas',FDQuery.fieldbyname('cidade_apontaofertas').AsString);
+
+        //null  '"categoria_dsconto":null,'+
+        JSonObject.AddPair('categoria_dsconto',FDQuery.fieldbyname('categoria_dsconto').AsString);
+
+        //1  '"frete":"1",'+
+        JSonObject.AddPair('frete',FDQuery.fieldbyname('frete').AsString);
+
+        //31280240   '"ceporigem":"31280240",'+
+        JSonObject.AddPair('ceporigem',FDQuery.fieldbyname('ceporigem').AsString);
+
+        //02,0  '"peso":"02,0",'+
+        JSonObject.AddPair('peso',FDQuery.fieldbyname('peso').AsString);
+
+        //0,00  '"valorfrete":" 0,00",'+
+        JSonObject.AddPair('valorfrete',FDQuery.fieldbyname('valorfrete').AsString);
+
+        //0  '"fretegratuito":"0",'+
+        JSonObject.AddPair('fretegratuito',FDQuery.fieldbyname('fretegratuito').AsString);
+
+        //null  '"republicacao":null,'+
+        JSonObject.AddPair('republicacao',FDQuery.fieldbyname('republicacao').AsString);
+
+        //null  '"estatica_home":null,'+
+        JSonObject.AddPair('estatica_home',FDQuery.fieldbyname('estatica_home').AsString);
+
+        //null '"estatica_direita":null,'+
+        JSonObject.AddPair('estatica_direita',FDQuery.fieldbyname('estatica_direita').AsString);
+
+        //null   '"estatica_detalhe":null,'+
+        JSonObject.AddPair('estatica_detalhe',FDQuery.fieldbyname('estatica_detalhe').AsString);
+
+        //null  '"estatica_recentes":null,'+
+        JSonObject.AddPair('estatica_recentes',FDQuery.fieldbyname('estatica_recentes').AsString);
+
+        //12312  '"codreferencia":"12312",'+
+        JSonObject.AddPair('codreferencia',FDQuery.fieldbyname('codreferencia').AsString);
+
+        //null   '"mostrarpreco":null,'+
+        JSonObject.AddPair('mostrarpreco',FDQuery.fieldbyname('mostrarpreco').AsString);
+
+        //""   '"condicaoenvio":"",'+
+        JSonObject.AddPair('condicaoenvio',FDQuery.fieldbyname('condicaoenvio').AsString);
+
+        //0   '"uploadarquivo":"0",'+
+         JSonObject.AddPair('uploadarquivo',FDQuery.fieldbyname('uploadarquivo').AsString);
+
+        //{Vermelho}{Azul}{Preto}   '"condbuy2":"{Vermelho}{Azul}{Preto}",'+
+        JSonObject.AddPair('condbuy2',FDQuery.fieldbyname('condbuy2').AsString);
+
+        //"" '"nomeaba1":"",'+
+        JSonObject.AddPair('nomeaba1',FDQuery.fieldbyname('nomeaba1').AsString);
+
+        //""  '"nomeaba2":"",'+
+        JSonObject.AddPair('nomeaba2',FDQuery.fieldbyname('nomeaba2').AsString);
+
+        //"" '"observacao_preco":"",'+
+        JSonObject.AddPair('observacao_preco',FDQuery.fieldbyname('observacao_preco').AsString);
+
+        //Escolha a cor  '"titulo_opcao2":"Escolha a cor",'+
+        JSonObject.AddPair('titulo_opcao2',FDQuery.fieldbyname('titulo_opcao2').AsString);
+
+        //Escolha a voltagem   '"titulo_opcao1":"Escolha a voltagem",'+
+        JSonObject.AddPair('titulo_opcao1',FDQuery.fieldbyname('titulo_opcao1').AsString);
+
+        //""   '"titulo_upload":"",'+
+        JSonObject.AddPair('titulo_upload',FDQuery.fieldbyname('titulo_upload').AsString);
+
+        //Coluna 3M 3/8   '"titleresumido":"Coluna 3M 1/2",'+
+        JSonObject.AddPair('titleresumido',FDQuery.fieldbyname('titleresumido').AsString);
+
+        //""  '"video_team":""'+
+        JSonObject.AddPair('video_team',FDQuery.fieldbyname('video_team').AsString);
+
+
+        //op I = Inclusao ou Alteracao E =  Exclusao
+        JSonObject.AddPair('op',FDQuery.fieldbyname('op').AsString);
+
+
+
+        JSonArray.AddElement(jSonObject);
+
+
+
+        memo1.lines.add('Produto Adicionado....');
+
+
+
+
+
+
+         FDQuery.Next;
+
+      end;
+
+
+
+
+  memo1.lines.add(JSonArray.ToString);
+  memo1.lines.add('Enviando lote produtos...');
+
+  log := log + JSonArray.ToString;
+
+
+  try
+
+
+     try
+
+       HTTP:= TIdHTTP.Create;
+       HTTP.Request.UserAgent := 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:12.0) Gecko/20100101 Firefox/12.0';
+       HTTP.Request.ContentType := 'application/json';
+
+       vJsonAEnviar := TStringStream.Create(UTF8Encode(JSonArray.ToString));
+       sresponse :=  HTTP.Post(edtaddressapi.Text+'/produtos/insert/several/token/'+edthashcodeapi.text, vJsonAEnviar);
+
+
+     except on e:exception do
+       begin
+
+          errorSyncProduto := true;
+          memo1.lines.add('Erro ao enviar dados produto(s)...'+e.Message);
+          log := log +  'Erro ao enviar dados produto(s)...'+e.Message+#13+#10;
+
+       end;
+
+     end;
+
+     memo1.lines.add(sresponse);
+
+     log := log + sresponse+#13+#10;
+
+  finally
+
+
+      try
+
+         if not errorSyncProduto then
+         begin
+
+            FDQuery.close;
+            FDQuery.sql.Clear;
+            FDQuery.sql.add('update team set  op = ''S''   where op <> ''S'' ');
+            FDQuery.ExecSQL;
+
+         end;
+
+
+      except
+        memo1.lines.add('Erro ao atualizar produto...');
+      end;
+
+
+
+
+
+     memo1.lines.add('Finalizando envio de lote de produtos...');
+
+
+     log := log + 'Finalizando envio de lote de produtos...'+#13+#10;
+
+  end;
+
+
+  processando := 'N';
+
+  FDConn.Connected := false;
+
+  JSonArray.DisposeOf;
+  vJsonAEnviar.DisposeOf;
+  HTTP.DisposeOf;
+
+
+
+end;
+
+
+
+procedure TFSincronizaDadosSite.ThreadEnd(Sender: TObject);
+begin
+
+    //memo1.lines.add(log);
+
+    if Assigned(TThread(Sender).FatalException) then
+        showmessage('Erro na etapa: ' + etapa + ' - ' + Exception(TThread(Sender).FatalException).Message);
+
+    //showmessage('Fim da Thread');
+end;
+
+
+procedure TFSincronizaDadosSite.syncAll;
+begin
+
+  TTask.Run(procedure
+    begin
+
+        SincronizaCategoria;
+        SincronizaMarca;
+        SincronizaProdutos;
+        EnviarMensagens;
+        TThread.Synchronize(TThread.CurrentThread,
+        procedure
+        begin
+            //label1.caption:=datetimetostr(now);
+            memo1.lines.add('Fim da Sincronização: '+datetimetostr(now));
+        end);
+
+
+
+    end);
+
+
+
+end;
+
+
+procedure TFSincronizaDadosSite.syncCategoria;
+begin
+
+  TTask.Run(procedure
+    begin
+
+        SincronizaCategoria;
+        TThread.Synchronize(TThread.CurrentThread,
+        procedure
+        begin
+            //label1.caption:=datetimetostr(now);
+            memo1.lines.add('Sincronização Categoria: '+datetimetostr(now));
+        end);
+
+        sleep(300000);
+
+    end);
+
+
+end;
+
+
+procedure TFSincronizaDadosSite.syncMarca;
+begin
+
+  TTask.Run(procedure
+    begin
+
+        SincronizaMarca;
+        TThread.Synchronize(TThread.CurrentThread,
+        procedure
+        begin
+            //label1.caption:=datetimetostr(now);
+            memo1.lines.add('Sincronização Marca: '+datetimetostr(now));
+        end);
+
+        sleep(300000);
+    end);
+
+end;
+
+
+procedure TFSincronizaDadosSite.syncProduto;
+begin
+
+  TTask.Run(procedure
+    begin
+
+        SincronizaProdutos;
+        TThread.Synchronize(TThread.CurrentThread,
+        procedure
+        begin
+            //label1.caption:=datetimetostr(now);
+            memo1.lines.add('Sincronização Produto: '+datetimetostr(now));
+        end);
+
+        sleep(300000);
+
+    end);
+
+
+
+end;
+
+
+
+
+procedure TFSincronizaDadosSite.Timer1Timer(Sender: TObject);
+begin
+
+
+   if processando = 'S' then
+      exit;
+
+   processando := 'S';
+
+   log := '';
+
+
+    TTimer(Sender).Enabled := false;
+
+    //Reiniciar timer
+    label17.Caption := '0';
+    label18.Caption := '0';
+    Timer4.Enabled := false;
+
+
+    //Categoria
+    tCategoria := TThread.CreateAnonymousThread(procedure
+    var
+        x : integer;
+    begin
+
+
+
+     SincronizaCategoria;
+
+     //SincronizaMarca;
+
+     //SincronizaProdutos;
+
+
+
+
+
+    end);
+
+    tCategoria.FreeOnTerminate := true;
+    //tCategoria.OnTerminate := ThreadEnd;
+    tCategoria.Start;
+
+
+    //memo1.lines.add(log);
+
+    TTimer(Sender).Enabled := true;
+
+
+    //Reiniciar timer
+    label17.Caption := '0';
+    label18.Caption := '0';
+    Timer4.Enabled := true;
+
+    processando := 'N';
+
+end;
+
+procedure TFSincronizaDadosSite.Timer2Timer(Sender: TObject);
+
+begin
+
+    if not RadioButton2.Visible then
+      exit;
+
+    if processando = 'S' then
+       exit;
+
+    processando := 'S';
+
+    log := '';
+
+    TTimer(Sender).Enabled := false;
+
+    //Reiniciar timer
+    label17.Caption := '0';
+    label18.Caption := '0';
+    Timer4.Enabled := false;
+
+    //Marca
+    tMarca := TThread.CreateAnonymousThread(procedure
+    var
+        x : integer;
+    begin
+
+
+     SincronizaMarca;
+
+    end);
+
+    tMarca.FreeOnTerminate := true;
+    //t.OnTerminate := ThreadEnd;
+    tMarca.Start;
+
+
+    TTimer(Sender).Enabled := true;
+
+
+    //Reiniciar timer
+    label17.Caption := '0';
+    label18.Caption := '0';
+    Timer4.Enabled := true;
+
+
+    processando := 'N';
+
+
+end;
+
+procedure TFSincronizaDadosSite.Timer3Timer(Sender: TObject);
+begin
+
+    if processando = 'S' then
+       exit;
+
+    processando := 'S';
+
+    log := '';
+
+
+    TTimer(Sender).Enabled := false;
+
+    //Reiniciar timer
+    label17.Caption := '0';
+    label18.Caption := '0';
+    Timer4.Enabled := false;
+
+    //Produto
+    tProduto := TThread.CreateAnonymousThread(procedure
+    var
+        x : integer;
+    begin
+
+
+
+
+     SincronizaProdutos;
+
+
+
+
+
+    end);
+
+    tProduto.FreeOnTerminate := true;
+    //t.OnTerminate := ThreadEnd;
+    tProduto.Start;
+
+
+
+    TTimer(Sender).Enabled := true;
+
+
+    //Reiniciar timer
+    label17.Caption := '0';
+    label18.Caption := '0';
+    Timer4.Enabled := true;
+
+    processando := 'N';
+
+
+end;
+
+procedure TFSincronizaDadosSite.Timer4Timer(Sender: TObject);
+begin
+  label17.Caption := inttostr(strtoint(label17.Caption)+1);
+
+  if strtoint(label17.Caption) > 59 then
+  begin
+     label17.Caption := '0';
+     label18.Caption := inttostr(strtoint(label18.Caption)+1);
+  end;
+
+end;
+
+procedure TFSincronizaDadosSite.tmSyncTimer(Sender: TObject);
+begin
+  btnSyncNowClick(sender);
+end;
+
+
+
+procedure TFSincronizaDadosSite.EnviarMensagens;
+var
+    AuthHeader: string;
+    Url, Json: string;
+    ResponseCode: integer;
+    IOHandler: TIdSSLIOHandlerSocketOpenSSL;
+    HTTP : TIdHTTP;
+
+    vJsonAEnviar, vJsonRetorno: TStringStream;
+    sresponse:string;
+
+    jSonObject:  TJSonObject;
+    jSonArray: TJSonArray;
+    jSonValue:TJsonValue;
+    id:string;
+
+    newWayFile, Auxiliar:string;
+
+    contador:integer;
+
+    imagemsemfoto:String;
+
+    dataatual:String;
+
+    ipos:integer;
+
+    extensao:string;
+
+    base64:string;
+
+    rota:string;
+
+    i:integer;
+
+    wayFile:string;
+
+    zaapId, messageId, feedbackId:string;
+
+    filename:string;
+
+    Headers:TStringList;
+
+    link:string;
+
+
+
+begin
+
+  erroorSyncMens := false;
+
+  if processando = 'S' then
+      exit;
+
+  processando := 'S';
+
+  dataatual := formatdatetime('YYYY-MM-DD HH:MM:SS',now);
+
+
+  try
+
+    etapa := 'Abrindo banco de dados...';
+    FDConn.Connected := false;
+    FDConn.Params.Database := edtDataBaseName.Text;
+    FDConn.Params.UserName := edtUserName.Text;
+    FDConn.Params.Password := edtPassWord.Text;
+    FDConn.Params.DriverID := cbxDriveID.Text;
+    FDConn.Params.Add('port='+edtPort.Text);
+    FDConn.Params.Add('server='+edtServerLocal.Text);
+    FDConn.Connected := true;
+
+    etapa := 'Abrindo tabela mensagens';
+    FDQuery.active := false;
+    FDQuery.sql.Clear;
+    FDQuery.sql.add('select * from servico_mensagens where dthragendamento <= :dataatual and enviado = ''N'' ');
+    FDQuery.Params.ParamByName('dataatual').asString := dataatual;
+    FDQuery.Active := true;
+
+  except
+    erroorSyncMens := true;
+  end;
+
+  if (erroorSyncMens) then
+  begin
+    memo1.lines.add('Erro ao conectar banco...');
+    FDConn.Connected := false;
+    processando := 'N';
+    exit;
+  end;
+
+  if (FDQuery.IsEmpty)then
+  begin
+    memo1.lines.add('Não há mensagens para ser enviada...');
+    FDConn.Connected := false;
+    processando := 'N';
+    exit;
+  end;
+
+  imagemsemfoto := 'mensagens/anexos/semfoto.jpg';
+
+  memo1.lines.add('Preparando envio mensagens...');
+  log := log + 'Mensagens...'+#13+#10;
+
+  i := 0;
+
+  while not FDQuery.Eof do
+  begin
+
+
+     zaapId := '';
+     messageId := '';
+     feedbackId := '';
+
+
+      Auxiliar := '';
+
+     newWayFile :=  FDQuery.fieldbyname('originfile').AsString;
+     wayFile :=  FDQuery.fieldbyname('originfile').AsString;
+
+     ipos := pos('/',newWayFile);
+
+      if ipos > 0 then
+      begin
+         newWayFile :=  StringReplace(newWayFile, '/', '\',[rfReplaceAll, rfIgnoreCase]);
+         wayFile := newWayFile;
+      end;
+
+      newWayFile := AnsiStrRScan(PCHar(newWayFile), '\');
+
+      for contador := 2 To StrLen(PCHar(newWayFile)) do
+          Auxiliar := Auxiliar + newWayFile [contador];
+
+      newWayFile := FDQuery.FieldByName('caminhocurto').asString+Auxiliar;
+
+      ipos := pos('.',Auxiliar);
+      extensao := copy(Auxiliar,ipos+1,length(Auxiliar));
+
+      filename := copy(Auxiliar,1,ipos-1);
+
+      JSonObject := TJSonObject.Create;
+
+      if edtcanal.ItemIndex = 0 then
+      begin
+         JSonObject.AddPair('phone',FDQuery.fieldbyname('codpais').AsString+FDQuery.fieldbyname('destinatario_phone').AsString);
+      end;
+
+      if edtcanal.ItemIndex = 1 then
+      begin
+         JSonObject.AddPair('number',FDQuery.fieldbyname('codpais').AsString+FDQuery.fieldbyname('destinatario_phone').AsString);
+         JSonObject.AddPair('publictoken',edtpublictokenwh2.Text);
+         JSonObject.AddPair('devicetoken',edtdevicetokenwh2.Text);
+
+
+      end;
+
+      if FDQuery.fieldbyname('mensagem').AsString <> '' then
+      begin
+
+         if edtcanal.ItemIndex = 0 then
+         begin
+
+           JSonObject.AddPair('message',FDQuery.fieldbyname('mensagem').AsString);
+           rota :=  'send-messages';
+
+         end;
+
+         if edtcanal.ItemIndex = 1 then
+         begin
+
+           JSonObject.AddPair('text',FDQuery.fieldbyname('mensagem').AsString);
+
+           //rota :=  'sendText';
+           rota := 'sendtext';
+
+         end;
+
+         if FDQuery.fieldbyname('intervalo').AsInteger > 0 then
+         begin
+
+           if edtcanal.ItemIndex = 0 then
+           begin
+              JSonObject.AddPair('delayTyping',TJSONNumber.create(FDQuery.fieldbyname('intervalo').AsInteger));
+
+           end;
+           if edtcanal.ItemIndex = 1 then
+           begin
+              //JSonObject.AddPair('time_typing',TJSONNumber.create(FDQuery.fieldbyname('intervalo').AsInteger));
+              JSonObject.AddPair('time_wait',TJSONNumber.create(FDQuery.fieldbyname('intervalo').AsInteger));
+
+           end;
+
+
+         end;
+
+         //JSonObject.AddPair('delayMessage',TJSONNumber.create(7));
+
+
+
+      end
+      else
+      begin
+
+         if (wayFile  <> '') then
+         begin
+
+            enviarFotoFTP(wayFile ,FDQuery.FieldByName('dirdest').asString);
+
+
+            if (extensao = 'jpg') or
+               (extensao = 'jpeg') or
+               (extensao = 'png')
+            then
+            begin
+
+               if edtcanal.ItemIndex = 0 then
+                  rota := 'send-image';
+               //end
+
+               if edtcanal.ItemIndex = 1 then
+                  rota := 'sendfile';
+               //end
+
+               if (FDQuery.FieldByName('tipoenvio').asString  = 'L') then
+               begin
+
+                 if edtcanal.ItemIndex = 0 then
+                    JSonObject.AddPair('image',FDQuery.fieldbyname('linkurl').AsString);
+                 //endi
+                 if edtcanal.ItemIndex = 1 then
+                    JSonObject.AddPair('path',FDQuery.fieldbyname('linkurl').AsString);
+                 //endi
+
+
+               end
+               else
+               begin
+                //base64 := ConverteBase64()
+                if edtcanal.ItemIndex = 0 then
+                   JSonObject.AddPair('image','data:image/png;base64,'+base64);
+                //endi
+                if edtcanal.ItemIndex = 1 then
+                   JSonObject.AddPair('path','data:image/png;base64,'+base64);
+                //endi
+
+
+               end;
+
+              //opção de envio
+              if FDQuery.fieldbyname('intervalo').AsInteger > 0 then
+              begin
+
+                 if edtcanal.ItemIndex = 0 then
+                    JSonObject.AddPair('delayMessage',TJSONNumber.create(FDQuery.fieldbyname('intervalo').AsInteger));
+                 //endi
+
+                 if edtcanal.ItemIndex = 1 then
+                    JSonObject.AddPair('time_wait',TJSONNumber.create(FDQuery.fieldbyname('intervalo').AsInteger));
+                 //endi
+
+              end;
+
+
+
+              if FDQuery.fieldbyname('caption').AsString <> '' then
+                 JSonObject.AddPair('caption',FDQuery.fieldbyname('caption').AsString);
+
+
+
+            end
+            else if extensao = 'pdf' then
+            begin
+
+              if edtcanal.ItemIndex = 0 then
+                 rota := 'send-document/pdf';
+              //endi
+
+              if edtcanal.ItemIndex = 1 then
+                 rota := 'sendfile';
+              //endi
+
+              if FDQuery.fieldbyname('tipoenvio').AsString = 'L' then
+              begin
+
+                if edtcanal.ItemIndex = 0 then
+                begin
+
+                  JSonObject.AddPair('document',FDQuery.fieldbyname('linkurl').AsString);
+
+
+                  if FDQuery.fieldbyname('caption').AsString <> '' then
+                  begin
+                    JSonObject.AddPair('fileName',FDQuery.fieldbyname('caption').AsString);
+                  end
+                  else
+                  begin
+                    JSonObject.AddPair('fileName',filename);
+                  end;
+
+
+                end;
+
+
+                if edtcanal.ItemIndex = 1 then
+                begin
+
+                  JSonObject.AddPair('path',FDQuery.fieldbyname('linkurl').AsString);
+
+                  if FDQuery.fieldbyname('caption').AsString <> '' then
+                  begin
+                    JSonObject.AddPair('caption',FDQuery.fieldbyname('caption').AsString);
+                  end;
+
+
+
+                end;
+
+
+              end
+              else
+              begin
+                //base64 := ConverteBase64()
+
+
+                if edtcanal.ItemIndex = 0 then
+                begin
+
+                  JSonObject.AddPair('document','data:@file/pdf;base64,'+base64);
+
+
+                  if FDQuery.fieldbyname('caption').AsString <> '' then
+                  begin
+                    JSonObject.AddPair('fileName',FDQuery.fieldbyname('caption').AsString);
+                  end
+                  else
+                  begin
+                    JSonObject.AddPair('fileName',filename);
+                  end;
+
+
+                end;
+
+
+                if edtcanal.ItemIndex = 1 then
+                begin
+
+                   JSonObject.AddPair('path','data:image/png;base64,'+base64);
+
+
+                  if FDQuery.fieldbyname('caption').AsString <> '' then
+                  begin
+                    JSonObject.AddPair('caption',FDQuery.fieldbyname('caption').AsString);
+                  end;
+
+
+
+                end;
+
+
+
+              end;
+
+
+              //opções de envio
+              if edtcanal.ItemIndex = 0 then
+              begin
+
+                if FDQuery.fieldbyname('intervalo').AsInteger > 0 then
+                   JSonObject.AddPair('delayMessage',TJSONNumber.create(FDQuery.fieldbyname('intervalo').AsInteger));
+
+              end;
+
+
+              if edtcanal.ItemIndex = 1 then
+              begin
+
+                if FDQuery.fieldbyname('intervalo').AsInteger > 0 then
+                   JSonObject.AddPair('time_wait',TJSONNumber.create(FDQuery.fieldbyname('intervalo').AsInteger));
+
+              end;
+
+
+
+            end
+            else  if extensao = 'mp4' then
+            begin
+
+              if edtcanal.ItemIndex = 0 then
+                 rota := 'send-video';
+              //endi
+
+              if edtcanal.ItemIndex = 1 then
+                 rota := 'sendfile';
+              //endi
+
+              if FDQuery.fieldbyname('tipoenvio').AsString = 'L' then
+              begin
+
+                if edtcanal.ItemIndex = 0 then
+                begin
+                  JSonObject.AddPair('video',FDQuery.fieldbyname('linkurl').AsString);
+                end;
+
+                if edtcanal.ItemIndex = 1 then
+                begin
+                  JSonObject.AddPair('path',FDQuery.fieldbyname('linkurl').AsString);
+                end;
+
+              end
+              else
+              begin
+                //base64 := ConverteBase64()
+
+                if edtcanal.ItemIndex = 0 then
+                   JSonObject.AddPair('video','data:video/mp4;base64'+base64);
+                //endi
+
+                if edtcanal.ItemIndex = 1 then
+                   JSonObject.AddPair('path','data:video/mp4;base64'+base64);
+                //endi
+
+
+              end;
+
+              //opções de envio
+              if FDQuery.fieldbyname('intervalo').AsInteger > 0 then
+              begin
+
+                if edtcanal.ItemIndex = 0 then
+                   JSonObject.AddPair('delayMessage',TJSONNumber.create(FDQuery.fieldbyname('intervalo').AsInteger));
+
+                if edtcanal.ItemIndex = 1 then
+                   JSonObject.AddPair('time_wait',TJSONNumber.create(FDQuery.fieldbyname('intervalo').AsInteger));
+
+              end;
+
+
+
+            end;
+
+         end;
+
+
+      end;
+      //endi
+
+      memo1.lines.add(jSonObject.ToString);
+      memo1.lines.add('Enviando Mensagem...');
+
+     // JSonArray.AddElement(jSonObject);
+
+
+      //memo1.lines.add(jSonObject.ToString);
+      //memo1.lines.add('Enviando Mensagem...');
+      //log := log + JSonArray.ToString+#13+#10;
+
+
+       try
+
+         HTTP:= TIdHTTP.Create(nil);
+         IOHandler := TIdSSLIOHandlerSocketOpenSSL.Create(nil);
+
+         try
+
+
+           if edtcanal.ItemIndex = 0 then
+           begin
+
+             HTTP.Request.UserAgent := 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:12.0) Gecko/20100101 Firefox/12.0';
+             HTTP.Request.ContentType := 'application/json';
+
+           end;
+
+           Headers := TStringList.Create;
+
+           if edtcanal.ItemIndex = 1 then
+           begin
+
+             Http.Request.CustomHeaders.Clear;
+
+             AuthHeader := BasicAuthEncode('magic', 'Sssasbmsai@!');
+             http.Request.CustomHeaders.AddValue('Authorization', AuthHeader);
+
+           end;
+
+           //Http.Request.CustomHeaders.Clear;
+           //Http.Request.Clear;
+           //Http.Request.CharSet := 'utf-8';
+
+           { Neste ponto é configurado a autenticação/token }
+           //Http.Request.CustomHeaders.Values['Authorization'] := 'Bearer ';
+           //Http.HTTPOptions := [];
+           //Http.IOHandler := IOHandler;
+           //  JSonArray
+
+           if edtcanal.ItemIndex = 0 then
+           begin
+             vJsonAEnviar := TStringStream.Create(UTF8Encode(JSonObject.ToString));
+
+           end;
+
+           if edtcanal.ItemIndex = 1 then
+           begin
+             //vJsonAEnviar := TStringStream.create('{ "number": "5511963930108",    "text": "Top, APIGRATIS! Que massa.",       "time_typing": 1 }');
+             vJsonAEnviar := TStringStream.create(JSonObject.ToString);
+
+           end;
+
+           if edtcanal.ItemIndex = 0 then
+           begin
+
+              link :=  'https://api.plugzapi.com.br/instances/'+edtinstanceswh1.Text+'/token/'+edttokenwh1.text+'/'+rota;
+              sresponse :=  HTTP.Post(link, vJsonAEnviar);
+              responsecode := HTTP.ResponseCode;
+
+           end;
+
+           if edtcanal.ItemIndex = 1 then
+           begin
+
+             if rota = 'sendtext' then
+             begin
+
+               //Consumo de endpoint utilizando datarest
+               ReqSendText.ClearBody;
+               ReqSendText.Params.AddItem('Content-Type', 'application/json', TRESTRequestParameterKind.pkHTTPHEADER, [poDoNotEncode]);
+               ReqSendText.Params.AddItem('devicetoken', edtdevicetokenwh2.Text, TRESTRequestParameterKind.pkHTTPHEADER, [poDoNotEncode]);
+               ReqSendText.Params.AddItem('publictoken', edtpublictokenwh2.Text, TRESTRequestParameterKind.pkHTTPHEADER, [poDoNotEncode]);
+               ReqSendText.AddBody(JsonObject.ToString,  TRESTContentType.ctAPPLICATION_JSON);
+               ReqSendText.Execute;
+               responsecode :=  ReqSendText.Response.StatusCode;
+               sresponse :=  ReqSendText.Response.Content;
+               //memo1.lines.add(sresponse);
+
+               //http://localhost:3001/api/whatsapp/br/sendtext
+
+             end;
+
+
+             if rota = 'sendfile' then
+             begin
+
+               //Consumo de endpoint utilizando datarest
+               ReqSendFile.ClearBody;
+               ReqSendFile.Params.AddItem('Content-Type', 'application/json', TRESTRequestParameterKind.pkHTTPHEADER, [poDoNotEncode]);
+               ReqSendFile.Params.AddItem('devicetoken', edtdevicetokenwh2.Text, TRESTRequestParameterKind.pkHTTPHEADER, [poDoNotEncode]);
+               ReqSendFile.Params.AddItem('publictoken', edtpublictokenwh2.Text, TRESTRequestParameterKind.pkHTTPHEADER, [poDoNotEncode]);
+               ReqSendFile.AddBody(JsonObject.ToString,  TRESTContentType.ctAPPLICATION_JSON);
+               ReqSendFile.Execute;
+               responsecode :=  ReqSendFile.Response.StatusCode;
+               sresponse :=  ReqSendFile.Response.Content;
+
+
+             end;
+
+
+            memo1.lines.add(sresponse);
+           end;
+
+           memo1.lines.add(jSonObject.ToString);
+
+           //jSonObject := TJSONObject.ParseJSONValue(TEncoding.ASCII.GetBytes(sresponse), 0) as TJSONObject;
+           //vJsonRetorno := TStringStream.Create(UTF8Encode(sresponse));
+           jSonValue := TJSONObject.ParseJSONValue(sresponse);
+
+           try
+             zaapId := jSonValue.GetValue<String>('zaapId');
+           except
+             zaapId := md5( 'zapid'+datetimetostr(date)+datetimetostr(time));
+           end;
+
+
+           try
+             messageId := jSonValue.GetValue<String>('messageId');
+           except
+             messageId := '';
+           end;
+
+
+           try
+
+             if messageId = '' then
+             begin
+
+               messageId := jSonValue.GetValue<String>('error');
+               memo1.lines.add(messageId);
+               if messageId = 'false' then
+               begin
+                 messageId := md5( 'messageid'+datetimetostr(date)+datetimetostr(time));
+               end;
+
+
+
+
+             end;
+
+
+
+           except
+             messageId :='';
+           end;
+
+
+
+           try
+             feedbackId := jSonValue.GetValue<String>('id');
+           except
+             feedbackId := md5( 'feedbackid'+datetimetostr(date)+datetimetostr(time));
+           end;
+
+
+         finally
+
+           IOHandler.DisposeOf;
+           //JSonArray.DisposeOf;
+           vJsonAEnviar.DisposeOf;
+           HTTP.DisposeOf;
+           jsonObject.DisposeOf;
+           jSonValue.DisposeOf;
+           Headers.DisposeOf;
+
+           if (responsecode = 200) or (responsecode = 201)  then
+           begin
+
+
+             if messageId <> '' then
+             begin
+
+                 FDQueryAtualiza.close;
+                 FDQueryAtualiza.sql.Clear;
+                 FDQueryAtualiza.sql.add('insert into servico_protocolo_mensagens(id_servico_mensagens, zaapId, messageId, feedbackId ) values (:id_servico_mensagens, :zaapId, :messageId, :feedbackId)');
+                 FDQueryAtualiza.Params.ParamByName('id_servico_mensagens').asString :=  FDQuery.fieldbyname('id').asString;
+                 FDQueryAtualiza.Params.ParamByName('zaapId').asString :=  zaapid;
+                 FDQueryAtualiza.Params.ParamByName('messageId').asString :=  messageid;
+                 FDQueryAtualiza.Params.ParamByName('feedbackId').asString :=  feedbackid;
+                 FDQueryAtualiza.ExecSQL;
+
+                 FDQueryAtualiza.close;
+                 FDQueryAtualiza.sql.Clear;
+                 FDQueryAtualiza.sql.add('update servico_mensagens set enviado = ''S'' where id = '+FDQuery.fieldbyname('id').asString);
+                 FDQueryAtualiza.ExecSQL;
+
+
+             end;
+
+
+
+           end;
+
+
+         end;
+
+         memo1.lines.add(sresponse);
+         log := log + sresponse+#13+#10;
+
+       except on e:exception do
+         begin
+            erroorSyncMens := true;
+            memo1.lines.add('Erro ao enviar mensagem(s)...'+e.Message);
+            log := log +  'Erro ao enviar mensagem(s)...'+e.Message+#13+#10;
+
+
+         end;
+
+
+
+       end;
+
+
+      //sleep(5000);
+      i := i + 1;
+      FDQuery.Next;
+
+  end;
+
+  FDConn.Connected := false;
+  memo1.lines.add('Finalizando envio de mensagem...');
+  log := log + 'Envio Mensagem Finalizado...'+#13+#10;
+
+  processando := 'N';
+
+
+
+end;
+
+
+
+
+end.
