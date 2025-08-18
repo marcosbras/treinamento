@@ -396,6 +396,21 @@ no evoluteAPI alterar variável de ambiente:
     CONFIG_SESSION_PHONE_VERSION 
     AUTHENTICATION_API_KEY
 
+
+# Instalar suporte a venv (se ainda não tiver)
+sudo apt install python3-venv -y
+
+# Criar ambiente virtual
+python3 -m venv .venv
+
+# Ativar ambiente virtual
+source .venv/bin/activate
+
+# Instalar pacotes dentro dele
+pip install pandas
+
+
+
 https://www.youtube.com/watch?v=Ag8vGGzmiwc&ab_channel=PyFlet
 
 https://www.youtube.com/watch?v=CAedO3UaiU8&ab_channel=Rocketseat

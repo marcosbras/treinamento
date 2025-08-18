@@ -1,0 +1,121 @@
+Boa pergunta 👍. Esses diretórios que você listou são os **diretórios padrão de um sistema Linux/Unix**, geralmente na raiz (`/`). Cada um tem uma finalidade específica. Vou detalhar:
+
+---
+
+### 📂 Diretórios principais do Linux
+
+* **`/bin`**
+  Contém programas/binários essenciais para o funcionamento do sistema e para uso básico dos usuários (ex.: `ls`, `cp`, `mv`, `cat`).
+  ⚠️ Em sistemas modernos, muito dele foi movido para `/usr/bin`.
+
+* **`/bin.usr-is-merged`**
+  É um **indicador de compatibilidade** criado em sistemas que usam o *usr merge* (união de `/bin`, `/sbin`, `/lib` → dentro de `/usr`). Mostra que `/bin` foi fundido com `/usr/bin`.
+  → Geralmente é apenas um **link simbólico ou marcador**.
+
+* **`/boot`**
+  Contém arquivos necessários para inicialização do sistema: kernel (`vmlinuz`), initramfs, e arquivos do bootloader (como GRUB).
+
+* **`/dev`**
+  Diretório que contém os **arquivos de dispositivos** (device files), representando hardware e periféricos (ex.: `/dev/sda`, `/dev/null`, `/dev/tty`).
+
+* **`/etc`**
+  Configurações e arquivos de configuração do sistema e dos serviços.
+
+* **`/home`**
+  Diretório pessoal dos usuários comuns. Cada usuário tem um subdiretório (`/home/usuario`).
+
+* **`/lib`**
+  Bibliotecas essenciais necessárias para os programas em `/bin` e `/sbin`.
+  (Em sistemas *usr-merged*, isso foi movido para `/usr/lib`).
+
+* **`/lib.usr-is-merged`**
+  Outro **marcador/atalho** do *usr merge*, indicando que `/lib` foi integrado a `/usr/lib`.
+
+* **`/lib64`**
+  Bibliotecas de 64 bits necessárias ao sistema.
+
+* **`/lost+found`**
+  Criado automaticamente em partições formatadas com **ext4/ext3**.
+  → Usado pelo `fsck` para recuperar arquivos órfãos após falhas no sistema de arquivos.
+
+* **`/media`**
+  Ponto de montagem automática de dispositivos removíveis (pendrives, HDs externos, CDs).
+
+* **`/mnt`**
+  Ponto de montagem genérico para sistemas de arquivos. Usado manualmente pelo administrador para montar volumes temporários.
+
+* **`/opt`**
+  Local para instalar **programas adicionais/opcionais** que não fazem parte da distribuição (ex.: softwares de terceiros).
+
+* **`/proc`**
+  Sistema de arquivos virtual que fornece informações sobre processos e o kernel. (ex.: `/proc/cpuinfo`, `/proc/meminfo`).
+
+* **`/root`**
+  Diretório pessoal do superusuário **root**.
+
+* **`/run`**
+  Armazena dados temporários sobre a execução do sistema e processos em execução (PID files, sockets, etc).
+  ⚠️ É apagado a cada boot.
+
+* **`/sbin`**
+  Programas/binários essenciais para administração do sistema (ex.: `mount`, `fsck`, `ifconfig`).
+  (Também foi movido para `/usr/sbin` em sistemas *usr-merged*).
+
+* **`/sbin.usr-is-merged`**
+  Outro marcador do *usr merge*, indicando que `/sbin` foi fundido em `/usr/sbin`.
+
+* **`/snap`**
+  Diretório criado pelo **Ubuntu Snap** para armazenar pacotes Snap e seus pontos de montagem.
+
+* **`/srv`**
+  Armazena dados de **serviços** do sistema (ex.: páginas web de um servidor HTTP em `/srv/www`).
+
+* **`/sys`**
+  Outro sistema de arquivos virtual, ligado ao **sysfs**, que expõe informações sobre dispositivos, drivers e o kernel.
+
+* **`/tmp`**
+  Diretório para arquivos temporários criados por programas e usuários.
+  ⚠️ Normalmente é limpo ao reiniciar.
+
+* **`/usr`**
+  Local onde ficam programas, bibliotecas e documentação **não essenciais para o boot** do sistema.
+  Subdiretórios:
+
+  * `/usr/bin` → programas para usuários
+  * `/usr/sbin` → programas de administração
+  * `/usr/lib` → bibliotecas
+  * `/usr/share` → dados compartilhados (ícones, manuais)
+
+* **`/var`**
+  Dados variáveis do sistema, como:
+
+  * Logs (`/var/log`)
+  * Fila de impressão (`/var/spool`)
+  * Cache de pacotes (`/var/cache`)
+  * Bancos de dados de serviços
+
+---
+
+👉 Em resumo:
+
+* **Essenciais para boot:** `/bin`, `/sbin`, `/boot`, `/lib`, `/root`, `/etc`
+* **Gerais de uso:** `/home`, `/usr`, `/var`, `/opt`
+* **Montagens e temporários:** `/mnt`, `/media`, `/tmp`, `/run`, `/proc`, `/sys`, `/dev`
+
+---
+
+# Instalar suporte a venv (se ainda não tiver)
+sudo apt install python3-venv -y
+
+# Criar ambiente virtual
+python3 -m venv .venv
+
+# Ativar ambiente virtual
+source .venv/bin/activate
+
+# Subir Servidor
+uvicorn main:app --host 0.0.0.0 --port 8000 --reload
+
+# Instalar pacotes dentro dele
+pip install pandas
+
