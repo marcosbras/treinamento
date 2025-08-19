@@ -1,0 +1,55 @@
+C:/Users/Israel/Documents/projetos/Treinamento/delphi/99Coders/Poupei/Servidor/modules
+
+# Ignorar pasta modules inteira
+/modules/
+
+# Arquivos binários e executáveis
+*.exe
+*.dll
+*.dcu
+*.dcp
+*.bpl
+*.dres
+*.dproj.local
+*.dproj.identcache
+*.identcache
+
+# Arquivos de debug / compilação
+*.map
+*.drc
+*.~*
+*.local
+*.bak
+*.tmp
+*.dsk
+*.tvsconfig
+
+# Lazarus / Free Pascal
+*.ppu
+*.o
+*.or
+*.compiled
+*.lps
+lib/
+
+# Diretórios de build comuns
+__history/
+__recovery/
+*.ide/
+*.deploy/
+Win32/
+Win64/
+Debug/
+Release/
+
+# Arquivos do Windows
+Thumbs.db
+Desktop.ini
+
+# Logs
+*.log
+
+# Mantém uma pasta mas ignora o conteúdo
+# (se quiser aplicar em modules também, só trocar o nome da pasta)
+# /algumapasta/*
+# !/algumapasta/.gitkeep

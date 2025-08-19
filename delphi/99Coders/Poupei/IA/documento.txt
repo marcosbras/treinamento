@@ -1,0 +1,35 @@
+projeto n8n / serviço n8n / ambiente:
+
+N8N_HOST=$(PRIMARY_DOMAIN)
+GENERIC_TIMEZONE=America/Sao_Paulo
+N8N_COMMUNITY_PACKAGES_ALLOW_TOOL_USAGE=true
+DB_TYPE=postgresdb
+DB_POSTGRESDB_HOST=?????
+DB_POSTGRESDB_PORT=5432
+DB_POSTGRESDB_USER=?????
+DB_POSTGRESDB_PASSWORD=?????
+
+
+
+----------------------------------------------
+
+PROMPT CHATGPT DENTRO NO N8N
+
+Transforme a seguinte frase em um objeto JSON contendo os dados de um lançamento financeiro:
+
+{{ $('Mensagem').item.json.Mensagem }}
+
+Use este formato:
+
+{
+  "descrição": "...",
+  "valor": ...,
+  "tipo": "R" para receita ou "D" para despesa,
+  "id_categoria": ...
+}
+
+A categoria deve ser buscada pela descrição mais próxima desta lista (caso não encontre uma categoria, deixa o id_categoria = 0):
+
+{{ $('Listar Categorias').all().toJsonString() }}
+
+Retorne **apenas** o JSON. Não explique nada.
