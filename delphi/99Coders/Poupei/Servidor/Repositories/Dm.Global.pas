@@ -60,7 +60,7 @@ var
   DmGlobal: TDmGlobal;
 
 Const
-  NUM_DIAS_DEMONSTRACAO = 7;
+  NUM_DIAS_DEMONSTRACAO = 360;
 
 implementation
 
@@ -73,7 +73,7 @@ begin
   if FileExists('c:\Poupei\DataBase\BANCO.FDB') then
     Conn.Params.Add('Database=c:\Poupei\DataBase\BANCO.FDB')
   else
-    Conn.Params.Add('Database=D:\Poupei\Database\BANCO.FDB');
+    Conn.Params.Add('Database=C:\Users\Administrator\Desktop\api3001\Poupei\DataBase\BANCO.FDB');
 
   //FDPhysFBDriverLink.VendorLib := 'C:\Program Files (x86)\Firebird\Firebird_3_0\fbclient.dll';
 end;
@@ -229,7 +229,7 @@ begin
     qry.SQL.Add('values(:nome, :email, :senha, current_timestamp, :status, :dt_termino_acesso)');
     qry.SQL.Add('returning id_usuario, nome, email, dt_cadastro, status,');
     qry.SQL.Add('stripe_assinatura_id, stripe_cliente_id, vl_assinatura,');
-    qry.SQL.Add('dt_termino_acesso, current_date as dt_referencia');
+    qry.SQL.Add('dt_termino_acesso');
 
     qry.ParamByName('nome').Value := nome;
     qry.ParamByName('email').Value := email;
@@ -238,10 +238,10 @@ begin
     qry.ParamByName('dt_termino_acesso').Value :=
               FormatDateTime('yyyy-mm-dd', date + NUM_DIAS_DEMONSTRACAO);
 
-
     qry.Active := true;
 
     Result := qry.ToJSONObject;
+    Result.AddPair('dt_referencia', FormatDateTime('yyyy-mm-dd', Date));
 
   finally
     FreeAndNil(qry);
